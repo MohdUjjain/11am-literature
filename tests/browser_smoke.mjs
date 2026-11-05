@@ -22,7 +22,7 @@ try {
       reducedMotion:'reduce'});
     const page=await context.newPage();
     await page.goto(url,{waitUntil:'domcontentloaded'});
-    await page.locator('#reader-search-input').waitFor();
+    await page.locator('#reader-search-input').waitFor({state:'attached'});
     const horizontal=await page.evaluate(()=>({
       doc:document.documentElement.scrollWidth,
       viewport:window.innerWidth
