@@ -3,7 +3,7 @@
  * Browser storage can be evicted and fonts are always optional.
  */
 const CACHE_PREFIX = '11am-lit-reader-';
-const BOOK_CACHE = CACHE_PREFIX + 'd6ec451b2fe1';
+const BOOK_CACHE = CACHE_PREFIX + '11d89ea86fd8';
 const FONT_CACHE = '11am-lit-fonts-v1';
 const APP_SHELL = [
   './index.html', './manifest.webmanifest', './offline-update.js',
@@ -37,6 +37,26 @@ self.addEventListener('activate', event => {
   })());
 });
 self.addEventListener('message', event => {
+  if (event.data?.type === 'EDITION_STATUS') {
+    const port = event.ports?.[0];
+    event.waitUntil((async () => {
+      try {
+        const cache = await caches.open(BOOK_CACHE);
+        const assets = await Promise.all(APP_SHELL.map(p => cache.match(p)));
+        port?.postMessage({
+          type:'EDITION_STATUS', edition:BOOK_CACHE,
+          ready:assets.every(Boolean), cached:assets.filter(Boolean).length,
+          required:APP_SHELL.length
+        });
+      } catch (error) {
+        port?.postMessage({
+          type:'EDITION_STATUS', edition:BOOK_CACHE,
+          ready:false, error:String(error)
+        });
+      }
+    })());
+    return;
+  }
   if (event.data?.type === 'PREPARE_FONTS') {
     const port = event.ports?.[0];
     event.waitUntil((async () => {
@@ -93,7 +113,9 @@ self.addEventListener('message', event => {
       const cache = await caches.open(BOOK_CACHE);
       const present = await Promise.all(APP_SHELL.map(p => cache.match(p)));
       if (present.some(p => !p)) await cache.addAll(APP_SHELL);
-      port?.postMessage({ok:true});
+      const verified = await Promise.all(APP_SHELL.map(p => cache.match(p)));
+      if (verified.some(p => !p)) throw new Error('Incomplete offline shell');
+      port?.postMessage({ok:true,edition:BOOK_CACHE,required:APP_SHELL.length});
     } catch (error) {
       port?.postMessage({ok:false,error:String(error)});
     }
