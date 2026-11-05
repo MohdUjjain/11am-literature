@@ -8,7 +8,7 @@ A single-file, landscape-oriented literature study dossier with **25 completed r
 
 Open the GitHub Pages site online at least once, then open **Contents → Save / refresh offline copy**. The versioned service worker pre-caches the **entire HTML reader**, manifest and app icons. When offline, the installed app serves that cached copy; online navigation updates it. You can install from Chrome/Edge's browser menu or **Share → Add to Home Screen** on iPhone. A browser may clear or evict stored data, so no site can guarantee storage forever. The large standalone PDF is intentionally not auto-cached.
 
-For this edition the service worker cache is `11am-lit-reader-01-26-v4` and will replace the previous cache when the new worker is installed and activated. Google Fonts are cached opportunistically, with readable system fallbacks if unavailable.
+The complete reader is cached atomically using a service-worker revision automatically derived from the published HTML and assets. When an updated edition has been fully saved, an existing app session shows **New Literature edition saved** with a reload control. The existing manual **Save / refresh offline copy** option and optional persistent-storage request remain available. Google Fonts are cached opportunistically, with readable system fallbacks.
 
 ## GitHub Pages
 
@@ -25,7 +25,7 @@ The project is published from `main` at `/(root)`. If Pages has not been enabled
 
 ## Reproducible source
 
-The **complete 01–26 editable source ZIP** is included in the accompanying project deliverables/Library. The GitHub `source/` directory retains the earlier 01–25 source checkpoint; the published `index.html` is the current complete reader. The final ZIP contains `book-source/build.py`, `head-template.html`, `engine.js`, `styles.css`, all 25 chapter files, untouched source explainers, print exporter, tests, and `MANUAL_CHECKPOINT_READING_26.json`.
+The **complete 01–26 editable source ZIP** is included in the accompanying project deliverables/Library. The GitHub `source/` directory retains the complete 01–26 source checkpoint alongside earlier snapshots; the published `index.html` is the current complete reader. The final ZIP contains `book-source/build.py`, `head-template.html`, `engine.js`, `styles.css`, all 25 chapter files, untouched source explainers, print exporter, tests, and `MANUAL_CHECKPOINT_READING_26.json`.
 
 ```bash
 cd book-source
@@ -39,3 +39,10 @@ The last full PDF was built using a documented, verified fallback because one la
 ## Next step
 
 The dossier has processed every assigned reading except **Reading 19**, which remains unassigned. The recurring automation is disabled; future edits are manual.
+
+## Website publishing upgrades
+
+- **Preview and discovery:** `og-image.png` (1200 × 630, generated from `scripts/render_social.py`), Open Graph/Twitter metadata in `index.html`, a one-page `sitemap.xml`, and a branded `404.html`.
+- **Offline editions:** `scripts/service-worker.template.js` is the authored worker; `scripts/build.py` writes `service-worker.js` with a content-derived cache revision. `offline-update.js` offers a reload once a new service worker takes control. The PWA stays scoped to `/11am-literature/` and never pre-caches PDFs.
+- **Build/verification:** `.github/workflows/verify-pages.yml` regenerates image and worker, checks the source ZIP can reassemble the 25-reading book, validates publication metadata, and simulates offline loading and interrupted installation. On main it commits only the regenerated publishing assets when they differ; it does not alter the notes or print compositor.
+- **Local verification:** `python -m pip install Pillow==12.3.0`, `python scripts/render_social.py`, `python scripts/build.py`, `python scripts/verify_source_archive.py`, `python tests/verify_publication.py`, `node tests/test_service_worker.mjs`, then `python scripts/build.py --check`.

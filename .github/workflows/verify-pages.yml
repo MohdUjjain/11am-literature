@@ -1,0 +1,57 @@
+name: Verify Literature website publication
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: literature-publishing-main
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Rebuild and verify hosting assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout publication sources
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install deterministic preview-image renderer
+        run: python -m pip install Pillow==12.3.0
+      - name: Rebuild the social preview and content-hashed offline worker
+        run: |
+          python scripts/render_social.py
+          python scripts/build.py
+      - name: Verify the zipped source rebuild
+        run: python scripts/verify_source_archive.py
+      - name: Validate publication metadata and files
+        run: python tests/verify_publication.py
+      - name: Simulate offline install, navigation and failed updates
+        run: node tests/test_service_worker.mjs
+      - name: Verify reproduced assets are checked in (pull requests)
+        if: github.event_name == 'pull_request'
+        run: git diff --exit-code -- service-worker.js og-image.png
+      - name: Commit regenerated publishing assets (main only)
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- service-worker.js og-image.png
+          if git diff --cached --quiet; then
+            echo 'Publishing assets are current.'
+          else
+            git commit -m 'Regenerate Literature publication assets'
+            git push origin HEAD:main
+          fi

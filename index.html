@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Complete Literature Dossier Notes — Daraja Hadi Ashar</title>
 <meta name="author" content="Mohammed Husain Ujjainwala, TR: 25368, Hadi Ashar 1448H">
-<meta name="description" content="Complete Literature Dossier Notes: 26 academic readings, widescreen study edition">
+<meta name="description" content="Literature Dossier Notes for Daraja Hadi Ashar: 25 completed academic readings, with passage-linked analysis and revision tools. Read online or offline.">
 <meta name="theme-color" content="#2A2016">
 <meta name="application-name" content="11AM Literature Dossier">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,9 +17,21 @@
 <link rel="canonical" href="https://mohdujjain.github.io/11am-literature/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="11AM Literature Dossier">
-<meta property="og:title" content="11AM Literature Dossier — Readings 01–26">
-<meta property="og:description" content="An installable, offline-ready literary study dossier with passage-linked notes and revision sections.">
+<meta property="og:title" content="11AM Literature Dossier Notes">
+<meta property="og:description" content="25 completed academic literature readings with scholarly notes, memory aids and revision sections. Install for offline study.">
 <meta property="og:url" content="https://mohdujjain.github.io/11am-literature/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://mohdujjain.github.io/11am-literature/og-image.png">
+<meta property="og:image:secure_url" content="https://mohdujjain.github.io/11am-literature/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="11AM Literature Dossier Notes — a gold-and-ink academic book cover">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="11AM Literature Dossier Notes">
+<meta name="twitter:description" content="A complete academic literature study companion with 25 published readings and offline access.">
+<meta name="twitter:image" content="https://mohdujjain.github.io/11am-literature/og-image.png">
+<meta name="twitter:image:alt" content="11AM Literature Dossier Notes social-sharing preview">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
@@ -746,6 +758,12 @@ blockquote{
 #pwa-status { font-family: var(--font-utility); font-size: 12px; line-height: 1.55; color: var(--ink-soft); margin: 6px 0; }
 #pwa-control .pwa-hint { margin: 8px 0 0; font-family: var(--font-utility); font-size: 11px; line-height: 1.5; color: var(--ink-soft); }
 @media print { #pwa-control { display: none !important; } }
+#edition-notice{position:fixed;right:16px;bottom:16px;z-index:200;display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:min(520px,calc(100vw - 32px));padding:13px 15px;border:1px solid var(--rule-strong);border-radius:13px;background:var(--ink);color:var(--parchment);box-shadow:0 10px 28px rgba(0,0,0,.24);font:600 13px/1.5 var(--font-utility)}
+#edition-notice[hidden]{display:none!important}
+#edition-notice button{border:1px solid var(--rule-strong);border-radius:8px;padding:8px 11px;cursor:pointer;font:600 12px var(--font-utility)}
+#edition-reload{background:var(--rule-strong);color:var(--ink)}
+#edition-dismiss{background:transparent;color:var(--parchment)}
+@media print{#edition-notice{display:none!important}}
 </style>
 </head>
 <body>
@@ -2252,6 +2270,7 @@ blockquote{
 }());
 
 </script>
+<script src="./offline-update.js" defer></script>
 
 </body>
 </html>
