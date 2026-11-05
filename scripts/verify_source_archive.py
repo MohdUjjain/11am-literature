@@ -10,6 +10,8 @@ import sys
 import tempfile
 import zipfile
 from pathlib import Path
+from html.parser import HTMLParser
+import hashlib
 
 ROOT=Path(__file__).resolve().parents[1]
 ZIP=ROOT/"source/Literature_Dossier_Source_Readings_01-26_Offline_PWA.zip"
@@ -18,6 +20,28 @@ PATTERN=re.compile(r'<section\b[^>]*\bclass=["\']chapter["\'][^>]*\bdata-chapter
 
 def numbers(html):
     return [int(n) for n in PATTERN.findall(html)]
+
+class ScholarlyText(HTMLParser):
+    """Collect chapter text independently of the separate application shell."""
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.fragments=[]
+    def handle_data(self,data):
+        if data.strip():
+            self.fragments.append(data)
+
+def chapter_digests(html):
+    starts=list(PATTERN.finditer(html))
+    digests={}
+    for i,match in enumerate(starts):
+        end=starts[i+1].start() if i+1<len(starts) else html.find("</main>",match.end())
+        if end<0:
+            raise AssertionError("Cannot delimit published chapter " + match.group(1))
+        parser=ScholarlyText()
+        parser.feed(html[match.start():end])
+        normalized=" ".join(" ".join(parser.fragments).split())
+        digests[int(match.group(1))]=hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+    return digests
 
 def main():
     assert ZIP.exists(),"The latest 01-26 complete source ZIP is missing"
@@ -41,11 +65,17 @@ def main():
                      numbers(p.read_text(encoding="utf-8"))==EXPECTED]
             assert outputs,"Source builder did not produce an assembled HTML book"
             rebuilt=max(outputs,key=lambda p:p.stat().st_mtime)
-            chapters=numbers(rebuilt.read_text(encoding="utf-8"))
+            rebuilt_html=rebuilt.read_text(encoding="utf-8")
+            chapters=numbers(rebuilt_html)
             assert chapters==EXPECTED,f"Source rebuild reading sequence differs: {chapters}"
-    published=numbers((ROOT/"index.html").read_text(encoding="utf-8"))
+            source_digests=chapter_digests(rebuilt_html)
+    published_html=(ROOT/"index.html").read_text(encoding="utf-8")
+    published=numbers(published_html)
     assert published==EXPECTED,"Published reading sequence differs from source"
-    print("PASS: source ZIP integrity and reproducible 25-reading HTML assembly")
+    published_digests=chapter_digests(published_html)
+    differences=[n for n in EXPECTED if source_digests.get(n)!=published_digests.get(n)]
+    assert not differences, "Scholarly chapter-text parity failed for readings: "+str(differences)
+    print("PASS: archived source rebuild, 25 chapter numbers and scholarly-text SHA-256 parity")
 
 if __name__=="__main__":
     try:main()

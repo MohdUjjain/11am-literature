@@ -15,6 +15,7 @@
   var searchBox = null, searchResults = null, closeSearchButton = null;
   var searchToggle = null, searchHeader = null;
   var pageSize = 24;
+  var renderedQuery = '';
 
   function getStored(key) {
     try {return window.localStorage.getItem(key);} catch (_) {return null;}
@@ -22,10 +23,21 @@
   function setStored(key,value) {
     try {window.localStorage.setItem(key,value);} catch (_) {}
   }
+  // Temporary reveals belong to a single navigation destination, not to the
+  // user's persistent visibility preference.
+  function clearTemporaryRevisions(except) {
+    document.querySelectorAll('.lit-temporary-revision').forEach(function(zone) {
+      if(zone!==except)zone.classList.remove('lit-temporary-revision');
+    });
+  }
   // A temporary reveal does not change the reader's saved hide preference.
   function revealRevisionTarget(target) {
     var revision = target && target.closest && target.closest('.revision-zone');
-    if (!revision || visibleRevisions()) return false;
+    if (!revision || visibleRevisions()) {
+      clearTemporaryRevisions(null);
+      return false;
+    }
+    clearTemporaryRevisions(revision);
     revision.classList.add('lit-temporary-revision');
     window.dispatchEvent(new Event('resize'));
     return true;
@@ -272,6 +284,14 @@
       var target=document.getElementById(id);
       if(target)revealRevisionTarget(target);
     },true);
+    // Dismissing a temporary reveal by navigating to a different visible
+    // section must not overwrite the stored revision preference.
+    window.addEventListener('hashchange',function() {
+      var id;
+      try {id=decodeURIComponent(window.location.hash.slice(1));}catch(_){return;}
+      var destination=document.getElementById(id);
+      if(destination)revealRevisionTarget(destination);
+    });
     if(visibilityInput) visibilityInput.addEventListener('change',function(){
       showRevisions(visibilityInput.checked,true);
     });
@@ -335,9 +355,17 @@
     resultDirection(section,section.textContent);
     var snippet=document.createElement('span');
     snippet.className='reader-result-snippet';
-    snippet.textContent=window.LiteratureSearch.excerpt(
-      entry.text, searchBox.value, 190
-    );
+    var excerpt=window.LiteratureSearch.excerptMatch(entry.text,searchBox.value,190);
+    if(excerpt.prefix) snippet.appendChild(document.createTextNode('…'));
+    excerpt.parts.forEach(function(part) {
+      if(part.match) {
+        var mark=document.createElement('mark');
+        mark.className='reader-result-match';
+        mark.textContent=part.text;
+        snippet.appendChild(mark);
+      } else snippet.appendChild(document.createTextNode(part.text));
+    });
+    if(excerpt.suffix) snippet.appendChild(document.createTextNode('…'));
     resultDirection(snippet,snippet.textContent);
     button.appendChild(title);button.appendChild(section);button.appendChild(snippet);
     button.addEventListener('click',function(){jumpTo(hit);});
@@ -358,13 +386,23 @@
     }
   }
   function jumpTo(hit){
-    var target=hit.entry.el;
-    if(hit.entry.revision)revealRevisionTarget(target);
+    // A button created for a previous query must never navigate after typing.
+    if(renderedQuery!==searchBox.value.trim()) {renderResults();return;}
+    var target=hit.entry.destination || hit.entry.el;
+    revealRevisionTarget(target);
     if(lastHit)lastHit.classList.remove('reader-search-hit-target');
     if(lastHitTimer)clearTimeout(lastHitTimer);
     lastHit=target;
     target.classList.add('reader-search-hit-target');
-    target.scrollIntoView({behavior:'smooth',block:'center'});
+    var fragment='#'+encodeURIComponent(hit.entry.anchorId || target.id);
+    if(target.id && window.location && window.history &&
+       window.location.hash!==fragment)
+      window.history.pushState({literatureSearch:true},'',fragment);
+    var reduce=window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({behavior:reduce?'instant':'smooth',block:'center'});
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex','-1');
+    target.focus({preventScroll:true});
     closeResults();
     collapseMobileSearch();
     searchBox.blur();
@@ -376,6 +414,7 @@
   function renderResults(){
     if(!searchBox || !searchResults || !window.LiteratureSearch)return;
     var query=searchBox.value.trim();
+    renderedQuery=query;
     closeSearchButton.hidden=!query;
     searchResults.replaceChildren();
     shown=0;
@@ -405,6 +444,10 @@
     });
     searchBox.addEventListener('input',function(){
       if(searchTimer)clearTimeout(searchTimer);
+      // Invalidate stale matches immediately, not after the debounce.
+      renderedQuery='';
+      results=[];
+      closeResults();
       searchTimer=setTimeout(renderResults,140);
     });
     searchBox.addEventListener('focus',function(){
@@ -418,6 +461,7 @@
         event.preventDefault();closeResults();collapseMobileSearch();searchBox.blur();
       }else if(event.key==='Enter'){
         event.preventDefault();
+        if(renderedQuery!==searchBox.value.trim())renderResults();
         if(results.length)jumpTo(results[0]);
       }else if(event.key==='ArrowDown'&&!searchResults.hidden){
         var first=searchResults.querySelector('.reader-result');
@@ -445,6 +489,26 @@
          !searchBox.closest('.reader-search-wrap').contains(event.target))
         closeResults();
     });
+    // Deep links created by the search index need their DOM IDs installed
+    // before restoring the browser's initial fragment or Back/Forward.
+    function followFragment() {
+      var hash=window.location && window.location.hash;
+      if(!hash || !/^#lit-(hit|passage)-/.test(hash))return;
+      ensureIndex();
+      var id;
+      try {id=decodeURIComponent(hash.slice(1));}catch(_){return;}
+      var target=document.getElementById(id);
+      if(target) {
+        revealRevisionTarget(target);
+        target.scrollIntoView({block:'start',behavior:'instant'});
+        if(!target.hasAttribute('tabindex'))target.setAttribute('tabindex','-1');
+        target.focus({preventScroll:true});
+      }
+    }
+    window.addEventListener('popstate',followFragment);
+    window.addEventListener('hashchange',followFragment);
+    if(window.location && /^#lit-(hit|passage)-/.test(window.location.hash))
+      window.requestAnimationFrame(followFragment);
     document.addEventListener('keydown',function(event){
       var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();
       var editing=tag==='input'||tag==='textarea'||

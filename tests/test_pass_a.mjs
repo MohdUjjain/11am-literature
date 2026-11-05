@@ -186,8 +186,10 @@ drawer.contains=el=>controls.includes(el);
 for(const el of controls){el.getClientRects=()=>[1];el.tabIndex=0;
   el.closest=selector=>selector==='[hidden]'?null:null;}
 const panelDoc={
+  body,
   getElementById:id=>id==='panel-toggle'?trigger:id==='side-panel'?drawer:
     id==='panel-backdrop'?backdrop:id==='panel-close'?close:
+    id==='book'?chapter:id==='reading-header'?header:
     id==='toc-list'?toc:id==='rev-one'?revSection:null,
   addEventListener:(name,fn)=>{listeners['panel:'+name]=fn},
   get activeElement(){return activeElement;}
@@ -198,6 +200,9 @@ assert.equal(drawer.inert,true);
 trigger.click();
 assert.equal(drawer.inert,false);
 assert.equal(drawer.getAttribute('aria-hidden'),'false');
+assert.equal(chapter.inert,true);
+assert.equal(header.inert,true);
+assert.ok(body.classList.contains('lit-drawer-open'));
 assert.equal(activeElement,indexTab);
 activeElement=resume[0];
 let prevented=false;
@@ -208,5 +213,8 @@ assert.equal(activeElement,close,'Tab must wrap to the first control');
 listeners['panel:keydown']({key:'Escape',preventDefault(){}});
 assert.equal(drawer.inert,true);
 assert.equal(drawer.getAttribute('aria-hidden'),'true');
+assert.equal(chapter.inert,false);
+assert.equal(header.inert,false);
+assert.ok(!body.classList.contains('lit-drawer-open'));
 assert.equal(activeElement,trigger,'Escape restores launcher focus');
 console.log('PASS: stable passage checkpoint, hidden-revision navigation, live header offset, focus-trapped drawer');

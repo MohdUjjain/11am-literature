@@ -361,3 +361,49 @@
     #toc-list .toc-toggle .reader-icon{transition:none;}
   }
 }
+
+/* Pass C: scholarly concordance match marks; reuse ink/gold, no new hue. */
+@media screen {
+  .reader-result-match {
+    color:var(--ink);
+    background:color-mix(in srgb,var(--rule-strong) 26%,var(--parchment));
+    border-radius:3px;
+    padding:0 .08em;
+    box-decoration-break:clone;
+    -webkit-box-decoration-break:clone;
+    font-weight:700;
+  }
+  .reader-result:focus-visible .reader-result-match {
+    outline:1px solid var(--rule-strong);
+  }
+}
+
+/* Modal drawer blocks background reading scroll; screen only. */
+@media screen { body.lit-drawer-open {overflow:hidden;} }
+
+/* Pass C3: prevent scholarly tables from widening the mobile document.
+   Fixed layout keeps cells in normal reading flow instead of introducing
+   nested vertical scroll containers that break Resume Reading. Print and
+   original table markup remain untouched. */
+@media screen and (max-width:850px) {
+  #book .chapter table {
+    display:table;
+    table-layout:fixed;
+    width:100%;
+    max-width:100%;
+    overflow:visible;
+  }
+  #book .chapter table th,
+  #book .chapter table td {
+    min-width:0;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+}
+
+/* Long transliterated terms in labels and headings must wrap as well as prose.
+   Prefer wrapping over nested scroll containers: vertical reading position
+   remains owned by the document. Screen-only; the print compositor is intact. */
+@media screen and (max-width:850px) {
+  #book .chapter .leaf { overflow-wrap:anywhere; }
+}

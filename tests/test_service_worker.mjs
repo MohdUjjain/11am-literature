@@ -6,7 +6,7 @@ const code=readFileSync(new URL('../service-worker.js',import.meta.url),'utf8');
 const scope='https://mohdujjain.github.io/11am-literature/';
 const normalize=v=>new URL(typeof v==='string'?v:v.url,scope).href;
 
-function simulate(fail=false,failFonts=false){
+function simulate(fail=false,failFonts=false,openClients=0){
   const listeners={},stores=new Map(),stats={skip:0,claim:0,network:0};
   const caches={
     open:async name=>{
@@ -31,7 +31,7 @@ function simulate(fail=false,failFonts=false){
     registration:{scope},
     location:{origin:'https://mohdujjain.github.io'},
     skipWaiting:async()=>{stats.skip++},
-    clients:{claim:async()=>{stats.claim++}},
+    clients:{claim:async()=>{stats.claim++},matchAll:async()=>Array(openClients).fill({})},
     addEventListener:(name,fn)=>{listeners[name]=fn}
   };
   runInContext(code,createContext({
@@ -111,6 +111,17 @@ await broken.caches.open('11am-lit-reader-old-core');
 await assert.rejects(broken.event('install'));
 assert.equal(broken.stats.skip,0,'Partial update should never activate');
 assert.ok(broken.stores.has('11am-lit-reader-old-core'),'Old edition lost after failed install');
+
+// Simulate two older book windows still alive during the new worker's
+// activation. Their shell stays cached until a later single-client upgrade.
+const multiTab=simulate(false,false,2);
+await multiTab.caches.open('11am-lit-reader-old-core');
+await multiTab.event('install');
+await multiTab.event('activate');
+assert.ok(multiTab.stores.has('11am-lit-reader-old-core'),
+  'Do not evict a previous edition while multiple clients remain active');
+assert.ok([...multiTab.stores.keys()].some(k=>
+  k.startsWith('11am-lit-reader-')&&k!=='11am-lit-reader-old-core'));
 
 // Proactive font preparation must only fetch permitted CDN URLs and preserve
 // the independent font cache even when the offline book edition changes.

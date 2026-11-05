@@ -942,6 +942,7 @@ blockquote{
       <section id="pwa-control" class="panel-section app-chrome no-print" aria-label="Offline app">
         <h4>Install &amp; offline reading</h4>
         <p id="pwa-status" role="status" aria-live="polite">Checking saved copy…</p>
+        <p id="pwa-edition" class="pwa-hint">Saved edition: checking…</p>
         <button id="pwa-save" type="button"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-save"></use></svg><span>Save / refresh offline copy</span></button>
         <button id="pwa-install" type="button" hidden>Install app</button>
         <p class="pwa-hint">All readings live inside the saved dossier. On iPhone, use Share → Add to Home Screen; on Chrome or Edge, use Install app. Browser storage may be cleared by the device.</p>
@@ -2178,6 +2179,11 @@ blockquote{
       });
     }
     function open(){
+      var book=document.getElementById('book');
+      var header=document.getElementById('reading-header');
+      if(book)book.inert=true;
+      if(header)header.inert=true;
+      document.body.classList.add('lit-drawer-open');
       panel.inert = false;
       panel.removeAttribute('inert');
       panel.classList.add('open');
@@ -2192,6 +2198,11 @@ blockquote{
       panel.classList.remove('open');
       backdrop.classList.remove('open');
       toggle.setAttribute('aria-expanded','false');
+      var book=document.getElementById('book');
+      var header=document.getElementById('reading-header');
+      if(book)book.inert=false;
+      if(header)header.inert=false;
+      document.body.classList.remove('lit-drawer-open');
       // Move focus out before applying inert + aria-hidden.
       if(restoreFocus) toggle.focus();
       else if(panel.contains(document.activeElement)) document.activeElement.blur();
@@ -2388,6 +2399,13 @@ blockquote{
   var status, saveButton, installButton, installEvent = null;
   var isSecure = location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   function say(message) { if (status) status.textContent = message; }
+  function showEdition(report) {
+    var node=document.getElementById('pwa-edition');
+    if(!node)return;
+    node.textContent = report && report.ready && report.edition
+      ? 'Saved offline edition: '+String(report.edition).replace('11am-lit-reader-','')
+      : 'Saved edition could not be confirmed on this device.';
+  }
   function askWorker(reg,type,timeoutMs) {
     return new Promise(function(resolve,reject){
       var worker=reg.active;
@@ -2532,6 +2550,7 @@ blockquote{
         return navigator.serviceWorker.ready.then(function () {
           return cachedBook(reg).then(function (ready) {
             say(ready ? 'Full dossier saved on this device. Available without internet, subject to browser storage limits.' : 'The offline copy is being prepared. Use Save offline copy to retry.');
+            editionStatus(reg).then(showEdition).catch(function(){showEdition(null);});
           }).then(function () { return reg; });
         });
       }).then(function (reg) {
@@ -2545,6 +2564,7 @@ blockquote{
                               : 'Verifying saved reading files; the update check was unavailable…');
             var saved=await askWorker(reg,'SAVE_READER',20000);
             var latest=await editionStatus(reg).catch(function(){return null;});
+            showEdition(latest);
             if(!saved.ok || (latest && !latest.ready) ||
                !(await cachedBook(reg))) throw Error('Offline cache verification failed');
             var changed=!!(previous && latest && previous.edition!==latest.edition);

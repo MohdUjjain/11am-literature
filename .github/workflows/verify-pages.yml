@@ -8,22 +8,22 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: literature-publishing-main
-  cancel-in-progress: false
+  group: literature-c3-validation-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   verify:
     name: Rebuild and verify hosting assets
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     steps:
       - name: Checkout publication sources
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -36,6 +36,8 @@ jobs:
           python scripts/build.py
       - name: Verify the zipped source rebuild
         run: python scripts/verify_source_archive.py
+      - name: Prove full source-to-publication equivalence
+        run: python scripts/rebuild_published_reader.py
       - name: Validate publication metadata and files
         run: python tests/verify_publication.py
       - name: Simulate offline install, navigation and failed updates
@@ -50,11 +52,43 @@ jobs:
         run: node tests/test_reader_polish.mjs
       - name: Verify offline refresh and update status logic
         run: node tests/test_offline_refresh.mjs
-      - name: Verify reproduced assets are checked in (pull requests)
+      - name: Run browser-level viewport and navigation checks
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.58.2
+          npx playwright install --with-deps chromium
+          node tests/browser_smoke.mjs
+      - name: Upload browser screenshots for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: literature-chromium-smoke
+          path: test-artifacts/
+          if-no-files-found: ignore
+      - name: Verify reproducible worker and unchanged preview (pull requests)
         if: github.event_name == 'pull_request'
-        run: git diff --exit-code -- service-worker.js og-image.png
-      - name: Commit regenerated publishing assets (main only)
-        if: github.event_name != 'pull_request'
+        run: |
+          python scripts/build.py --check
+          git diff --exit-code -- og-image.png
+          # The worker is regenerated and committed by the main-branch job.
+          # Reader-source PRs do not need to check in an interim stale worker.
+  publish-assets:
+    name: Publish verified generated assets
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install Pillow==12.3.0
+      - name: Rebuild generated website assets
+        run: |
+          python scripts/render_social.py
+          python scripts/build.py
+      - name: Commit generated assets only if changed
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'

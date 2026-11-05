@@ -1,0 +1,17 @@
+name: Verify deployed Literature edition
+on:
+  workflow_dispatch:
+  deployment_status:
+  schedule:
+    - cron: '25 3 * * *'
+permissions:
+  contents: read
+jobs:
+  live-check:
+    if: github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'github-pages')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the live published book and edition assets
+        run: python3 scripts/check_live.py

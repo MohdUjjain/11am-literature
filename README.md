@@ -6,7 +6,7 @@ A single-file, landscape-oriented literature study dossier with **25 completed r
 
 ## Install and read offline
 
-Open the GitHub Pages site online at least once, then open **Contents → Save / refresh offline copy**. The versioned service worker pre-caches the **entire HTML reader**, manifest and app icons. When offline, the installed app serves that cached copy; online navigation updates it. You can install from Chrome/Edge's browser menu or **Share → Add to Home Screen** on iPhone. A browser may clear or evict stored data, so no site can guarantee storage forever. The large standalone PDF is intentionally not auto-cached.
+Open the GitHub Pages site online at least once, then open **Tools → Save / refresh offline copy**. The versioned service worker pre-caches the **entire HTML reader**, manifest and app icons. When offline, the installed app serves that cached copy; online navigation updates it. You can install from Chrome/Edge's browser menu or **Share → Add to Home Screen** on iPhone. A browser may clear or evict stored data, so no site can guarantee storage forever. The large standalone PDF is intentionally not auto-cached.
 
 The complete reader is cached atomically using a service-worker revision automatically derived from the published HTML and assets. When an updated edition has been fully saved, an existing app session shows **New Literature edition saved** with a reload control. The existing manual **Save / refresh offline copy** option and optional persistent-storage request remain available. Google Fonts are cached as the reader uses them, and the **Save / refresh offline copy** control also proactively loads the Latin and Arabic font faces, sending approved Google Fonts resources to the worker through `PREPARE_FONTS`. The font cache persists across book editions. If font downloads fail, the full offline reader remains saved and readable system fallbacks are used.
 
@@ -80,3 +80,13 @@ This is a **screen-interface update only**. Every reading's scholarly text, the 
 - **Unified icons and typography:** Self-contained 24px stroke SVG symbols for the reader's search, menu, close, tabs, resume, offline-save and expandable navigation controls; no external icon font or added dependency. Print/export action text and the print compositor are unchanged.
 
 The new test at tests/test_reader_polish.mjs checks the actual chapter palette, interaction markup, touch dimensions, text direction, responsive-search behavior and print separation.
+
+## Pass C — reader quality and reproducible publication
+
+- **Concordance search:** each search request invalidates stale results immediately; Unicode-aware excerpts preserve Arabic vocalization and Latin diacritics, while match highlighting uses the existing parchment/ink palette. Stable passage identifiers produce shareable fragment URLs and browser-history navigation.
+- **Reading visibility and edition confidence:** temporary revision reveals are scoped to the selected destination. The Tools panel identifies the verified saved offline edition without implying the visible page has already reloaded. The worker protects the previous book cache when multiple tabs remain open during an update.
+- **Real-browser regression:** `tests/browser_smoke.mjs` uses Chromium at seven viewport widths and checks navigation, search, RTL results, browser restart/resume and two-tab offline reopening. Playwright is a CI-only dependency; the published reader continues to use vanilla JavaScript.
+- **Source-to-publication reproducibility:** `source/publication-shell-before-chapters.html` and `source/publication-shell-after-chapters.html` preserve the modern approved application shell. `python scripts/rebuild_published_reader.py` reconstructs the complete published HTML from the 01–26 chapter source archive and checks byte equivalence, without rewriting scholarly content.
+- **Live deployment verification:** `scripts/check_live.py` checks the actual GitHub Pages edition, service worker, assets and chapter inventory after deployment or by manual/scheduled workflow.
+
+PDF generation remains excluded from the GitHub Pages workflow. Existing published scholarly chapter text and the print compositor are not intentionally changed by Pass C.
