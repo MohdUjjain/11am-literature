@@ -1,0 +1,31 @@
+{
+  "id": "/11am-literature/",
+  "name": "11AM Literature Dossier — Daraja Hadi Ashar",
+  "short_name": "11AM Literature",
+  "description": "A 20-reading literature study dossier with interactive notes and revision sections, available offline after first visit.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F3E9D2",
+  "theme_color": "#2A2016",
+  "lang": "en",
+  "categories": [
+    "books",
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
