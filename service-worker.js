@@ -3,7 +3,7 @@
  * Browser storage can be evicted and fonts are always optional.
  */
 const CACHE_PREFIX = '11am-lit-reader-';
-const BOOK_CACHE = CACHE_PREFIX + 'e0e92bddd085';
+const BOOK_CACHE = CACHE_PREFIX + '2cc5cefa1921';
 const FONT_CACHE = '11am-lit-fonts-v1';
 const APP_SHELL = [
   './index.html', './manifest.webmanifest', './offline-update.js',
