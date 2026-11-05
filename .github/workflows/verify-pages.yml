@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: literature-publishing-main
-  cancel-in-progress: false
+  group: literature-publishing-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   verify:
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout publication sources
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -71,8 +71,24 @@ jobs:
           git diff --exit-code -- og-image.png
           # The worker is regenerated and committed by the main-branch job.
           # Reader-source PRs do not need to check in an interim stale worker.
-      - name: Commit regenerated publishing assets (main only)
-        if: github.event_name != 'pull_request'
+  publish-assets:
+    name: Publish verified generated assets
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install Pillow==12.3.0
+      - name: Rebuild generated website assets
+        run: |
+          python scripts/render_social.py
+          python scripts/build.py
+      - name: Commit generated assets only if changed
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
