@@ -31,8 +31,16 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const names = await caches.keys();
-    await Promise.all(names.filter(name => name.startsWith(CACHE_PREFIX) && name !== BOOK_CACHE)
-      .map(name => caches.delete(name)));
+    // A newly activated worker can take control of multiple existing tabs.
+    // Retain the previous book cache until a later upgrade in that case,
+    // rather than evicting assets potentially requested by an older tab.
+    const windows = self.clients.matchAll
+      ? await self.clients.matchAll({type:'window',includeUncontrolled:true})
+      : [];
+    if (windows.length <= 1) {
+      await Promise.all(names.filter(name => name.startsWith(CACHE_PREFIX) && name !== BOOK_CACHE)
+        .map(name => caches.delete(name)));
+    }
     await self.clients.claim();
   })());
 });
