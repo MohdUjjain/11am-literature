@@ -2,7 +2,7 @@
   "id": "/11am-literature/",
   "name": "11AM Literature Dossier — Daraja Hadi Ashar",
   "short_name": "11AM Literature",
-  "description": "A 20-reading literature study dossier with interactive notes and revision sections, available offline after first visit.",
+  "description": "An offline-ready literature dossier with 22 completed readings, passage-linked study aids and six-part revision sections.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

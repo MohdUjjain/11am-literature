@@ -1,6 +1,6 @@
 # 11AM Literature Dossier
 
-**An installable, offline-ready literary study companion.** Published readings: **01–18, 20–21**; Reading 19 remains reserved and unassigned. The entire available reading dossier lives inside a single HTML file, with full passage-linked study sidebars and six-part revision sections for each chapter.
+**An installable, offline-ready literary study companion.** Published readings: **01–18, 20–23**; Reading 19 remains reserved and unassigned. The entire available reading dossier lives inside a single HTML file, with full passage-linked study sidebars and six-part revision sections for each chapter.
 
 **[Read / install the study app](https://mohdujjain.github.io/11am-literature/)**
 
@@ -24,10 +24,15 @@ On Chrome or Edge use **Install app** from the address bar / browser menu or the
 
 ## Source and consistency
 
-`index.html` is assembled from the canonical modular source, not hand-edited. The publishing source and checkpoint are retained separately as **Literature_Dossier_Source_Readings_01-21_Editorial.zip** in the project Library. Preserve original chapter content, six callout categories and six revision zones; never alter the compositor just to force lower page counts. The source build script uses `head-template.html`, `styles.css`, `engine.js`, `cover.html` and the chapter modules.
+`index.html` is assembled from the canonical modular source, not hand-edited. The publishing source and checkpoint are retained separately as **Literature_Dossier_Source_Readings_01-23_Editorial.zip** in the project Library. Preserve original chapter content, six callout categories and six revision zones; never alter the compositor just to force lower page counts. The source build script uses `head-template.html`, `styles.css`, `engine.js`, `cover.html` and the chapter modules.
 
 ### Verification
 
 Use browser Developer Tools → Application → Service Workers and Cache Storage: `11am-lit-reader-…-core` must contain `index.html`, `manifest.webmanifest`, and both icons. Test using **Offline** network mode, then reload and check all completed readings still load. The web app must be served through HTTPS or localhost; service workers do not work on `file://`.
 
 Editorial caveat: these are study notes generated from supplied academic reading explainers, and have not been independently verified against original publications.
+
+
+## Latest dossier release — Readings 22–23
+
+Current volume: **22 completed readings** (Reading 19 reserved); full PDF baseline **239 landscape pages, 336 real bookmarks**, and 22 Contents links. The two newest chapters are **The Monetary History of Egypt, 642–1517** and **1068 in the Fayyum**. All 47 new sidebar notes are placed on pages containing their linked passages. PWA offline cache: `11am-lit-reader-01-23-v2`. The editable source archive is under `source/`.
