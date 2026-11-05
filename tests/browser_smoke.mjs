@@ -23,52 +23,57 @@ try {
     const page=await context.newPage();
     await page.goto(url,{waitUntil:'domcontentloaded'});
     await page.locator('#reader-search-input').waitFor({state:'attached'});
-    const horizontal=await page.evaluate(()=>{
-      const width=window.innerWidth;
-      const offenders=Array.from(document.querySelectorAll('body *'))
-        .map(el=>({el,rect:el.getBoundingClientRect()}))
-        .filter(({el,rect})=>rect.width>0 && rect.height>0 &&
-          rect.right>width+4 && rect.left<width &&
-          getComputedStyle(el).visibility!=='hidden')
-        .sort((a,b)=>b.rect.right-a.rect.right).slice(0,12)
-        .map(({el,rect})=>({
-          tag:el.tagName,id:el.id,cls:String(el.className||'').slice(0,100),
-          left:Math.round(rect.left),right:Math.round(rect.right),
-          width:Math.round(rect.width)
-        }));
-      const rootNodes=['html','body','#book','#reading-header',
-        '.reading-header-inner','.book-cover','#book .chapter',
-        '#book .leaf','#book table','#side-panel'].map(selector=>{
-        const el=document.querySelector(selector),r=el?.getBoundingClientRect();
-        return {selector,left:r&&Math.round(r.left),right:r&&Math.round(r.right),
-          client:el?.clientWidth,scroll:el?.scrollWidth,
-          overflow:el&&getComputedStyle(el).overflowX};
+    const viewport=await page.evaluate(()=>({
+      doc:document.documentElement.scrollWidth,viewport:window.innerWidth
+    }));
+    if(viewport.doc>viewport.viewport+3) {
+      const horizontal=await page.evaluate(()=>{
+        const width=window.innerWidth;
+        const offenders=Array.from(document.querySelectorAll('body *'))
+          .map(el=>({el,rect:el.getBoundingClientRect()}))
+          .filter(({el,rect})=>rect.width>0 && rect.height>0 &&
+            rect.right>width+4 && rect.left<width &&
+            getComputedStyle(el).visibility!=='hidden')
+          .sort((a,b)=>b.rect.right-a.rect.right).slice(0,12)
+          .map(({el,rect})=>({
+            tag:el.tagName,id:el.id,cls:String(el.className||'').slice(0,100),
+            left:Math.round(rect.left),right:Math.round(rect.right),
+            width:Math.round(rect.width)
+          }));
+        const rootNodes=['html','body','#book','#reading-header',
+          '.reading-header-inner','.book-cover','#book .chapter',
+          '#book .leaf','#book table','#side-panel'].map(selector=>{
+          const el=document.querySelector(selector),r=el?.getBoundingClientRect();
+          return {selector,left:r&&Math.round(r.left),right:r&&Math.round(r.right),
+            client:el?.clientWidth,scroll:el?.scrollWidth,
+            overflow:el&&getComputedStyle(el).overflowX};
+        });
+        const worst=document.querySelector('thead');
+        const sampleTable=worst?.closest('table');
+        const chapterWidths=Array.from(document.querySelectorAll('#book > .chapter'))
+          .map(ch=>({number:ch.getAttribute('data-chapter'),client:ch.clientWidth,
+             scroll:ch.scrollWidth,right:Math.round(ch.getBoundingClientRect().right)}))
+          .filter(ch=>ch.scroll>width+3);
+        const otherOffenders=Array.from(document.querySelectorAll('#book *'))
+          .filter(el=>!el.closest('table'))
+          .map(el=>({el,rect:el.getBoundingClientRect()}))
+          .filter(x=>x.rect.width>0 && x.rect.left<width &&
+            x.rect.right>width+3)
+          .sort((x,y)=>y.rect.right-x.rect.right).slice(0,14)
+          .map(x=>({tag:x.el.tagName,cls:String(x.el.className).slice(0,70),
+            chapter:x.el.closest('.chapter')?.getAttribute('data-chapter'),
+            left:Math.round(x.rect.left),right:Math.round(x.rect.right)}));
+        return {doc:document.documentElement.scrollWidth,viewport:width,
+          body:document.body.scrollWidth,offenders,rootNodes,chapterWidths,otherOffenders,
+          table:sampleTable?{chapter:sampleTable.closest('.chapter')?.getAttribute('data-chapter'),
+            parent:sampleTable.parentElement?.className,
+            width:sampleTable.getBoundingClientRect().width,
+            client:sampleTable.clientWidth,scroll:sampleTable.scrollWidth,
+            overflow:getComputedStyle(sampleTable).overflowX}:null};
       });
-      const worst=document.querySelector('thead');
-      const sampleTable=worst?.closest('table');
-      const chapterWidths=Array.from(document.querySelectorAll('#book > .chapter'))
-        .map(ch=>({number:ch.getAttribute('data-chapter'),client:ch.clientWidth,
-           scroll:ch.scrollWidth,right:Math.round(ch.getBoundingClientRect().right)}))
-        .filter(ch=>ch.scroll>width+3);
-      const otherOffenders=Array.from(document.querySelectorAll('#book *'))
-        .filter(el=>!el.closest('table'))
-        .map(el=>({el,rect:el.getBoundingClientRect()}))
-        .filter(x=>x.rect.width>0 && x.rect.left<width &&
-          x.rect.right>width+3)
-        .sort((x,y)=>y.rect.right-x.rect.right).slice(0,14)
-        .map(x=>({tag:x.el.tagName,cls:String(x.el.className).slice(0,70),
-          chapter:x.el.closest('.chapter')?.getAttribute('data-chapter'),
-          left:Math.round(x.rect.left),right:Math.round(x.rect.right)}));
-      return {doc:document.documentElement.scrollWidth,viewport:width,
-        body:document.body.scrollWidth,offenders,rootNodes,chapterWidths,otherOffenders,
-        table:sampleTable?{chapter:sampleTable.closest('.chapter')?.getAttribute('data-chapter'),
-          parent:sampleTable.parentElement?.className,
-          width:sampleTable.getBoundingClientRect().width,
-          client:sampleTable.clientWidth,scroll:sampleTable.scrollWidth,
-          overflow:getComputedStyle(sampleTable).overflowX}:null};
-    });
-    assert.ok(horizontal.doc<=horizontal.viewport+3,
-      'Unexpected horizontal overflow at '+width+'px: '+JSON.stringify(horizontal));
+      assert.fail('Unexpected horizontal overflow at '+width+'px: '+
+        JSON.stringify(horizontal));
+    }
     await page.locator('#panel-toggle').click();
     await assert.doesNotReject(()=>page.locator('#panel-tools').count());
     assert.equal(await page.locator('#side-panel').getAttribute('aria-hidden'),'false');
