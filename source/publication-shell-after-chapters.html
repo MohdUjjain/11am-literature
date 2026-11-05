@@ -1,0 +1,1347 @@
+
+
+  </main>
+
+<div id="print-root"></div>
+
+<script>
+
+(function(){
+  "use strict";
+
+  function buildTOC(){
+    var list = document.getElementById('toc-list');
+    var chapters = document.querySelectorAll('.chapter');
+    list.innerHTML = '';
+
+    // Empty-edition state: Chapter 1 has been archived, but the reusable
+    // design system is ready for the new Reading 1 when it arrives.
+    var empty = document.getElementById('empty-dossier-state');
+    if(empty) empty.hidden = chapters.length > 0;
+    var scope = document.getElementById('cover-scope');
+    if(scope) scope.textContent = chapters.length
+      ? chapters.length + ' reading' + (chapters.length === 1 ? '' : 's') + ' available'
+      : 'New readings forthcoming';
+
+    if(!chapters.length){
+      var notice=document.createElement('p');
+      notice.className='toc-empty';
+      notice.textContent='No readings have been added to this edition yet.';
+      list.appendChild(notice);
+    }
+
+    chapters.forEach(function(ch){
+      var num = ch.getAttribute('data-chapter');
+      var titleEl = ch.querySelector('.chapter-title-page h1');
+      var title = titleEl ? titleEl.textContent : ('Chapter ' + num);
+
+      var wrap = document.createElement('div');
+      wrap.className = 'toc-chapter';
+
+      var row = document.createElement('div');
+      row.className = 'toc-chapter-row';
+
+      var toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'toc-toggle';
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label','Expand sections for Reading '+num);
+      toggle.innerHTML = '<svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-chevron"></use></svg>';
+
+      var a = document.createElement('a');
+      a.href = '#' + ch.id;
+      a.textContent = num + '. ' + title;
+
+      row.appendChild(toggle);
+      row.appendChild(a);
+      wrap.appendChild(row);
+
+      var ul = document.createElement('ul');
+      ul.id = 'toc-sections-'+num;
+      toggle.setAttribute('aria-controls',ul.id);
+      ch.querySelectorAll('.section > h2').forEach(function(h){
+        var sec = h.closest('.section');
+        if(!sec.id) return;
+        var li = document.createElement('li');
+        var sa = document.createElement('a');
+        sa.href = '#' + sec.id;
+        sa.textContent = h.textContent;
+        li.appendChild(sa);
+        ul.appendChild(li);
+      });
+      wrap.appendChild(ul);
+      list.appendChild(wrap);
+
+      function setOpen(open){
+        wrap.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label',(open?'Collapse':'Expand')+' sections for Reading '+num);
+      }
+      toggle.addEventListener('click', function(e){
+        e.preventDefault();
+        var willOpen = !wrap.classList.contains('open');
+        // accordion: collapse every other chapter first
+        list.querySelectorAll('.toc-chapter.open').forEach(function(other){
+          if(other !== wrap){
+            other.classList.remove('open');
+            var otherToggle = other.querySelector('.toc-toggle');
+            if(otherToggle){
+              otherToggle.setAttribute('aria-expanded','false');
+              otherToggle.setAttribute('aria-label',
+                'Expand sections for Reading '+other.querySelector('a').getAttribute('href').replace('#chapter-',''));
+            }
+          }
+        });
+        setOpen(willOpen);
+      });
+    });
+  }
+
+  function chapterNumbers(){
+    var nums = Array.prototype.map.call(document.querySelectorAll('.chapter'), function(c){
+      return parseInt(c.getAttribute('data-chapter'), 10);
+    });
+    return nums;
+  }
+
+  // Shared print-selection state: an ORDERED list of chapter numbers
+  // (not necessarily ascending, may skip chapters, may repeat a
+  // contiguous run via a range token) — read by the print compositor
+  // below to build pages in exactly this order.
+  var PrintSelection = { order: [], errors: [] };
+
+  function chapterNumbersAvailable(){
+    var set = {};
+    document.querySelectorAll('.chapter').forEach(function(ch){
+      set[parseInt(ch.getAttribute('data-chapter'), 10)] = true;
+    });
+    return set;
+  }
+
+  // Parses a spec like "15-24,1,26" into an ordered, deduplicated list
+  // of chapter numbers, validating each against which chapters actually
+  // exist in the document. Order is preserved exactly as typed —
+  // ranges expand in the direction written ("24-15" descends).
+  function parseRangeSpec(spec, availableSet){
+    var order = [], errors = [], seen = {};
+    (spec || '').split(',').forEach(function(tokenRaw){
+      var token = tokenRaw.trim();
+      if(!token) return;
+      var m = token.match(/^(\d+)\s*-\s*(\d+)$/);
+      var nums = [];
+      if(m){
+        var a = parseInt(m[1], 10), b = parseInt(m[2], 10);
+        if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||Math.abs(a-b)>1000){
+          errors.push('"'+token+'" is outside the supported range');return;
+        }
+        if(a <= b){ for(var i = a; i <= b; i++) nums.push(i); }
+        else{ for(var j = a; j >= b; j--) nums.push(j); }
+      } else if(/^\d+$/.test(token)){
+        nums.push(parseInt(token, 10));
+      } else {
+        errors.push('"' + token + '" isn\u2019t a valid chapter or range');
+        return;
+      }
+      nums.forEach(function(n){
+        if(!availableSet[n]){
+          errors.push('Chapter ' + n + ' isn\u2019t available');
+        } else if(!seen[n]){
+          seen[n] = true;
+          order.push(n);
+        }
+      });
+    });
+    return { order: order, errors: errors };
+  }
+
+  function applyRangeSpec(){
+    var input = document.getElementById('range-spec');
+    var warningEl = document.getElementById('range-warning');
+    var available = chapterNumbersAvailable();
+    if(!Object.keys(available).length){
+      PrintSelection.order=[];
+      PrintSelection.errors=[];
+      warningEl.textContent='';
+      warningEl.hidden=true;
+      var print=document.getElementById('btn-print');
+      if(print) print.disabled=true;
+      var status=document.getElementById('range-status');
+      if(status) status.textContent='No active readings yet. Export becomes available when the first new reading is added.';
+      return;
+    }
+    var result = parseRangeSpec(input.value, available);
+    if(!result.order.length && !result.errors.length){
+      result.errors.push('Enter at least one available reading to export');
+    }
+    PrintSelection.order = result.order;
+    PrintSelection.errors = result.errors;
+
+    if(result.errors.length){
+      warningEl.textContent = result.errors.join(' \u00b7 ');
+      warningEl.hidden = false;
+    } else {
+      warningEl.hidden = true;
+    }
+
+    var printButton=document.getElementById('btn-print');
+    if(printButton) printButton.disabled=!!result.errors.length || !result.order.length;
+    document.querySelectorAll('.chapter').forEach(function(ch){
+      var n = parseInt(ch.getAttribute('data-chapter'), 10);
+      ch.classList.toggle('range-excluded', PrintSelection.order.indexOf(n) === -1);
+    });
+
+    updateStatus();
+  }
+
+  function updateStatus(){
+    var statusEl = document.getElementById('range-status');
+    if(PrintSelection.errors.length){
+      statusEl.textContent='Export blocked until the invalid selection is corrected.';
+      return;
+    }
+    if(!PrintSelection.order.length){
+      statusEl.textContent = 'Nothing valid to print yet.';
+      return;
+    }
+    statusEl.textContent = 'Will print ' + PrintSelection.order.length + ' chapter' +
+      (PrintSelection.order.length === 1 ? '' : 's') + ', in this order: ' + PrintSelection.order.join(', ');
+  }
+
+  function initRangeControls(){
+    var nums = chapterNumbers();
+    var input = document.getElementById('range-spec');
+    if(nums.length){
+      input.value=nums.slice().sort(function(a,b){return a-b;}).join(',');
+    }else{
+      input.value='';
+      input.disabled=true;
+      input.placeholder='First reading not yet added';
+      document.getElementById('btn-reset-range').disabled=true;
+    }
+    applyRangeSpec();
+
+    input.addEventListener('input', applyRangeSpec);
+
+    document.getElementById('btn-reset-range').addEventListener('click', function(){
+      var current=chapterNumbers().sort(function(a,b){return a-b;});
+      input.value=current.join(',');
+      applyRangeSpec();
+    });
+
+    document.getElementById('btn-print').addEventListener('click', async function(){
+      applyRangeSpec();
+      if(PrintSelection.errors.length || !PrintSelection.order.length){
+        document.getElementById('range-warning').hidden=false;
+        return;
+      }
+      var btn=document.getElementById('btn-print');
+      btn.disabled=true;
+      var originalText=btn.textContent;
+      btn.textContent='Preparing fonts and pages…';
+      try{
+        // A late CDN font swap must NEVER change line wrapping after
+        // the compositor has measured pages. If loading is still active,
+        // reject the export instead of producing clipped pages.
+        if(document.fonts && document.fonts.status==='loading'){
+          await Promise.race([document.fonts.ready,
+            new Promise(function(resolve){setTimeout(resolve,9000);})]);
+          if(document.fonts.status==='loading')
+            throw Error('Fonts are still loading; try again when the font connection settles.');
+        }
+        Print.build();
+        window.print();
+      }catch(e){
+        var warn=document.getElementById('range-warning');
+        warn.textContent='Unable to export: '+e.message;warn.hidden=false;
+      }finally{
+        btn.textContent=originalText;btn.disabled=false;
+      }
+    });
+  }
+
+  function initActiveTOC(){
+    var links = document.querySelectorAll('#toc-list a');
+    if(!('IntersectionObserver' in window) || !links.length) return;
+    var map = {};
+    links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var link = map[entry.target.id];
+        if(!link) return;
+        if(entry.isIntersecting){
+          links.forEach(function(a){ a.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    document.querySelectorAll('.section[id], .chapter[id]').forEach(function(sec){
+      observer.observe(sec);
+    });
+  }
+
+  /* ============================================================
+     DETERMINISTIC PAGE COMPOSITOR — VERSION 2
+     In-house vanilla JS. All measurement is performed against an
+     ordinary screen-layout copy of the EXACT fixed print page.
+     The inner body has a fixed geometry. No oversize unit is ever
+     passed to Chromium for uncontrolled physical fragmentation.
+     Section headings and content can share pages; long prose,
+     lists, tables, card groups, and Arabic line groups split.
+     ============================================================ */
+  var Print = (function(){
+    var rig = null, root = null, current = null, pageCounter = 0;
+    var EPS = 1.5, guard = 0, MAX_WORK = 8000;
+    var textSplits = 0, pageKinds = [], activeChapterNumber = null;
+    function node(tag, cls, content){
+      var e=document.createElement(tag); if(cls) e.className=cls;
+      if(content!==undefined) e.textContent=content;
+      return e;
+    }
+    function getRig(){
+      if(rig) return rig;
+      rig=node('div','pagination-measure-rig');
+      rig.setAttribute('aria-hidden','true');
+      document.body.appendChild(rig);
+      return rig;
+    }
+    function cssAccent(ch){
+      return (ch && (ch.style.getPropertyValue('--chapter-accent') ||
+        getComputedStyle(ch).getPropertyValue('--chapter-accent')).trim()) || '#B8892A';
+    }
+    function shell(theme, label, tag, isOpener, accent){
+      var e=node('div','printed-page theme-'+theme+(isOpener?' opener':''));
+      e.style.setProperty('--chapter-accent',accent || '#B8892A');
+      e.setAttribute('data-logical-page',String(pageCounter+1));
+      if(activeChapterNumber!==null)e.setAttribute('data-print-chapter',String(activeChapterNumber));
+      if(!isOpener){
+        var h=node('div','page-header-band');
+        h.appendChild(node('span','',label)); e.appendChild(h);
+      }
+      var body=node('div','printed-body'); e.appendChild(body);
+      var main=null,side=null;
+      if(!isOpener && theme==='parchment'){
+        body.classList.add('dossier-dual');
+        main=node('div','page-main-column');
+        side=node('div','page-note-column');
+        body.appendChild(main);body.appendChild(side);
+      }
+      if(!isOpener){
+        var f=node('div','page-footer-band');
+        f.appendChild(node('span','',tag));
+        f.appendChild(node('span','page-number',String(pageCounter+1)));
+        e.appendChild(f);
+      }
+      return {page:e,body:body,main:main,side:side,target:main||body,theme:theme,label:label,tag:tag,opener:isOpener,accent:accent};
+    }
+    function pageFits(pg){
+      // Layout engine must be active OUTSIDE @media print.
+      getRig().appendChild(pg.page);
+      var cols=pg.main?[pg.main,pg.side]:[pg.body];
+      var okay=cols.every(function(el){
+        var h=el.clientHeight,used=el.scrollHeight;
+        var kids=Array.from(el.children),last=kids[kids.length-1];
+        var bottom=last?last.getBoundingClientRect().bottom-el.getBoundingClientRect().top:0;
+        return used<=h+EPS && bottom<=h+EPS;
+      }) && pg.page.scrollHeight<=pg.page.clientHeight+EPS;
+      getRig().removeChild(pg.page);
+      return okay;
+    }
+    function begin(theme,label,tag,accent,opener){
+      pageCounter++;
+      current=shell(theme,label,tag,!!opener,accent);
+      current.page.dataset.logicalPage=String(pageCounter);
+      var number=current.page.querySelector('.page-number');
+      if(number) number.textContent=String(pageCounter);
+      pageKinds.push({num:pageCounter,kind:opener?'opener':theme,header:label});
+    }
+    function finish(){
+      if(!current) return;
+      root.appendChild(current.page);
+      current=null;
+    }
+    function next(){
+      if(!current) throw Error('No active compositor page');
+      var {theme,label,tag,accent}=current;
+      finish(); begin(theme,label,tag,accent,false);
+    }
+    function fitsWith(n){
+      current.target.appendChild(n);
+      var yes=pageFits(current);
+      current.target.removeChild(n);
+      return yes;
+    }
+    function commit(n){current.target.appendChild(n);}
+    function spaceUsed(){return current.target.children.length>0;}
+    function assertProgress(){
+      if(++guard > MAX_WORK) throw Error('Pagination safety limit reached: '+guard);
+    }
+    function textOffsets(text){
+      var pts=[]; var re=/\s+/g; var m;
+      while((m=re.exec(text))) pts.push(m.index+m[0].length);
+      if(!pts.length || pts[pts.length-1]!==text.length) pts.push(text.length);
+      return pts.filter(function(v){return v>0 && v<=text.length;});
+    }
+    function sliceRichElement(el,start,end){
+      var texts=[],w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+      var n,len=0;
+      while((n=w.nextNode())){texts.push({node:n,start:len,end:len+n.nodeValue.length});len+=n.nodeValue.length;}
+      var out=el.cloneNode(false);
+      if(!texts.length || start>=end) return out;
+      function cursor(pos){
+        for(var i=0;i<texts.length;i++){
+          var t=texts[i];
+          if(pos<=t.end || i===texts.length-1) return [t.node,Math.max(0,Math.min(t.node.nodeValue.length,pos-t.start))];
+        }
+      }
+      var ra=document.createRange();var a=cursor(start),b=cursor(end);
+      ra.setStart(a[0],a[1]);ra.setEnd(b[0],b[1]);
+      out.appendChild(ra.cloneContents());
+      return out;
+    }
+    function splitText(el){
+      var text=el.textContent||'';
+      var offsets=textOffsets(text);
+      if(offsets.length<2) return null;
+      var lo=0,hi=offsets.length-1,best=-1;
+      while(lo<=hi){
+        var mid=(lo+hi)>>1;
+        var candidate=sliceRichElement(el,0,offsets[mid]);
+        if(fitsWith(candidate)){best=mid;lo=mid+1;}else hi=mid-1;
+      }
+      // Do not create a useless one-word fragment at a page bottom.
+      if(best<0 || offsets[best]<Math.min(28,Math.floor(text.length*.4))) return null;
+      var cut=offsets[best];
+      if(cut>=text.length) return [el.cloneNode(true)];
+      textSplits++;
+      var first=sliceRichElement(el,0,cut),rest=sliceRichElement(el,cut,text.length);
+      first.classList.add('fragment-start');rest.classList.add('fragment-continued');
+      return [first,rest];
+    }
+    function splitWrappedListItem(li,wrapper){
+      // Split an unusually long single LI while preserving its containing
+      // OL/UL list semantics and marker indentation during measurement.
+      var text=li.textContent||'', offsets=textOffsets(text);
+      if(offsets.length<2) return null;
+      var lo=0,hi=offsets.length-1,best=-1;
+      while(lo<=hi){
+        var mid=(lo+hi)>>1;
+        var item=sliceRichElement(li,0,offsets[mid]);
+        var test=wrapper.cloneNode(true);
+        test.appendChild(item);
+        if(fitsWith(test)){best=mid;lo=mid+1;}else hi=mid-1;
+      }
+      if(best<0 || offsets[best]<Math.min(28,Math.floor(text.length*.4)) ||
+         offsets[best]>=text.length) return null;
+      var first=sliceRichElement(li,0,offsets[best]);
+      var rest=sliceRichElement(li,offsets[best],text.length);
+      first.classList.add('fragment-start');
+      rest.classList.add('fragment-continued','list-item-continued');
+      textSplits++;
+      return [first,rest];
+    }
+    function splitOversizedTableRow(row,table,tbody){
+      // One unusually verbose table cell must not make an entire PDF
+      // sheet overflow. Repeat the table header and split the dominant
+      // text cell while leaving adjacent cells empty on continuation.
+      var cells=Array.from(row.children).filter(function(c){
+        return c.tagName==='TD'||c.tagName==='TH';
+      });
+      if(!cells.length)return null;
+      var target=cells.reduce(function(best,c){
+        return (c.textContent||'').length>(best.textContent||'').length?c:best;
+      });
+      var text=target.textContent||'', offsets=textOffsets(text);
+      if(offsets.length<2)return null;
+      var col=cells.indexOf(target),lo=0,hi=offsets.length-1,best=-1;
+      while(lo<=hi){
+        var mid=(lo+hi)>>1,trial=row.cloneNode(true);
+        trial.replaceChild(sliceRichElement(target,0,offsets[mid]),trial.children[col]);
+        tbody.appendChild(trial);
+        var okay=fitsWith(table);
+        tbody.removeChild(trial);
+        if(okay){best=mid;lo=mid+1;}else hi=mid-1;
+      }
+      if(best<0 || offsets[best]<Math.min(28,Math.floor(text.length*.4)) ||
+         offsets[best]>=text.length)return null;
+      var front=row.cloneNode(true),tail=row.cloneNode(true);
+      front.replaceChild(sliceRichElement(target,0,offsets[best]),front.children[col]);
+      tail.replaceChild(sliceRichElement(target,offsets[best],text.length),tail.children[col]);
+      Array.from(tail.children).forEach(function(c,i){
+        if(i!==col){c.textContent='';c.setAttribute('aria-label','Continued table row');}
+      });
+      front.classList.add('fragment-start');
+      tail.classList.add('fragment-continued','table-row-continued');
+      textSplits++;
+      return [front,tail];
+    }
+    function cleanClone(el){
+      var clone=el.cloneNode(false);
+      clone.removeAttribute('id');
+      return clone;
+    }
+    function splitContainer(original){
+      // Returns [fitting prefix, remaining suffix], preserving all
+      // nested content and attributes (including table column headers).
+      var el=original;
+      var children=Array.from(el.children);
+      if(!children.length) return null;
+      var isTable=el.tagName==='TABLE';
+      var listParent=el.tagName==='OL' || el.tagName==='UL';
+      var orderedStart=parseInt(el.getAttribute('start')||'1',10);
+      var holder=cleanClone(el),remaining=cleanClone(el);
+      var headRows=[];
+      if(isTable){
+        var heads=children.filter(function(ch){return ch.tagName==='THEAD'||ch.tagName==='COLGROUP';});
+        heads.forEach(function(h){holder.appendChild(h.cloneNode(true));remaining.appendChild(h.cloneNode(true));});
+        var groups=children.filter(function(ch){return ch.tagName==='TBODY'||ch.tagName==='TFOOT';});
+        if(groups.length){
+          var rows=[];
+          groups.forEach(function(g){Array.from(g.children).forEach(function(r){rows.push(r);});});
+          var hb=node('tbody'),rb=node('tbody'); holder.appendChild(hb);remaining.appendChild(rb);
+          var stop=0;
+          rows.forEach(function(r,i){
+            if(stop) {rb.appendChild(r.cloneNode(true));return;}
+            var c=r.cloneNode(true);hb.appendChild(c);
+            if(!fitsWith(holder)){
+              hb.removeChild(c);
+              var pieces=splitOversizedTableRow(r,holder,hb);
+              if(pieces){hb.appendChild(pieces[0]);rb.appendChild(pieces[1]);}
+              else rb.appendChild(c);
+              stop=1;
+            }
+          });
+          if(!hb.children.length) return null;
+          if(!rb.children.length) return [holder];
+          return [holder,remaining];
+        }
+      }
+      var stop=false, count=0;
+      children.forEach(function(ch){
+        if(isTable && (ch.tagName==='THEAD'||ch.tagName==='COLGROUP')) return;
+        if(stop){remaining.appendChild(ch.cloneNode(true));return;}
+        var c=ch.cloneNode(true);holder.appendChild(c);
+        if(fitsWith(holder)){count++;}
+        else{
+          holder.removeChild(c);
+          // If one list item itself exceeds a page, split the text
+          // WITHIN the list context rather than treating it as atomic.
+          var pair=listParent && ch.tagName==='LI' ? splitWrappedListItem(ch,holder):null;
+          if(pair){holder.appendChild(pair[0]);remaining.appendChild(pair[1]);}
+          else remaining.appendChild(c);
+          stop=true;
+        }
+      });
+      if(!holder.children.length) return null;
+      if(listParent && el.tagName==='OL'){
+        remaining.setAttribute('start',String(orderedStart+count));
+      }
+      if(!remaining.children.length) return [holder];
+      return [holder,remaining];
+    }
+    function splitByChildren(el){
+      // Wrapper types are split only at meaningful component edges.
+      if(el.tagName==='TABLE') return splitContainer(el);
+      if(el.tagName==='OL'||el.tagName==='UL') return splitContainer(el);
+      if(el.classList.contains('translation-block')){
+        var list=el.querySelector(':scope > ol');
+        if(!list) return null;
+        var a=cleanClone(el),b=cleanClone(el);
+        var x=list.cloneNode(false),y=list.cloneNode(false);
+        a.appendChild(x);b.appendChild(y);
+        var src=Array.from(list.children),count=0,failed=false;
+        src.forEach(function(li){
+          if(failed){y.appendChild(li.cloneNode(true));return;}
+          var trial=li.cloneNode(true);x.appendChild(trial);
+          if(fitsWith(a)){count++;}
+          else{x.removeChild(trial);y.appendChild(trial);failed=true;}
+        });
+        if(!count)return null;
+        if(list.tagName==='OL')y.setAttribute('start',String(parseInt(list.getAttribute('start')||'1',10)+count));
+        return y.children.length?[a,b]:[a];
+      }
+      if(el.classList.contains('transcription')) return splitContainer(el);
+      if(el.classList.contains('callout-grid') || el.classList.contains('revision-grid') ||
+         el.classList.contains('revision-card') || el.classList.contains('callout')) return splitContainer(el);
+      // Atomic links, headings, and other inline controls must never
+      // be fragmented merely because they have multiple spans.
+      return el.tagName==='DIV' && el.children.length>1 ? splitContainer(el) : null;
+    }
+    function place(el){
+      assertProgress();
+      // Always test this unit on the CURRENT page first — no hard
+      // page breaks at section boundaries.
+      if(fitsWith(el)){commit(el);return;}
+      // Fit a paragraph to the remainder where possible; this is the
+      // key to avoiding oversized trailing whitespace.
+      if((el.tagName==='P'||el.tagName==='LI'||el.tagName==='BLOCKQUOTE') && (el.textContent||'').length>80){
+        var parts=splitText(el);
+        if(parts && parts.length===2){
+          commit(parts[0]); next(); place(parts[1]);return;
+        }
+      }
+      // Use the remaining space BEFORE starting a new page: large
+      // tables, callout groups, revision grids and translations must
+      // yield a fitting prefix instead of leaving half a page blank.
+      if(spaceUsed()){
+        var partial=splitByChildren(el);
+        if(partial && partial.length===2 && fitsWith(partial[0])){
+          commit(partial[0]);next();place(partial[1]);return;
+        }
+        // Prevent an English Translation (or any other section)
+        // heading from becoming the only body content on a sheet.
+        var stranded=current.target.lastElementChild;
+        var carry=null;
+        if(stranded && (stranded.classList.contains('page-section-heading')||stranded.tagName==='H3')){
+          carry=stranded;current.target.removeChild(carry);
+        }
+        next();
+        if(carry)commit(carry);
+        if(fitsWith(el)){commit(el);return;}
+      }
+      // On a blank page, split by content structure rather than
+      // allowing the browser to create an uncounted sheet.
+      var sub=splitByChildren(el);
+      if(sub && sub.length===2){
+        if(!fitsWith(sub[0])) throw Error('Invalid component split for '+el.className);
+        commit(sub[0]);next();place(sub[1]);return;
+      }
+      if(sub && sub.length===1 && fitsWith(sub[0])){commit(sub[0]);return;}
+      if((el.tagName==='P'||el.tagName==='LI'||el.tagName==='BLOCKQUOTE') && (el.textContent||'').length>50){
+        var p=splitText(el);
+        if(p && p.length===2){commit(p[0]);next();place(p[1]);return;}
+      }
+      // On oversized cards with only a single large paragraph, turn
+      // it into separately paginated card fragments rather than drop it.
+      if(el.children.length===1){
+        var inner=el.firstElementChild;
+        if(inner && (inner.tagName==='P'||inner.tagName==='LI')){
+          var shrunk=splitText(inner);
+          if(shrunk && shrunk.length===2){
+            var x=cleanClone(el),y=cleanClone(el);x.appendChild(shrunk[0]);y.appendChild(shrunk[1]);
+            if(fitsWith(x)){commit(x);next();place(y);return;}
+          }
+        }
+      }
+      throw Error('Unsplit oversized unit: '+el.tagName+'.'+el.className+' '+(el.textContent||'').slice(0,85));
+    }
+    function sectionHeading(sec){
+      var box=node('div','page-section-heading');
+      var number=sec.querySelector(':scope > .section-number');
+      var h2=sec.querySelector(':scope > h2');
+      if(number) box.appendChild(number.cloneNode(true));
+      if(h2) box.appendChild(h2.cloneNode(true));
+      if(sec.id) box.id='print-'+sec.id;
+      return box;
+    }
+    function headingNeedsNewPage(head,first){
+      // A page-end heading must be followed by real content, not an
+      // invented one-line probe which could fit when a card cannot.
+      // For compound elements test the first useful child/card/row.
+      var sample=null;
+      if(first){
+        if(first.classList && (first.classList.contains('revision-grid')||
+          first.classList.contains('callout-grid'))){
+          sample=first.cloneNode(false);
+          if(first.firstElementChild)sample.appendChild(first.firstElementChild.cloneNode(true));
+        } else if(first.classList && first.classList.contains('translation-block')){
+          sample=first.cloneNode(false);
+          var ol=first.querySelector('ol');
+          if(ol){var l=ol.cloneNode(false); if(ol.firstElementChild)l.appendChild(ol.firstElementChild.cloneNode(true));sample.appendChild(l);}
+        } else if(first.tagName==='TABLE'){
+          sample=first.cloneNode(false);
+          var th=first.querySelector('thead');if(th)sample.appendChild(th.cloneNode(true));
+          var row=first.querySelector('tbody tr');if(row){var tb=node('tbody');tb.appendChild(row.cloneNode(true));sample.appendChild(tb);}
+        } else if(first.tagName==='P'){
+          var t=(first.textContent||'');
+          sample=t.length>38?sliceRichElement(first,0,38):first.cloneNode(true);
+        } else sample=first.cloneNode(true);
+      }
+      if(!sample)sample=node('p','','Sample');
+      current.target.appendChild(head);current.target.appendChild(sample);
+      var ok=pageFits(current);
+      current.target.removeChild(sample);current.target.removeChild(head);
+      return !ok;
+    }
+    var notesPool=[], notesPlaced=0, noteFallthrough=[];
+    function flattenMainSection(sec){
+      var body=sec.querySelector(':scope > .section-body');
+      var stream=[];
+      if(!body)return stream;
+      Array.from(body.children).forEach(function(item){
+        if(!item.classList.contains('passage')){
+          var plain=item.cloneNode(true);
+          plain.dataset.section=sec.id;
+          stream.push(plain);return;
+        }
+        var anchor=item.getAttribute('data-anchor')||sec.id;
+        var noteNodes=Array.from(item.querySelectorAll('.callout'));
+        noteNodes.forEach(function(x){
+          notesPool.push({card:x.cloneNode(true),anchor:anchor,section:sec.id});
+        });
+        var prose=item.querySelector(':scope > .prose');
+        if(!prose)return;
+        var cloned=prose.cloneNode(true);
+        cloned.querySelectorAll('.callout').forEach(function(c){c.remove();});
+        cloned.querySelectorAll('.callout-grid,.callout-grid-label').forEach(function(c){c.remove();});
+        Array.from(cloned.children).forEach(function(ch){
+          if(!ch.textContent.trim() && !ch.querySelector('img,svg,table'))return;
+          ch.dataset.anchor=anchor;ch.dataset.section=sec.id;
+          stream.push(ch);
+        });
+      });
+      return stream;
+    }
+    function layoutSections(sections){
+      sections.forEach(function(sec){
+        var children=current.main?flattenMainSection(sec):Array.from(
+          (sec.querySelector(':scope > .section-body')||{children:[]}).children);
+        var h=sectionHeading(sec);
+        h.dataset.section=sec.id;
+        if(headingNeedsNewPage(h,children[0]) && spaceUsed()) next();
+        place(h);
+        children.forEach(function(child,i){
+          if(child.tagName==='H3'){
+            if(headingNeedsNewPage(child,children[i+1]) && spaceUsed()) next();
+          }
+          place(child.cloneNode(true));
+        });
+      });
+    }
+    function placeNotesForChapter(chapterNum){
+      // Main narrative is already paginated. Cards do not block or extend its rows.
+      // A card may only occupy a sheet containing its passage/section (strict alignment).
+      var pages=Array.from(root.querySelectorAll('.printed-page.theme-parchment'))
+        .filter(function(p){return p.dataset.printChapter===String(chapterNum);});
+      notesPool.forEach(function(info){
+        var ordered=pages.filter(function(pg){return Array.from(pg.querySelectorAll('.page-main-column [data-anchor]')).some(function(a){return a.dataset.anchor===info.anchor;});});
+        var sameSection=pages.filter(function(pg){return Array.from(pg.querySelectorAll('.page-main-column [data-section]')).some(function(a){return a.dataset.section===info.section;});});
+        sameSection.forEach(function(p){if(ordered.indexOf(p)<0)ordered.push(p);});
+        var found=false;
+        for(var i=0;i<ordered.length;i++){
+          var pg=ordered[i], card=info.card.cloneNode(true),copy=pg.cloneNode(true);
+          var aside=copy.querySelector('.page-note-column');if(!aside)continue;
+          var original=pg.querySelector('.page-note-column');
+          card.classList.add('side-note-card');card.setAttribute('data-note-anchor',info.anchor);
+          // Prefer a modest vertical alignment cue, but never reserve huge blank gaps.
+          var origMain=copy.querySelector('.page-main-column');
+          var ref=Array.from(origMain.querySelectorAll('[data-anchor]')).find(function(x){return x.dataset.anchor===info.anchor;});
+          var offset=ref?Math.max(0,ref.offsetTop):0;
+          var available=Math.max(0,offset-aside.scrollHeight);
+          var nudge=Math.min(54,available);
+          card.style.marginTop=nudge+'px';
+          aside.appendChild(card);
+          getRig().appendChild(copy);
+          var fit=copy.querySelector('.page-note-column').scrollHeight<=copy.querySelector('.page-note-column').clientHeight+EPS;
+          getRig().removeChild(copy);
+          if(!fit && nudge>0){card.style.marginTop='0px';copy=pg.cloneNode(true);copy.querySelector('.page-note-column').appendChild(card.cloneNode(true));getRig().appendChild(copy);fit=copy.querySelector('.page-note-column').scrollHeight<=copy.querySelector('.page-note-column').clientHeight+EPS;getRig().removeChild(copy);}
+          if(fit){
+            if(card.style.marginTop && !card.style.marginTop.endsWith('0px')){
+              var sclone=pg.cloneNode(true);sclone.querySelector('.page-note-column').appendChild(card.cloneNode(true));getRig().appendChild(sclone);
+              var confirmed=sclone.querySelector('.page-note-column').scrollHeight<=sclone.querySelector('.page-note-column').clientHeight+EPS;getRig().removeChild(sclone);
+              if(!confirmed)card.style.marginTop='0px';
+            }
+            original.appendChild(card);
+            found=true;notesPlaced++;break;
+          }
+        }
+        if(!found)noteFallthrough.push(info);
+      });
+      if(noteFallthrough.length)throw Error('Unplaced passage notes: '+noteFallthrough.map(function(n){return n.card.dataset.noteId+'@'+n.section;}).join(', '));
+    }
+    function layoutOpener(source,theme,accent,id){
+      if(!source) return;
+      pageCounter++;
+      var pg=shell(theme,'','',true,accent);
+      pg.page.dataset.logicalPage=String(pageCounter);
+      pageKinds.push({num:pageCounter,kind:'opener'});
+      var cloned=source.cloneNode(true);
+      cloned.id=id;
+      cloned.style.setProperty('--chapter-accent',accent||'#B8892A');
+      pg.body.appendChild(cloned);
+      // A compact typographic scale is far better than an empty
+      // continuation sheet. Never repeat a meaningless '(continued)'.
+      var scales=[1,.96,.92,.88,.84,.8,.76,.72];
+      var okay=false;
+      for(var i=0;i<scales.length;i++){
+        cloned.style.zoom=String(scales[i]);
+        if(pageFits(pg)){okay=true;break;}
+      }
+      if(!okay){
+        // No content is discarded: split logical child groups only if
+        // even the compact title-page layout cannot fit.
+        pg.body.removeChild(cloned);
+        var blocks=Array.from(cloned.children);
+        var part=cloned.cloneNode(false);part.style.zoom='.82';
+        pg.body.appendChild(part);
+        blocks.forEach(function(ch){
+          part.appendChild(ch.cloneNode(true));
+          if(pageFits(pg)) return;
+          part.removeChild(part.lastElementChild);
+          if(part.children.length){root.appendChild(pg.page);pageCounter++;}
+          pg=shell(theme,'','',true,accent);
+          pg.page.dataset.logicalPage=String(pageCounter);
+          pageKinds.push({num:pageCounter,kind:'opener-continuation'});
+          part=cloned.cloneNode(false);part.removeAttribute('id');part.style.zoom='.82';
+          pg.body.appendChild(part);part.appendChild(ch.cloneNode(true));
+          if(!pageFits(pg)) throw Error('Unbreakable opener block: '+ch.className);
+        });
+      }
+      root.appendChild(pg.page);
+    }
+    function layoutCover(nums,all){
+      var original=document.getElementById('book-cover');if(!original)return;
+      var cloned=original.cloneNode(true);
+      var scope=cloned.querySelector('#cover-scope');
+      if(scope){
+        if(nums.length===26 && all.length===26 && nums.every(function(n,i){return n===i+1;})){
+          scope.textContent='All Twenty-Six Readings';
+        }else if(nums.length===1){
+          var c=document.querySelector('.chapter[data-chapter="'+nums[0]+'"]');
+          scope.textContent=(c&&c.querySelector('.reading-eyebrow')||{textContent:'Reading '+nums[0]}).textContent;
+        }else{scope.textContent='Readings '+nums.join(', ');}
+      }
+      layoutOpener(cloned,'ink','#B8892A','print-book-cover');
+    }
+    function layoutContents(nums){
+      begin('ink','Literature Dossier Notes · Contents','Contents','#B8892A',false);
+      place(node('h1','printed-contents-title','Contents'));
+      place(node('p','printed-contents-scope',nums.length+' readings · in the order selected'));
+      nums.forEach(function(n,i){
+        var ch=document.querySelector('.chapter[data-chapter="'+n+'"]');
+        var eye=ch&&ch.querySelector('.reading-eyebrow');
+        var title=ch&&ch.querySelector('.chapter-title-page h1');
+        var link=node('a','printed-toc-entry');
+        link.href='#print-chapter-'+n;
+        link.appendChild(node('span','printed-toc-index',String(i+1).padStart(2,'0')));
+        link.appendChild(node('span','printed-toc-label',eye?eye.textContent:'Reading '+n));
+        link.appendChild(node('span','printed-toc-title',title?title.textContent:''));
+        place(link);
+      });
+      finish();
+    }
+    function layoutChapter(ch,includeRevision){
+      var accent=cssAccent(ch),n=parseInt(ch.getAttribute('data-chapter'),10);
+      activeChapterNumber=n;
+      var cover=ch.querySelector('.chapter-title-page');
+      var eyebrow=(cover&&cover.querySelector('.reading-eyebrow')||{textContent:'Reading '+n}).textContent;
+      var title=(cover&&cover.querySelector('h1')||{textContent:''}).textContent;
+      layoutOpener(cover,'parchment',accent,'print-chapter-'+n);
+      notesPool=[];noteFallthrough=[];
+      begin('parchment',eyebrow+' · '+title,eyebrow,accent,false);
+      layoutSections(Array.from(ch.querySelectorAll(':scope > .leaf > .section')));
+      finish();
+      placeNotesForChapter(n);
+      if(!includeRevision){activeChapterNumber=null;return;}
+      var rev=ch.querySelector(':scope > .revision-zone');
+      if(!rev){activeChapterNumber=null;return;}
+      begin('ink',eyebrow+' · Revision',eyebrow+' · Revision',accent,false);
+      layoutSections(Array.from(rev.querySelectorAll(':scope > .revision-leaf > .section')));
+      finish();activeChapterNumber=null;
+    }
+    function build(){
+      root=document.getElementById('print-root');root.innerHTML='';
+      pageCounter=0;pageKinds=[];guard=0;textSplits=0;activeChapterNumber=null;notesPlaced=0;noteFallthrough=[];
+      var chapters=Array.from(document.querySelectorAll('.chapter'));
+      var ordered=PrintSelection.order.slice();
+      if(PrintSelection.errors.length||!ordered.length){
+        throw Error('Correct the chapter selection before printing: '+PrintSelection.errors.join('; '));
+      }
+      try{
+        layoutCover(ordered,chapters);
+        var includeContents=document.getElementById('toggle-contents-page');
+        if((!includeContents||includeContents.checked)&&ordered.length>1)layoutContents(ordered);
+        var includeRevision=document.getElementById('toggle-revision');
+        ordered.forEach(function(n){
+          var ch=document.querySelector('.chapter[data-chapter="'+n+'"]');
+          if(ch)layoutChapter(ch,!includeRevision||includeRevision.checked);
+        });
+        // Verify all page boxes in the final printed DOM. Chrome is
+        // forbidden to create additional implicit pages.
+        var overflows=[];
+        Array.from(root.children).forEach(function(el,i){
+          var body=el.querySelector('.printed-body');
+          if(body && ([body, ...Array.from(body.querySelectorAll('.page-main-column,.page-note-column'))].some(function(c){return c.scrollHeight>c.clientHeight+EPS;}) ||
+               el.scrollHeight>el.clientHeight+EPS))overflows.push(i+1);
+        });
+        if(overflows.length)throw Error('Overflow in composed page(s): '+overflows.join(', '));
+        window.__dossierPrintDiagnostics={pages:pageCounter,kinds:pageKinds,textSplits:textSplits,overflows:overflows,selection:ordered,notesPlaced:notesPlaced,notesUnplaced:noteFallthrough.length};
+      }catch(e){
+        root.innerHTML='';console.error('[Dossier compositor]',e);
+        window.__dossierPrintDiagnostics={error:String(e),pages:pageCounter};
+        throw e;
+      }finally{
+        if(rig){rig.remove();rig=null;}
+      }
+    }
+    function teardown(){
+      if(root)root.innerHTML='';root=null;
+    }
+    return {build:build,teardown:teardown};
+  })();
+
+  function initPanel(){
+    var toggle = document.getElementById('panel-toggle');
+    var panel = document.getElementById('side-panel');
+    var backdrop = document.getElementById('panel-backdrop');
+    var closeBtn = document.getElementById('panel-close');
+    if(!toggle || !panel) return;
+
+    function focusableControls(){
+      return Array.from(panel.querySelectorAll(
+        'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),' +
+        'textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+      )).filter(function(el){
+        return !el.closest('[hidden]') && !!el.getClientRects().length &&
+               el.tabIndex !== -1 && !el.inert;
+      });
+    }
+    function open(){
+      panel.inert = false;
+      panel.removeAttribute('inert');
+      panel.classList.add('open');
+      backdrop.classList.add('open');
+      toggle.setAttribute('aria-expanded','true');
+      panel.setAttribute('aria-hidden','false');
+      var activeTab = panel.querySelector('.panel-tab[aria-selected="true"]');
+      (activeTab || closeBtn).focus();
+    }
+    function close(restoreFocus){
+      if(!panel.classList.contains('open')) return;
+      panel.classList.remove('open');
+      backdrop.classList.remove('open');
+      toggle.setAttribute('aria-expanded','false');
+      // Move focus out before applying inert + aria-hidden.
+      if(restoreFocus) toggle.focus();
+      else if(panel.contains(document.activeElement)) document.activeElement.blur();
+      panel.inert = true;
+      panel.setAttribute('inert','');
+      panel.setAttribute('aria-hidden','true');
+    }
+    panel.inert = true;
+    panel.setAttribute('inert','');
+    toggle.addEventListener('click', function(){
+      panel.classList.contains('open') ? close(true) : open();
+    });
+    closeBtn.addEventListener('click',function(){close(true);});
+    backdrop.addEventListener('click',function(){close(true);});
+    document.addEventListener('keydown',function(e){
+      if(!panel.classList.contains('open'))return;
+      if(e.key==='Escape'){
+        e.preventDefault();close(true);
+      }else if(e.key==='Tab'){
+        var options=focusableControls();
+        if(!options.length){e.preventDefault();closeBtn.focus();return;}
+        var current=options.indexOf(document.activeElement);
+        if(e.shiftKey && current<=0){
+          e.preventDefault();options[options.length-1].focus();
+        }else if(!e.shiftKey && (current===options.length-1 || current<0)){
+          e.preventDefault();options[0].focus();
+        }
+      }
+    });
+    // Let native fragment navigation update the URL, while moving focus to
+    // the destination instead of back to the drawer's menu button.
+    document.getElementById('toc-list').addEventListener('click',function(e){
+      var a=e.target.closest && e.target.closest('a[href^="#"]');
+      if(!a)return;
+      var id=decodeURIComponent(a.getAttribute('href').slice(1));
+      var dest=document.getElementById(id);
+      close(false);
+      if(dest) requestAnimationFrame(function(){
+        if(!dest.hasAttribute('tabindex'))dest.setAttribute('tabindex','-1');
+        dest.focus({preventScroll:true});
+      });
+    });
+  }
+
+  // Distinct progress indicators: full-book rail + current-reading ring.
+  // Use each .chapter's complete on-screen height, including its revision zone.
+  // The book rail follows document scroll, never resetting at chapter boundaries.
+  function initReadingProgress(){
+    var headerTag = document.getElementById('rh-chapter-tag');
+    var headerTitle = document.getElementById('rh-chapter-title');
+    var fill = document.getElementById('progress-fill');
+    var bookTrack = document.getElementById('rh-book-track');
+    var bookPercent = document.getElementById('rh-book-percent');
+    var ring = document.getElementById('rh-chapter-ring');
+    var chapterPercent = document.getElementById('rh-chapter-percent');
+    if(!headerTag || !headerTitle || !fill || !bookTrack ||
+       !bookPercent || !ring || !chapterPercent) return;
+
+    var chapters = [];
+    function collectChapters(){
+      chapters = Array.from(document.querySelectorAll('#book > .chapter')).map(function(ch){
+        var eyebrow = ch.querySelector('.chapter-title-page .reading-eyebrow');
+        var title = ch.querySelector('.chapter-title-page h1');
+        return {
+          el:ch,
+          num:ch.getAttribute('data-chapter'),
+          tag:eyebrow ? eyebrow.textContent : 'Reading ' + ch.getAttribute('data-chapter'),
+          title:title ? title.textContent : '',
+          revision:ch.querySelector('.revision-zone')
+        };
+      });
+    }
+
+    function clamp(n){ return Math.max(0, Math.min(1, n)); }
+    var ticking = false;
+    function update(){
+      ticking = false;
+      var scrollMax = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      var full = scrollMax ? clamp(window.scrollY / scrollMax) : 0;
+      var fullPct = Math.round(full * 100);
+      fill.style.width = (full * 100) + '%';
+      bookTrack.setAttribute('aria-valuenow', String(fullPct));
+      bookTrack.setAttribute('aria-valuetext', fullPct + '% through the complete dossier');
+      bookPercent.textContent = fullPct + '%';
+
+      // A reference point below the sticky header identifies the active reading
+      // consistently across title pages, main notes and all revision pages.
+      var readingLine = window.innerHeight * .36;
+      var active = null;
+      for(var i=0; i<chapters.length; i++){
+        if(chapters[i].el.getBoundingClientRect().top <= readingLine){
+          active = chapters[i];
+        }else{
+          break;
+        }
+      }
+      if(!active){
+        headerTag.textContent = 'Cover';
+        headerTag.style.color = '';
+        headerTitle.textContent = 'Complete Literature Dossier';
+        ring.style.setProperty('--reading-angle', '0%');
+        ring.style.setProperty('--ring-accent', 'var(--rule-strong)');
+        ring.setAttribute('aria-valuenow', '0');
+        ring.setAttribute('aria-valuetext', 'No reading selected');
+        chapterPercent.textContent = '—';
+        return;
+      }
+
+      var rect = active.el.getBoundingClientRect();
+      var chapterProgress = clamp((readingLine - rect.top) / Math.max(1, rect.height));
+      // The last reading must reach 100% at the actual end of the book.
+      if(active === chapters[chapters.length-1] && scrollMax > 0 &&
+         window.scrollY >= scrollMax - 2) chapterProgress = 1;
+      var pct = Math.round(chapterProgress * 100);
+      var accent = getComputedStyle(active.el).getPropertyValue('--chapter-accent').trim() ||
+                   'var(--rule-strong)';
+      var inRevision = active.revision &&
+                       active.revision.getClientRects().length > 0 &&
+                       active.revision.getBoundingClientRect().top <= readingLine;
+      // The header shows only the reading number; the full title is adjacent.
+      headerTag.textContent = String(active.num).padStart(2, '0');
+      headerTag.style.color =
+        'color-mix(in srgb, ' + accent + ' 40%, var(--parchment))';
+      headerTitle.textContent = active.title + (inRevision ? ' — Revision' : '');
+      ring.style.setProperty('--reading-angle', (chapterProgress * 100) + '%');
+      ring.style.setProperty('--ring-accent',
+                             'color-mix(in srgb, ' + accent + ' 40%, var(--parchment))');
+      ring.setAttribute('aria-valuenow', String(pct));
+      ring.setAttribute('aria-valuetext',
+                        'Reading ' + active.num + ': ' + pct + '% complete');
+      chapterPercent.textContent = pct + '%';
+    }
+    function requestUpdate(){
+      if(!ticking){ ticking=true; requestAnimationFrame(update); }
+    }
+
+    collectChapters();
+    window.addEventListener('scroll', requestUpdate, {passive:true});
+    window.addEventListener('resize', requestUpdate);
+    window.addEventListener('pageshow', requestUpdate);
+    window.addEventListener('load', requestUpdate);
+    if(document.fonts && document.fonts.ready)
+      document.fonts.ready.then(requestUpdate).catch(function(){});
+    update();
+  }
+
+
+  function positionScreenNotes(){
+    var desktop=window.innerWidth>850;
+    document.querySelectorAll('.chapter .leaf .section-body').forEach(function(body){
+      body.style.minHeight='';
+      var notes=Array.from(body.querySelectorAll(':scope > .passage > aside'));
+      notes.forEach(function(note){note.style.top='';});
+      if(!desktop)return;
+      var last=0;
+      notes.forEach(function(note){
+        if(!note.querySelector('.callout'))return;
+        var passage=note.closest('.passage');
+        var start=passage.offsetTop;
+        var pos=Math.max(start,last+9);
+        note.style.top=(pos-start)+'px';
+        last=pos+note.getBoundingClientRect().height;
+      });
+      body.style.minHeight=Math.ceil(Math.max(body.offsetHeight,last))+'px';
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    buildTOC();
+    initRangeControls();
+    initActiveTOC();
+    initPanel();
+    initReadingProgress();
+    requestAnimationFrame(positionScreenNotes);
+    window.addEventListener('resize',function(){requestAnimationFrame(positionScreenNotes);});
+    if(document.fonts)document.fonts.ready.then(positionScreenNotes);
+  });
+
+  window.addEventListener('beforeprint', function(){
+    if(!document.querySelector('#print-root > .printed-page')){
+      try{Print.build();}catch(e){console.error('Print layout failed:',e);}
+    }
+  });
+  window.addEventListener('afterprint', Print.teardown);
+  window.DossierPrint={build:Print.build,teardown:Print.teardown,parseRangeSpec:parseRangeSpec};
+})();
+
+</script>
+<script>
+
+/* App install and explicit offline-copy verification; separate from the book/print engine. */
+(function () {
+  'use strict';
+  var status, saveButton, installButton, installEvent = null;
+  var isSecure = location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  function say(message) { if (status) status.textContent = message; }
+  function showEdition(report) {
+    var node=document.getElementById('pwa-edition');
+    if(!node)return;
+    node.textContent = report && report.ready && report.edition
+      ? 'Saved offline edition: '+String(report.edition).replace('11am-lit-reader-','')
+      : 'Saved edition could not be confirmed on this device.';
+  }
+  function askWorker(reg,type,timeoutMs) {
+    return new Promise(function(resolve,reject){
+      var worker=reg.active;
+      if(!worker)return reject(Error('No active offline worker'));
+      var channel=new MessageChannel();
+      var timer=setTimeout(function(){
+        channel.port1.close();
+        reject(Error('Offline worker did not respond'));
+      },timeoutMs||12000);
+      channel.port1.onmessage=function(event){
+        clearTimeout(timer);channel.port1.close();
+        var data=event.data||{};
+        if(type==='SAVE_READER'){
+          if(data.ok)resolve(data);
+          else reject(Error(data.error||'Offline save failed'));
+        }else if(data.type==='EDITION_STATUS'){
+          resolve(data);
+        }else{
+          reject(Error('Unexpected offline worker response'));
+        }
+      };
+      worker.postMessage({type:type},[channel.port2]);
+    });
+  }
+  function editionStatus(reg){
+    return askWorker(reg,'EDITION_STATUS',4500);
+  }
+  async function cachedBook(reg){
+    try {
+      var report=await editionStatus(reg);
+      return !!report.ready;
+    }catch(_){
+      // Upgrade compatibility: older installed workers did not implement
+      // EDITION_STATUS. An old cached copy is not proof of current version.
+      if(!('caches' in window))return false;
+      return caches.match(new URL('./index.html',reg.scope).href)
+        .then(Boolean).catch(function(){return false;});
+    }
+  }
+  function withTimeout(task,ms) {
+    var timer;
+    return Promise.race([
+      task,
+      new Promise(function(_,reject){
+        timer=setTimeout(function(){reject(Error('Update check timed out'));},ms);
+      })
+    ]).finally(function(){clearTimeout(timer);});
+  }
+  async function checkForEdition(reg) {
+    if(!navigator.onLine)return {checked:false,reason:'offline'};
+    try {
+      await withTimeout(reg.update(),14000);
+      var pending=reg.installing||reg.waiting;
+      if(pending && pending.state!=='activated'){
+        var ready=await withTimeout(new Promise(function(resolve){
+          function changed(){
+            if(['activated','redundant'].indexOf(pending.state)>=0){
+              pending.removeEventListener('statechange',changed);
+              resolve(pending.state==='activated');
+            }
+          }
+          pending.addEventListener('statechange',changed);
+          changed();
+        }),12000).catch(function(){return false;});
+        if(!ready)return {checked:false,reason:'pending'};
+      }
+      return {checked:true};
+    }catch(error){
+      return {checked:false,reason:'connection',error:String(error)};
+    }
+  }
+
+  // Proactively load the same typefaces already linked in this document.
+  // This runs after the book is saved, and font failures never undo that save.
+  async function prepareFonts(reg) {
+    if (!navigator.onLine || !reg.active) return {skipped:true};
+    var latin = 'Literature Dossier: ideas, evidence, argument; ā ī ū ʿ ḍ ḥ ṣ ṭ';
+    var arabic = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ؛ الأدب واللغة والرِّسَائِل ١٢٣';
+    var faces = [
+      ['400 16px "Fraunces"',latin],['500 16px "Fraunces"',latin],
+      ['600 16px "Fraunces"',latin],['700 16px "Fraunces"',latin],
+      ['400 16px "Spectral"',latin],['500 16px "Spectral"',latin],
+      ['600 16px "Spectral"',latin],['700 16px "Spectral"',latin],
+      ['400 14px "IBM Plex Sans"',latin],['500 14px "IBM Plex Sans"',latin],
+      ['600 14px "IBM Plex Sans"',latin],['700 14px "IBM Plex Sans"',latin],
+      ['400 18px "Amiri"',arabic],['700 18px "Amiri"',arabic],
+      ['400 18px "Aref Ruqaa"',arabic],['700 18px "Aref Ruqaa"',arabic],
+      ['400 14px "IBM Plex Sans Arabic"',arabic],
+      ['500 14px "IBM Plex Sans Arabic"',arabic],
+      ['600 14px "IBM Plex Sans Arabic"',arabic]
+    ];
+    if (document.fonts && document.fonts.load) {
+      // Bounded waiting is intentional: a remote font server must not
+      // indefinitely delay the reader's already completed offline save.
+      await Promise.race([
+        Promise.allSettled(faces.map(function (face) {
+          return document.fonts.load(face[0],face[1]);
+        })),
+        new Promise(function(resolve) { setTimeout(resolve,12000); })
+      ]);
+    }
+    var urls = new Set();
+    var stylesheet = document.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+    if (stylesheet) urls.add(stylesheet.href);
+    if (typeof performance !== 'undefined' && performance.getEntriesByType) {
+      performance.getEntriesByType('resource').forEach(function (entry) {
+        if (/^https:\/\/fonts\.(?:googleapis|gstatic)\.com\//.test(entry.name)) {
+          urls.add(entry.name);
+        }
+      });
+    }
+    if (!urls.size) return {skipped:true};
+    return new Promise(function(resolve,reject) {
+      var channel = new MessageChannel();
+      var timeout = setTimeout(function () {
+        channel.port1.close();
+        reject(Error('Optional font preparation timed out'));
+      },30000);
+      channel.port1.onmessage = function (event) {
+        clearTimeout(timeout);
+        channel.port1.close();
+        var result = event.data || {};
+        if (result.type === 'FONTS_PREPARED') resolve(result);
+        else reject(Error('Unexpected font preparation response'));
+      };
+      reg.active.postMessage({type:'PREPARE_FONTS',urls:Array.from(urls)},[channel.port2]);
+    });
+  }
+
+  function setup() {
+    status = document.getElementById('pwa-status');
+    saveButton = document.getElementById('pwa-save');
+    installButton = document.getElementById('pwa-install');
+    if (!saveButton) return;
+    if (!('serviceWorker' in navigator) || !isSecure) {
+      say('Open the published HTTPS site to install and save the full dossier for offline reading.');
+      saveButton.disabled = true; return;
+    }
+    say('Preparing an offline copy of all available readings…');
+    navigator.serviceWorker.register('./service-worker.js', {scope: './', updateViaCache: 'none'})
+      .then(function (reg) {
+        return navigator.serviceWorker.ready.then(function () {
+          return cachedBook(reg).then(function (ready) {
+            say(ready ? 'Full dossier saved on this device. Available without internet, subject to browser storage limits.' : 'The offline copy is being prepared. Use Save offline copy to retry.');
+            return editionStatus(reg).then(showEdition).catch(function(){showEdition(null);});
+          }).then(function () { return reg; });
+        });
+      }).then(function (reg) {
+        saveButton.addEventListener('click', async function () {
+          saveButton.disabled = true;
+          say('Checking for a newer edition before verifying the offline copy…');
+          try {
+            var previous=await editionStatus(reg).catch(function(){return null;});
+            var check=await checkForEdition(reg);
+            say(check.checked ? 'Update check completed. Verifying saved reading files…'
+                              : 'Verifying saved reading files; the update check was unavailable…');
+            var saved=await askWorker(reg,'SAVE_READER',20000);
+            var latest=await editionStatus(reg).catch(function(){return null;});
+            showEdition(latest);
+            if(!saved.ok || (latest && !latest.ready) ||
+               !(await cachedBook(reg))) throw Error('Offline cache verification failed');
+            var changed=!!(previous && latest && previous.edition!==latest.edition);
+            var notice=document.getElementById('edition-notice');
+            var updateReady=changed||!!(notice && !notice.hidden);
+            var message=updateReady
+              ? 'New edition saved. Select Reload updated guide to read the updated copy.'
+              : check.checked
+                ? 'Offline copy verified. No newer edition detected during this check.'
+                : check.reason==='offline'
+                  ? 'Saved copy verified. An update check requires an internet connection.'
+                  : 'Saved copy verified, but the update check could not finish. Try again online.';
+            say(message + ' Preparing optional Latin and Arabic fonts…');
+            var fonts=null;
+            try {fonts=await prepareFonts(reg);}
+            catch(_){fonts={failed:1};}
+            var persistent=false;
+            if(navigator.storage && navigator.storage.persist){
+              try{persistent=await navigator.storage.persist();}catch(_){}
+            }
+            message+= persistent
+              ? ' Persistent storage enabled.'
+              : ' Browser storage may be reclaimed if space runs low.';
+            if(fonts && fonts.fontFiles>0 && !fonts.failed){
+              message+=' Font resources cached for offline reading.';
+            }else if(fonts && fonts.failed){
+              message+=' Some font resources could not be saved; fallback fonts remain available.';
+            }else if(fonts && fonts.skipped){
+              message+=navigator.onLine
+                ? ' No additional font URLs were available for preparation.'
+                : ' Font preparation skipped while offline.';
+            }else{
+              message+=' Available fonts are cached as they load.';
+            }
+            say(message);
+          }catch(err){
+            say('Could not verify the offline copy: '+err.message+
+                '. Your previously saved edition remains available if cached.');
+          }finally{saveButton.disabled=false;}
+        });
+      }).catch(function (err) { say('Offline setup unavailable: ' + (err && err.message || err)); });
+    window.addEventListener('beforeinstallprompt', function (evt) {
+      evt.preventDefault(); installEvent = evt;
+      installButton.hidden = false;
+    });
+    installButton.addEventListener('click', async function () {
+      if (!installEvent) return;
+      installEvent.prompt();
+      try { await installEvent.userChoice; } catch (_) {}
+      installEvent = null; installButton.hidden = true;
+    });
+    window.addEventListener('appinstalled', function () {
+      say('Installed. Your full offline reading copy is ready after it has finished downloading.');
+      installButton.hidden = true;
+    });
+    window.addEventListener('offline', function () { say('Offline mode: reading from your saved dossier when available.'); });
+    window.addEventListener('online', function () {
+      navigator.serviceWorker.getRegistration('./').then(function (reg) {
+        if (reg) cachedBook(reg).then(function (ok) { if (ok) say('Online again. The app can update your saved dossier.'); });
+      });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+  else setup();
+}());
+
+</script>
+<script src="./reader-search.js" defer></script>
+<script src="./reader-ui.js" defer></script>
+<script src="./offline-update.js" defer></script>
+
+</body>
+</html>
