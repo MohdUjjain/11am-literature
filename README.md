@@ -1,37 +1,41 @@
-# 11AM Literature Dossier
+# 11AM Literature Dossier — Through Reading 26
 
-**An installable, offline-ready literary study companion.** Published readings: **01–18, 20–25**; Reading 19 remains reserved and unassigned. The entire available reading dossier lives inside a single HTML file, with full passage-linked study sidebars and six-part revision sections for each chapter.
+**[Open the installable reader](https://mohdujjain.github.io/11am-literature/)** · [Repository](https://github.com/MohdUjjain/11am-literature)
 
-**[Read / install the study app](https://mohdujjain.github.io/11am-literature/)**
+A single-file, landscape-oriented literature study dossier with **25 completed readings** (01–18 and 20–26). **Reading 19 has not been supplied and remains reserved**, not silently renamed. Each reading includes scholarly main notes, passage-linked learning aids, and six end-of-reading revision sections. All chapter text is inside the root `index.html`.
 
-## GitHub Pages activation
+## Install and read offline
 
-This repository publishes from `main` at the repository root. If the URL has not appeared yet, open **Settings → Pages → Build and deployment → Deploy from a branch → `main` → `/(root)` → Save**. This one-time Pages setting is required when GitHub Pages has not yet been activated for a new repository. Leave the `.nojekyll` file at the root.
+Open the GitHub Pages site online at least once, then open **Contents → Save / refresh offline copy**. The versioned service worker pre-caches the **entire HTML reader**, manifest and app icons. When offline, the installed app serves that cached copy; online navigation updates it. You can install from Chrome/Edge's browser menu or **Share → Add to Home Screen** on iPhone. A browser may clear or evict stored data, so no site can guarantee storage forever. The large standalone PDF is intentionally not auto-cached.
 
-## Install and offline reading
+For this edition the service worker cache is `11am-lit-reader-01-26-v4` and will replace the previous cache when the new worker is installed and activated. Google Fonts are cached opportunistically, with readable system fallbacks if unavailable.
 
-Open the HTTPS site online at least once. The service worker precaches the **full `index.html`**, manifest and app icons, so the reader opens offline from an installed app or the same site URL afterward. For an explicit check, open **Contents & Export → Install & offline reading → Save / refresh offline copy**. You can do this again on later editions to update the stored copy. The browser may evict storage if space is low; clicking Save also asks the browser for persistent storage where supported. No web app can guarantee that an OS or browser will store a cache forever.
+## GitHub Pages
 
-On Chrome or Edge use **Install app** from the address bar / browser menu or the in-app button when offered. On iPhone/iPad use **Share → Add to Home Screen**. The website requires HTTPS for service workers, which GitHub Pages provides. The large print PDF is *not* automatically cached; download it separately if needed. The app can print/export its current chapters from the browser (PDF bookmarks depend on the printing method).
+The project is published from `main` at `/(root)`. If Pages has not been enabled, open **Settings → Pages → Build and deployment → Deploy from a branch → main → /(root) → Save**. The app is scoped to `/11am-literature/`, not the account-wide root.
 
-## Offline update policy
+## Verified release
 
-- The service worker is scoped to `/11am-literature/`, not the account root.
-- Every online navigation uses **network-first HTML** and updates the offline snapshot after a successful response. Offline navigation falls back to the latest successfully cached complete reader.
-- The new worker pre-caches `index.html` before activating. Versioned caches prevent an incomplete new installation from deleting the preceding edition.
-- On future publishing updates that modify core filenames or service-worker logic, bump `VERSION` in `service-worker.js` and validate the app offline again.
-- Google-hosted display fonts are attempted for offline caching; if unavailable the same text remains readable with system fallbacks. No font binaries are committed to this repository.
+- **269 physical landscape PDF pages** (source composed to 269), 378 real hierarchical bookmarks, 25 Contents links.
+- Reading 26: 4 main-note pages, 6 revision sections across 5 revision pages, plus its chapter opener; six memory aids gathered again in revision.
+- All 24 new sidebar cards aligned exactly. **512 / 513** cards in the full book aligned; a pre-existing Reading 04 card is the single exception under offline fallback metrics.
+- All earlier 24 chapter files and six stable publishing/index files preserved byte-for-byte. No CSS or compositor changes for this release.
+- Source is the named Google Drive explainer for Reading 26. Claims have **not been independently verified** against the original literary work.
+- The cumulative PDF is distributed in the conversation/Library, not auto-hosted by the site. The browser app can print/export selected chapters, but ordinary browser print may not preserve hierarchical PDF bookmarks.
 
-## Source and consistency
+## Reproducible source
 
-`index.html` is assembled from the canonical modular source, not hand-edited. The publishing source and checkpoint are retained separately as **Literature_Dossier_Source_Readings_01-23_Editorial.zip** in the project Library. Preserve original chapter content, six callout categories and six revision zones; never alter the compositor just to force lower page counts. The source build script uses `head-template.html`, `styles.css`, `engine.js`, `cover.html` and the chapter modules.
+The **complete 01–26 editable source ZIP** is included in the accompanying project deliverables/Library. The GitHub `source/` directory retains the earlier 01–25 source checkpoint; the published `index.html` is the current complete reader. The final ZIP contains `book-source/build.py`, `head-template.html`, `engine.js`, `styles.css`, all 25 chapter files, untouched source explainers, print exporter, tests, and `MANUAL_CHECKPOINT_READING_26.json`.
 
-### Verification
+```bash
+cd book-source
+python build.py
+# optional normal bookmarked PDF export on a computer with enough print-memory/time:
+python export_bookmarked.py --font-profile offline --out output/complete.pdf
+```
 
-Use browser Developer Tools → Application → Service Workers and Cache Storage: `11am-lit-reader-…-core` must contain `index.html`, `manifest.webmanifest`, and both icons. Test using **Offline** network mode, then reload and check all completed readings still load. The web app must be served through HTTPS or localhost; service workers do not work on `file://`.
+The last full PDF was built using a documented, verified fallback because one large Chromium print job timed out: fresh 4-page front matter, certified prior 01–25 PDF pages, and independently printed Reading 26, with restored bookmark and Contents link destinations. See `QA_READING_26.md` and `publish_incremental_26.py`.
 
-Editorial caveat: these are study notes generated from supplied academic reading explainers, and have not been independently verified against original publications.
+## Next step
 
-## Latest dossier release — Readings 24–25
-
-Current volume: **24 completed readings** (Reading 19 reserved); 261 pages in the first full-composition check, 259 pages after removing two almost-empty continuation pages through editorial compression. The two new chapters are **Fāṭimid Archivalia** and **Al-Muʿtaṣim’s “Bridge of Toil”**. All **47 new** sidebar cards remain on the same pages as their anchors; the sole inherited exception is the Reading 04 offline-font card. Cache version: `11am-lit-reader-01-25-v3`. The editable modular source is archived under `source/`.
+The dossier has processed every assigned reading except **Reading 19**, which remains unassigned. The recurring automation is disabled; future edits are manual.

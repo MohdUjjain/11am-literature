@@ -1,7 +1,7 @@
 /* 11AM Literature — scoped, versioned offline reader for GitHub Pages.
-   All 24 published readings are embedded in one HTML file. A PDF is NOT pre-cached.
+   All 25 published readings are embedded in one HTML file. A PDF is NOT pre-cached.
    Browser storage may still be evicted; persistent storage is requested on explicit user action. */
-const VERSION = '11am-lit-reader-01-25-v3';
+const VERSION = '11am-lit-reader-01-26-v4';
 const CORE_CACHE = VERSION + '-core';
 const FONT_CACHE = VERSION + '-fonts';
 const SCOPE = new URL(self.registration.scope);
