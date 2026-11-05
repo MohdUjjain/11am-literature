@@ -208,7 +208,13 @@
     var saved=readCheckpoint();
     if(!saved)return;
     var target=locateAnchor(saved);
-    if(saved.revision) revealRevisionTarget(target);
+    if(saved.revision && !visibleRevisions()){
+      // Old percentage-only checkpoints and removed section IDs can resolve
+      // to the chapter wrapper; still reveal its actual revision zone.
+      var revealTarget=target.closest && target.closest('.revision-zone')
+        ? target : saved.chapter.querySelector('.revision-zone');
+      revealRevisionTarget(revealTarget);
+    }
     // Older checkpoints without a passage/section ID retain one-time
     // approximate restoration, then become section anchored on scrolling.
     var top;

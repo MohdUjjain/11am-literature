@@ -162,6 +162,17 @@ assert.equal(local['11am-literature-show-revisions-v1'],'false');
 checkbox.checked=true;checkbox.handlers.change();
 assert.ok(!revision.classList.contains('lit-temporary-revision'));
 
+// An older percentage-only checkpoint inside revisions must still reopen it.
+checkbox.checked=false;checkbox.handlers.change();
+revision.classList.remove('lit-temporary-revision');
+local['11am-literature-reading-position-v1']=JSON.stringify({
+  chapter:'12',fraction:0.85,revision:true,savedAt:100
+});
+resume[1].click();
+assert.ok(revision.classList.contains('lit-temporary-revision'),
+  'Legacy checkpoint must reveal hidden revision content');
+assert.equal(local['11am-literature-show-revisions-v1'],'false');
+
 // Drawer focus should be managed, including the keyboard Tab cycle.
 const s=html.indexOf('  function initPanel(){');
 const e=html.indexOf('  // Distinct progress indicators:',s);
