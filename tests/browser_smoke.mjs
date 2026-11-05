@@ -57,7 +57,47 @@ try {
   await page.locator('.reader-result').first().waitFor({timeout:12000});
   assert.ok(await page.locator('.reader-result-snippet[dir="rtl"]').count()>0);
   await context.close();
-  console.log('PASS: Chromium responsive layout, drawer, Arabic/Latin search and stable passages');
+  // Real browser shutdown/restart: local checkpoints must remain usable.
+  const profile='/tmp/literature-c3-profile';
+  let installed=await chromium.launchPersistentContext(profile,{
+    headless:true,viewport:{width:390,height:844},reducedMotion:'reduce'});
+  let reading=installed.pages()[0] || await installed.newPage();
+  await reading.goto(url,{waitUntil:'domcontentloaded'});
+  await reading.locator('#chapter-12 .section[id]').first()
+    .evaluate(el=>el.scrollIntoView({block:'start'}));
+  await reading.waitForTimeout(1500);
+  await reading.evaluate(()=>window.dispatchEvent(new Event('scroll')));
+  const checkpoint=await reading.evaluate(()=>
+    JSON.parse(localStorage.getItem('11am-literature-reading-position-v1')));
+  assert.equal(checkpoint?.chapter,'12');
+  assert.equal(checkpoint?.version,2);
+  await installed.close();
+
+  installed=await chromium.launchPersistentContext(profile,{
+    headless:true,viewport:{width:390,height:844},reducedMotion:'reduce'});
+  reading=installed.pages()[0] || await installed.newPage();
+  await reading.goto(url,{waitUntil:'domcontentloaded'});
+  await reading.locator('#panel-toggle').click();
+  const resume=reading.locator('.reader-resume-button').first();
+  assert.equal(await resume.isDisabled(),false);
+  await resume.click();
+  await reading.waitForTimeout(250);
+  const resumedY=await reading.evaluate(()=>window.scrollY);
+  assert.ok(resumedY>1000,'Resume did not leave the cover after full browser restart');
+
+  // Two controlled tabs must reopen the complete text without a network.
+  await reading.evaluate(async()=>{await navigator.serviceWorker.ready;});
+  const another=await installed.newPage();
+  await another.goto(url,{waitUntil:'domcontentloaded'});
+  await installed.setOffline(true);
+  await reading.reload({waitUntil:'domcontentloaded'});
+  await another.reload({waitUntil:'domcontentloaded'});
+  for(const tab of [reading,another]) {
+    assert.equal(await tab.locator('#book > .chapter').count(),25,
+      'Offline multi-tab reopened an incomplete dossier');
+  }
+  await installed.close();
+  console.log('PASS: Chromium responsive layout, drawer, Arabic/Latin search and stable passages, browser restart and two-tab offline reading');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
