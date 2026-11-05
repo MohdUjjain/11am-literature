@@ -123,6 +123,32 @@ try {
   assert.ok(await page.locator('.reader-result-snippet mark.reader-result-match').first().count()>0,
     'Arabic query must highlight its actual scholarly text even inside mixed-direction cells');
   await context.close();
+  // Chromium print DOM check: one selected chapter only, independent of
+  // GitHub Pages (which deliberately never generates a PDF).
+  const printContext=await browser.newContext({viewport:{width:1024,height:800}});
+  const printPage=await printContext.newPage();
+  await printPage.goto(url,{waitUntil:'domcontentloaded'});
+  await printPage.evaluate(async()=> {
+    if(document.fonts?.ready)
+      await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,3500))]);
+  });
+  const printed=await printPage.evaluate(()=>{
+    const range=document.getElementById('range-spec');
+    range.value='1';
+    range.dispatchEvent(new Event('input',{bubbles:true}));
+    if(!window.DossierPrint?.build)throw Error('Missing preserved print compositor');
+    window.DossierPrint.build();
+    const pages=[...document.querySelectorAll('#print-root > .printed-page')];
+    return {pages:pages.length,
+      text:pages.map(p=>p.textContent||'').join(' ').slice(0,1500),
+      hasChapter12:pages.some(p=>(p.textContent||'').includes('Reading 12'))};
+  });
+  assert.ok(printed.pages>0,'Selected Reading 01 should produce print pages');
+  assert.equal(printed.hasChapter12,false,'Selected print must exclude Reading 12');
+  await printPage.emulateMedia({media:'print'});
+  assert.ok(await printPage.locator('#print-root > .printed-page').count()>0);
+  await printContext.close();
+
   // Real browser shutdown/restart: local checkpoints must remain usable.
   const profile='/tmp/literature-c3-profile';
   let installed=await chromium.launchPersistentContext(profile,{
