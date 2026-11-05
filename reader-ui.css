@@ -403,3 +403,9 @@
     overscroll-behavior-x:contain;
   }
 }
+
+/* Contain wide scholarly table descendants in their chapter's own screen scrollport.
+   The landscape print layout and compositor are unaffected. */
+@media screen and (max-width:850px) {
+  #book .chapter .leaf { overflow-x:auto; overscroll-behavior-x:contain; }
+}
