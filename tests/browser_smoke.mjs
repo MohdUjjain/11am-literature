@@ -36,7 +36,23 @@ try {
           left:Math.round(rect.left),right:Math.round(rect.right),
           width:Math.round(rect.width)
         }));
-      return {doc:document.documentElement.scrollWidth,viewport:width,offenders};
+      const rootNodes=['html','body','#book','#reading-header',
+        '.reading-header-inner','.book-cover','#book .chapter',
+        '#book .leaf','#book table','#side-panel'].map(selector=>{
+        const el=document.querySelector(selector),r=el?.getBoundingClientRect();
+        return {selector,left:r&&Math.round(r.left),right:r&&Math.round(r.right),
+          client:el?.clientWidth,scroll:el?.scrollWidth,
+          overflow:el&&getComputedStyle(el).overflowX};
+      });
+      const worst=document.querySelector('thead');
+      const sampleTable=worst?.closest('table');
+      return {doc:document.documentElement.scrollWidth,viewport:width,
+        body:document.body.scrollWidth,offenders,rootNodes,
+        table:sampleTable?{chapter:sampleTable.closest('.chapter')?.getAttribute('data-chapter'),
+          parent:sampleTable.parentElement?.className,
+          width:sampleTable.getBoundingClientRect().width,
+          client:sampleTable.clientWidth,scroll:sampleTable.scrollWidth,
+          overflow:getComputedStyle(sampleTable).overflowX}:null};
     });
     assert.ok(horizontal.doc<=horizontal.viewport+3,
       'Unexpected horizontal overflow at '+width+'px: '+JSON.stringify(horizontal));
