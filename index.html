@@ -628,6 +628,20 @@ blockquote{
   .chapter-title-page h1{ font-size:2.3rem; }
 }
 
+/* Mobile-only chapter opener: reset the desktop grid-column:2 placement.
+   Otherwise CSS Grid creates an implicit second column and crushes the thesis. */
+@media screen and (max-width:900px){
+  .chapter-title-page .opener-split{
+    grid-template-columns:minmax(0,1fr);
+    column-gap:0;
+  }
+  .chapter-title-page .thesis-block,
+  .chapter-title-page .roadmap{
+    grid-column:1;
+  }
+  .chapter-title-page .roadmap{ margin-top:1.2em; }
+}
+
 /* Oversized-component resilience: test/layout uses the same exact rules. */
 .printed-page li.list-item-continued{list-style:none;}
 .printed-page .table-row-continued td,.printed-page .table-row-continued th{
