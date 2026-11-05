@@ -392,3 +392,14 @@
     overscroll-behavior-x:contain;
   }
 }
+
+/* Some legacy wide table row-groups extend beyond their table's own scroll
+   box in Chromium. The section is the reliable horizontal scrollport, while
+   keeping every scholarly cell visible and retaining native print layout. */
+@media screen and (max-width:850px) {
+  #book .chapter .leaf .section-body {
+    max-width:100%;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+  }
+}
