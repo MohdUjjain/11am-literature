@@ -49,8 +49,19 @@ try {
             parent:x.el.parentElement?.className,
             left:Math.round(x.r.left),right:Math.round(x.r.right),
             text:x.el.textContent?.slice(0,65)})):null;
+        const tableDetails=chapter?Array.from(chapter.querySelectorAll('table')).map(t=>{
+          const tr=t.getBoundingClientRect();
+          const groups=Array.from(t.querySelectorAll('thead,tbody,tfoot,th,td')).map(x=>{
+            const r=x.getBoundingClientRect();
+            return {tag:x.tagName,right:Math.round(r.right),width:Math.round(r.width)};
+          }).filter(x=>x.right>width+3).slice(0,5);
+          return {right:Math.round(tr.right),width:Math.round(tr.width),
+            scroll:t.scrollWidth,client:t.clientWidth,
+            display:getComputedStyle(t).display,layout:getComputedStyle(t).tableLayout,
+            cells:groups};
+        }).filter(t=>t.right>width+3||t.cells.length>0).slice(0,5):null;
         return {viewport:width,doc:document.documentElement.scrollWidth,
-          chapters,detailed,book:document.getElementById('book').scrollWidth};
+          chapters,detailed,tableDetails,book:document.getElementById('book').scrollWidth};
       });
       assert.fail('Unexpected horizontal overflow at '+width+'px: '+
         JSON.stringify(horizontal));
