@@ -105,7 +105,7 @@
       var code = source.codePointAt(i);
       var char = String.fromCodePoint(code);
       var transformed = normalize(char);
-      if (/\\s/u.test(char)) transformed = ' ';
+      if (/\s/u.test(char)) transformed = ' ';
       if (transformed === ' ' && (!value || value.endsWith(' '))) {
         i += char.length; continue;
       }
@@ -117,7 +117,7 @@
     return {value:value,offsets:offsets,source:source};
   }
   function excerptMatch(text, query, maxChars) {
-    var mapped = mappedText(String(text || '').replace(/\\s+/g,' '));
+    var mapped = mappedText(String(text || '').replace(/\s+/g,' '));
     var terms = normalize(query).split(' ').filter(Boolean);
     var hits = [];
     terms.forEach(function(term) {
