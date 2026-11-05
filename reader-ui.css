@@ -377,3 +377,6 @@
     outline:1px solid var(--rule-strong);
   }
 }
+
+/* Modal drawer blocks background reading scroll; screen only. */
+@media screen { body.lit-drawer-open {overflow:hidden;} }
