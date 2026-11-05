@@ -46,8 +46,21 @@ try {
       });
       const worst=document.querySelector('thead');
       const sampleTable=worst?.closest('table');
+      const chapterWidths=Array.from(document.querySelectorAll('#book > .chapter'))
+        .map(ch=>({number:ch.getAttribute('data-chapter'),client:ch.clientWidth,
+           scroll:ch.scrollWidth,right:Math.round(ch.getBoundingClientRect().right)}))
+        .filter(ch=>ch.scroll>width+3);
+      const otherOffenders=Array.from(document.querySelectorAll('#book *'))
+        .filter(el=>!el.closest('table'))
+        .map(el=>({el,rect:el.getBoundingClientRect()}))
+        .filter(x=>x.rect.width>0 && x.rect.left<width &&
+          x.rect.right>width+3)
+        .sort((x,y)=>y.rect.right-x.rect.right).slice(0,14)
+        .map(x=>({tag:x.el.tagName,cls:String(x.el.className).slice(0,70),
+          chapter:x.el.closest('.chapter')?.getAttribute('data-chapter'),
+          left:Math.round(x.rect.left),right:Math.round(x.rect.right)}));
       return {doc:document.documentElement.scrollWidth,viewport:width,
-        body:document.body.scrollWidth,offenders,rootNodes,
+        body:document.body.scrollWidth,offenders,rootNodes,chapterWidths,otherOffenders,
         table:sampleTable?{chapter:sampleTable.closest('.chapter')?.getAttribute('data-chapter'),
           parent:sampleTable.parentElement?.className,
           width:sampleTable.getBoundingClientRect().width,
