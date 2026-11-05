@@ -35,8 +35,20 @@ try {
             leaf:ch.querySelector('.leaf')?.scrollWidth,
             revision:ch.querySelector('.revision-zone')?.scrollWidth}))
           .filter(ch=>ch.scroll>width+3);
+        const worst=chapters.slice().sort((a,b)=>b.scroll-a.scroll)[0];
+        const chapter=worst && document.querySelector(
+          '#book > .chapter[data-chapter="'+worst.number+'"]');
+        const detailed=chapter?Array.from(chapter.querySelectorAll('*'))
+          .filter(el=>!el.closest('table'))
+          .map(el=>({el,r:el.getBoundingClientRect()}))
+          .filter(x=>x.r.width>0 && x.r.left<width && x.r.right>width+4)
+          .sort((a,b)=>b.r.right-a.r.right).slice(0,16)
+          .map(x=>({tag:x.el.tagName,cls:String(x.el.className).slice(0,70),
+            parent:x.el.parentElement?.className,
+            left:Math.round(x.r.left),right:Math.round(x.r.right),
+            text:x.el.textContent?.slice(0,65)})):null;
         return {viewport:width,doc:document.documentElement.scrollWidth,
-          chapters,book:document.getElementById('book').scrollWidth};
+          chapters,detailed,book:document.getElementById('book').scrollWidth};
       });
       assert.fail('Unexpected horizontal overflow at '+width+'px: '+
         JSON.stringify(horizontal));
