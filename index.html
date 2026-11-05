@@ -2179,6 +2179,11 @@ blockquote{
       });
     }
     function open(){
+      var book=document.getElementById('book');
+      var header=document.getElementById('reading-header');
+      if(book)book.inert=true;
+      if(header)header.inert=true;
+      document.body.classList.add('lit-drawer-open');
       panel.inert = false;
       panel.removeAttribute('inert');
       panel.classList.add('open');
@@ -2193,6 +2198,11 @@ blockquote{
       panel.classList.remove('open');
       backdrop.classList.remove('open');
       toggle.setAttribute('aria-expanded','false');
+      var book=document.getElementById('book');
+      var header=document.getElementById('reading-header');
+      if(book)book.inert=false;
+      if(header)header.inert=false;
+      document.body.classList.remove('lit-drawer-open');
       // Move focus out before applying inert + aria-hidden.
       if(restoreFocus) toggle.focus();
       else if(panel.contains(document.activeElement)) document.activeElement.blur();
