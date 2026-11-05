@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete Literature Dossier Notes — Daraja Hadi Ashar</title>
+<meta name="author" content="Mohammed Husain Ujjainwala, TR: 25368, Hadi Ashar 1448H">
+<meta name="description" content="Literature Dossier Notes for Daraja Hadi Ashar: 25 completed academic readings, with passage-linked analysis and revision tools. Read online or offline.">
+<meta name="theme-color" content="#2A2016">
+<meta name="application-name" content="11AM Literature Dossier">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="11AM Literature">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="canonical" href="https://mohdujjain.github.io/11am-literature/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="11AM Literature Dossier">
+<meta property="og:title" content="11AM Literature Dossier Notes">
+<meta property="og:description" content="25 completed academic literature readings with scholarly notes, memory aids and revision sections. Install for offline study.">
+<meta property="og:url" content="https://mohdujjain.github.io/11am-literature/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://mohdujjain.github.io/11am-literature/og-image.png">
+<meta property="og:image:secure_url" content="https://mohdujjain.github.io/11am-literature/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="11AM Literature Dossier Notes — a gold-and-ink academic book cover">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="11AM Literature Dossier Notes">
+<meta name="twitter:description" content="A complete academic literature study companion with 25 published readings and offline access.">
+<meta name="twitter:image" content="https://mohdujjain.github.io/11am-literature/og-image.png">
+<meta name="twitter:image:alt" content="11AM Literature Dossier Notes social-sharing preview">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ============================================================
+   LANDSCAPE NOTES — DESIGN SYSTEM
+   Palette + type derived from Fāṭimid chancery illumination:
+   parchment ground, iron-gall ink, and the five pigments used
+   in medieval Islamicate manuscript rubrication (lapis, verdigris,
+   ochre, vermillion, Tyrian purple) — repurposed as the six
+   mandatory note categories so the colour system reads as part
+   of the document's own world, not a UI convention imported
+   from elsewhere.
+   ============================================================ */
+
+:root{
+  /* -- ground & ink -- */
+  --parchment:       #F3E9D2;
+  --parchment-deep:  #EADFC0;
+  --paper-card:      #FBF6EA;
+  --ink:             #2A2016;
+  --ink-soft:        #59493A;
+  --ink-faint:       #8C7A63;
+  --rule:            #C9B48A;
+  --rule-strong:     #B8892A;
+
+  /* -- six category pigments: PERMANENT identity colours, never
+        reassigned, never vary by chapter or zone. This is the
+        pedagogical colour code a reader learns once and reuses
+        across all 26 readings -- */
+  --def:        #2B4A73;
+  --concept:    #3E6B54;
+  --tip:        #9C6B14;
+  --mistake:    #8B3226;
+  --memory:     #5C3358;
+  --highyield:  #B8892A;
+
+  /* -- zone-aware callout theming. Every callout
+        rule below reads ONLY these custom properties, never a raw
+        hex value — so a new visual zone (like .revision-zone below)
+        adapts every category at once just by redefining this block
+        once, instead of needing a hand-written override per category
+        every time a new surface is introduced. -- */
+  --zone-fg:              var(--ink);
+  --zone-def-bg:          #E7ECF2;  --zone-def-border:        var(--def);
+  --zone-concept-bg:      #E6EEE9;  --zone-concept-border:    var(--concept);
+  --zone-tip-bg:          #F4EBD9;  --zone-tip-border:        var(--tip);
+  --zone-mistake-bg:      #F3E3E0;  --zone-mistake-border:    var(--mistake);
+  --zone-memory-bg:       #EDE2EC;  --zone-memory-border:     var(--memory);
+  --zone-highyield-bg:    #F6EDDA;  --zone-highyield-border:  var(--highyield);
+
+  /* -- chapter identity accent: rotates per chapter (see the lookup
+        table in references/03-print-engineering.md), deliberately
+        chosen to never fall near any of the six category hues above,
+        so it can never be mistaken for a category colour. Used only
+        for per-chapter "which volume am I in" touches (opener rule,
+        eyebrow, section-number chips) -- never for callouts. Set
+        inline per .chapter element; this is just the fallback. -- */
+  --chapter-accent: var(--rule-strong);
+
+  /* -- type -- */
+  --font-display:   'Fraunces', 'EB Garamond', Georgia, serif;
+  --font-body:      'Spectral', 'EB Garamond', Georgia, serif;
+  --font-utility:   'IBM Plex Sans', 'Inter', Arial, sans-serif;
+  --font-arabic:        'Amiri', serif;
+  --font-arabic-display:'Aref Ruqaa', 'Amiri', serif;
+  --font-arabic-utility:'IBM Plex Sans Arabic', 'Noto Sans Arabic', sans-serif;
+
+  --gutter: 34px;
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background: #DCD0AE;
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.6;
+}
+
+h1,h2,h3,h4{ font-family:var(--font-display); font-weight:600; color:var(--ink); margin:0 0 .4em; }
+p{ margin:0 0 1em; }
+.arabic{ direction:rtl; unicode-bidi:isolate; font-family:var(--font-arabic); text-align:right; }
+.arabic-display{ font-family:var(--font-arabic-display); }
+
+/* ============================================================
+   APP CHROME — on-screen only, never printed
+   ============================================================ */
+.app-chrome{ font-family:var(--font-utility); }
+
+/* -- sticky reader header: one continuous book rail, separate chapter ring.
+   Screen only; printed page composition remains completely independent. -- */
+#reading-header{
+  position:sticky; top:0; z-index:60;
+  background:var(--ink);
+}
+.reading-header-inner{
+  display:flex; align-items:center; gap:10px;
+  min-height:53px; padding:7px 63px 7px 16px;
+  overflow:hidden; white-space:nowrap;
+}
+#rh-chapter-tag{
+  font-family:var(--font-display); font-weight:600; font-size:.8rem;
+  color:var(--rule-strong); flex:none;
+}
+#rh-chapter-title{
+  font-size:.82rem; color:#D9CBAE; text-overflow:ellipsis;
+  overflow:hidden; min-width:0; flex:1 1 auto;
+}
+.rh-book-meter{
+  flex:none; display:flex; gap:6px; align-items:baseline;
+  color:#D9CBAE; font:600 10px var(--font-utility);
+  letter-spacing:.06em;
+}
+#rh-book-percent{color:var(--parchment);font-size:12px;letter-spacing:0;}
+.rh-reading-ring{
+  --reading-angle:0%;
+  --ring-accent:var(--rule-strong);
+  flex:none;display:grid;place-items:center;
+  width:36px;height:36px;border-radius:50%;position:relative;
+  background:conic-gradient(var(--ring-accent) var(--reading-angle),rgba(255,255,255,.16) 0);
+}
+.rh-reading-ring::before{
+  content:'';position:absolute;inset:4px;
+  background:var(--ink);border-radius:50%;
+}
+.rh-reading-ring > span{
+  position:relative; color:var(--parchment);
+  font:700 10px var(--font-utility);font-variant-numeric:tabular-nums;
+}
+.progress-track{
+  height:3px; background:rgba(255,255,255,.09);overflow:hidden;
+}
+.progress-fill{
+  height:100%;width:0%;background:var(--rule-strong);
+  transition:width .12s linear;
+}
+@media screen and (max-width:530px){
+  .reading-header-inner{gap:8px;padding-left:12px;}
+  .rh-book-meter{font-size:0;gap:0;letter-spacing:0;}
+  #rh-book-percent{font-size:11px;}
+}
+
+/* -- floating trigger + slide-out panel (Contents + Export merged) -- */
+.panel-widget{ position:relative; }
+#panel-toggle{
+  position:fixed; top:12px; right:14px; z-index:80;
+  width:40px; height:40px; border-radius:50%;
+  border:1px solid var(--rule-strong); background:var(--ink); color:var(--parchment);
+  font-family:var(--font-utility); font-size:1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.3);
+}
+#side-panel{
+  position:fixed; top:0; right:0; height:100%; width:320px; max-width:88vw; z-index:90;
+  background:var(--parchment-deep); border-left:1px solid var(--rule);
+  border-radius:18px 0 0 18px;
+  transform:translateX(100%); transition:transform .22s ease;
+  overflow-y:auto; padding:58px 20px 34px;
+}
+#side-panel.open{ transform:translateX(0); }
+#panel-backdrop{
+  position:fixed; inset:0; background:rgba(20,15,8,.4); z-index:85;
+  opacity:0; pointer-events:none; transition:opacity .22s ease;
+}
+#panel-backdrop.open{ opacity:1; pointer-events:auto; }
+#panel-close{
+  position:absolute; top:14px; right:16px; background:none; border:none;
+  font-size:1.2rem; line-height:1; cursor:pointer; color:var(--ink-soft);
+}
+
+.panel-section{ margin-bottom:30px; }
+.panel-section h4{ font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:.8em; }
+.panel-buttons{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.range-controls{ display:flex; flex-direction:column; gap:6px; font-size:.82rem; }
+.range-controls label{ font-weight:600; color:var(--ink-soft); }
+.range-controls input{
+  width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--rule);
+  background:var(--paper-card); color:var(--ink); font-family:var(--font-utility); box-sizing:border-box;
+}
+.range-controls input:focus{ outline:2px solid var(--rule-strong); outline-offset:1px; }
+.range-warning{
+  display:flex; gap:8px; align-items:flex-start; margin-top:8px; padding:10px 12px;
+  border-radius:10px; background:var(--zone-mistake-bg); border-left:3px solid var(--zone-mistake-border);
+  font-size:.78rem; color:var(--ink);
+}
+.range-warning::before{ content:"⚠"; color:var(--zone-mistake-border); font-size:.9rem; flex:none; }
+#panel-toggle, .panel-buttons button{
+  font-family:var(--font-utility); font-weight:600; letter-spacing:.02em; cursor:pointer;
+}
+.panel-buttons button{
+  font-size:.8rem; border:1px solid var(--rule-strong); background:var(--rule-strong); color:#241a0c;
+  padding:7px 16px; border-radius:10px;
+}
+.panel-buttons button.ghost{ background:transparent; color:var(--ink); border-color:var(--rule); }
+.panel-buttons button:disabled{opacity:.48;cursor:not-allowed;filter:grayscale(.4);}
+#range-status{ display:block; font-size:.75rem; color:var(--ink-faint); margin-top:6px; }
+.toggle-row{
+  display:flex; align-items:center; gap:8px; margin-top:14px;
+  font-size:.82rem; color:var(--ink-soft); cursor:pointer;
+}
+.toggle-row input{ accent-color:var(--rule-strong); width:15px; height:15px; }
+
+#toc-list h4{ font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:.8em; }
+#toc-list .toc-chapter{ margin-bottom:.2em; border-bottom:1px solid var(--rule); }
+#toc-list .toc-chapter-row{ display:flex; align-items:baseline; gap:8px; padding:8px 0; }
+#toc-list .toc-toggle{
+  flex:none; width:18px; height:18px; border:none; background:none; cursor:pointer;
+  color:var(--ink-faint); font-size:.7rem; padding:0; line-height:18px; text-align:center;
+}
+#toc-list .toc-chapter-row > a{ font-weight:600; color:var(--ink); text-decoration:none; font-size:.85rem; line-height:1.35; }
+#toc-list .toc-chapter ul{ list-style:none; margin:0 0 .6em; padding:0 0 0 26px; border-left:2px solid var(--rule); display:none; }
+#toc-list .toc-chapter.open ul{ display:block; }
+#toc-list .toc-chapter.open .toc-toggle{ color:var(--rule-strong); }
+#toc-list li{ margin:.35em 0; }
+#toc-list a{ color:var(--ink-soft); text-decoration:none; font-size:.8rem; display:block; padding:2px 0; }
+#toc-list a:hover, #toc-list a.active{ color:var(--rule-strong); }
+
+#book{ padding:0; }
+
+/* -- book cover (front matter, not tied to any single chapter,
+      so it uses the neutral gold accent rather than --chapter-accent) -- */
+.book-cover{ background:var(--ink); color:var(--parchment); }
+.cover-leaf{ min-height:92vh; display:flex; flex-direction:column; justify-content:center; max-width:1100px; }
+.cover-kicker{ font-family:var(--font-utility); text-transform:uppercase; letter-spacing:.16em; font-size:.85rem; color:var(--rule-strong); margin-bottom:20px; }
+.cover-title{ font-family:var(--font-display); font-weight:600; font-size:3.6rem; line-height:1.08; color:var(--parchment); margin-bottom:.25em; max-width:19ch; }
+.cover-rule{ width:140px; height:3px; background:var(--rule-strong); border:none; margin:22px 0 26px; }
+.cover-subtitle{ font-family:var(--font-body); font-style:italic; font-size:1.2rem; color:#D9CBAE; margin-bottom:3.2em; }
+.cover-signoff{
+  font-family:var(--font-utility); font-size:.78rem; color:#C9B48A; line-height:1.65;
+  border-top:1px solid #5a4c38; padding-top:14px; max-width:260px;
+}
+.cover-signoff .signoff-name{ display:block; color:#E7DBC0; }
+
+/* -- printed contents page: front matter, same ink theme as the cover -- */
+.contents-page{ color:var(--parchment); }
+.contents-page h1{ font-family:var(--font-display); font-size:2.2rem; color:var(--parchment); margin-bottom:.15em; }
+.contents-page .contents-scope{ font-family:var(--font-utility); font-size:.85rem; color:#C9B48A; margin-bottom:1.6em; }
+.contents-list{ list-style:none; margin:0; padding:0; counter-reset:contents-order; }
+.contents-list li{
+  counter-increment:contents-order;
+  display:flex; align-items:baseline; gap:14px; padding:10px 0;
+  border-bottom:1px solid #4a3c28; font-family:var(--font-utility);
+}
+.contents-list li::before{
+  content:counter(contents-order) ".";
+  color:var(--rule-strong); font-weight:700; min-width:1.6em; text-align:right; flex:none;
+}
+.contents-list .contents-tag{ color:var(--rule-strong); font-weight:600; font-size:.82rem; min-width:5.5em; flex:none; }
+.contents-list .contents-title{ color:#E7DBC0; flex:1; }
+
+/* ============================================================
+   CHAPTER / PAGE CANVAS  (wide, landscape-proportioned reading
+   surface — the "cinematic" screen experience Mohammed asked
+   for; true fixed-height pagination is computed only at print
+   time, see @media print below)
+   ============================================================ */
+.chapter{ background:var(--parchment); }
+.leaf{
+  max-width:1520px; margin:0 auto; padding:56px 64px 64px;
+}
+
+/* -- chapter opener / title page -- */
+.chapter-title-page{
+  min-height:78vh; display:flex; flex-direction:column; justify-content:center;
+  position:relative; padding:56px 64px; margin:0 -64px;
+  background:color-mix(in srgb, var(--chapter-accent) 20%, var(--parchment));
+  border-top:3px solid var(--chapter-accent);
+  border-bottom:3px solid var(--chapter-accent);
+}
+.reading-eyebrow{ font-family:var(--font-utility); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; color:var(--chapter-accent); margin-bottom:14px; }
+.chapter-title-page h1{ font-size:3.4rem; line-height:1.05; max-width:16ch; margin-bottom:.25em; }
+.chapter-title-page .subtitle{ font-family:var(--font-body); font-style:italic; font-size:1.25rem; color:var(--ink-soft); max-width:52ch; margin-bottom:1.6em; }
+.gold-rule{ width:120px; height:3px; background:var(--chapter-accent); margin:0 0 1.6em; border:none; }
+.opener-split{ display:grid; grid-template-columns:1.15fr 1fr; gap:0 48px; align-items:start; }
+.thesis-block{ grid-column:1; }
+.thesis-block .kicker{ font-family:var(--font-utility); font-weight:600; font-size:.75rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:.5em; }
+.thesis-block p{ font-size:1.08rem; }
+.roadmap{ grid-column:2; font-family:var(--font-utility); font-size:.86rem; color:var(--ink-soft); background:rgba(255,255,255,0.4); border-radius:16px; padding:20px 22px; border:1px solid rgba(255,255,255,0.55); box-shadow:0 1px 2px rgba(20,15,8,.04), 0 8px 24px -8px rgba(20,15,8,.12); }
+.roadmap .kicker{ font-family:var(--font-utility); font-weight:600; font-size:.75rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); }
+.roadmap ol{ padding-left:1.1em; margin:.5em 0 0; }
+.roadmap li{ margin-bottom:.45em; }
+.source-cite{ margin-top:1.6em; font-family:var(--font-utility); font-size:.78rem; color:var(--ink-soft); border-top:1px solid rgba(255,255,255,0.5); padding-top:1em; max-width:60ch; }
+
+/* -- section structure -- */
+.section{ padding:58px 0 52px; border-top:none; position:relative; }
+.section::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--rule) 18%, var(--rule) 82%, transparent);
+}
+.section::after{
+  content:'❦'; position:absolute; top:0; left:50%; transform:translate(-50%,-52%);
+  font-size:1rem; color:var(--rule-strong); background:var(--parchment); padding:0 18px; line-height:1;
+}
+.section-number{ font-family:var(--font-display); font-size:.85rem; color:var(--chapter-accent); letter-spacing:.06em; }
+.section h2{ font-size:2rem; margin-bottom:.7em; }
+.section h3{ font-size:1.3rem; margin-top:1.6em; }
+.section-body{ display:flow-root; position:relative; }
+
+/* -- callouts: everything lives in main flow now. No sidebar/float
+      mechanism — that was tried three ways (section-wide float,
+      per-paragraph grid, then float again) and never stabilised, so
+      it's gone. Creative presentation comes from .callout-grid
+      clustering adjacent callouts instead of a persistent side column. -- */
+.callout{
+  margin:1.4em 0; padding:18px 22px; border-radius:14px; border-left:5px solid var(--ink-faint);
+  color:var(--zone-fg);
+  background:var(--paper-card);
+  box-shadow:0 1px 2px rgba(20,15,8,.05), 0 6px 18px -6px rgba(20,15,8,.10);
+  backdrop-filter:blur(16px) saturate(190%);
+  -webkit-backdrop-filter:blur(16px) saturate(190%);
+  break-inside:avoid;
+}
+.callout .tag{ display:flex; align-items:center; gap:6px; font-family:var(--font-utility); font-weight:700; font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; margin-bottom:.5em; }
+.callout p:last-child{ margin-bottom:0; }
+.callout p{ color:var(--zone-fg); }
+.callout--definition{ background:var(--zone-def-bg); border-left-color:var(--zone-def-border); }
+.callout--definition .tag{ color:var(--zone-def-border); }
+.callout--concept{ background:var(--zone-concept-bg); border-left-color:var(--zone-concept-border); }
+.callout--concept .tag{ color:var(--zone-concept-border); }
+.callout--examtip{ background:var(--zone-tip-bg); border-left-color:var(--zone-tip-border); }
+.callout--examtip .tag{ color:var(--zone-tip-border); }
+.callout--mistake{ background:var(--zone-mistake-bg); border-left-color:var(--zone-mistake-border); }
+.callout--mistake .tag{ color:var(--zone-mistake-border); }
+.callout--memory{ background:var(--zone-memory-bg); border-left-color:var(--zone-memory-border); }
+.callout--memory .tag{ color:var(--zone-memory-border); }
+.callout--highyield{ background:var(--zone-highyield-bg); border-left-color:var(--zone-highyield-border); }
+.callout--highyield .tag{ color:var(--zone-highyield-border); }
+
+/* -- callout-grid: creative clustering for adjacent callouts. Same
+      mechanism whether the items share a category or not — an
+      adaptive grid that resolves to 2, 3, or more columns depending
+      on how many items and how much width is available, instead of a
+      fixed layout per count. Items keep their own category colours;
+      the grid gives them a considered shared composition rather than
+      a monotonous vertical stack. -- */
+.callout-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:16px; margin:1.4em 0; break-inside:avoid;
+}
+.callout-grid .callout{ margin:0; height:100%; }
+.callout-grid-label{
+  font-family:var(--font-utility); font-weight:600; font-size:.7rem; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--ink-faint); margin-bottom:.6em;
+}
+
+/* -- tables -- */
+table{ width:100%; border-collapse:collapse; margin:1.3em 0; font-size:.88rem; break-inside:avoid; border-radius:14px; overflow:hidden; border:1px solid var(--rule); box-shadow:0 1px 2px rgba(20,15,8,.05), 0 8px 22px -8px rgba(20,15,8,.12); }
+thead{ display:table-header-group; }
+th{ font-family:var(--font-utility); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; text-align:left; background:var(--ink); color:var(--parchment); padding:10px 14px; }
+td{ padding:10px 14px; border-bottom:1px solid var(--rule); vertical-align:top; }
+tr:nth-child(even) td{ background:rgba(184,137,42,0.06); }
+.table-caption{ font-family:var(--font-utility); font-size:.75rem; color:var(--ink-faint); margin-top:-.8em; margin-bottom:1.2em; }
+
+/* -- manuscript figure -- */
+figure.manuscript{
+  background:var(--paper-card); border:1px solid var(--rule); padding:26px; border-radius:16px;
+  box-shadow:0 1px 2px rgba(20,15,8,.05), 0 10px 28px -10px rgba(20,15,8,.14);
+  display:flex; gap:28px; align-items:flex-start; break-inside:avoid; margin:1.4em 0;
+}
+figure.manuscript img{ max-height:520px; width:auto; border:1px solid var(--rule); border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.16); }
+figure.manuscript figcaption{ font-family:var(--font-utility); font-size:.84rem; color:var(--ink-soft); }
+figure.manuscript figcaption .cap-title{ font-weight:600; color:var(--ink); display:block; margin-bottom:.4em; }
+figure.manuscript dl{ margin-top:1em; font-size:.8rem; }
+figure.manuscript dt{ font-weight:600; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; font-size:.68rem; margin-top:.6em; }
+figure.manuscript dd{ margin:0; }
+
+/* -- arabic transcription block -- */
+.transcription{
+  background:var(--paper-card); border:1px solid var(--rule); padding:26px 34px; border-radius:16px;
+  box-shadow:0 1px 2px rgba(20,15,8,.05), 0 10px 28px -10px rgba(20,15,8,.14);
+  font-family:var(--font-arabic); font-size:1.2rem; line-height:1.95; direction:rtl; text-align:right;
+  break-inside:avoid;
+  column-count:3; column-gap:30px; column-rule:1px solid var(--rule);
+}
+.transcription .line{ display:block; break-inside:avoid; }
+.transcription .line .ln{ font-family:var(--font-utility); font-size:.62rem; color:var(--ink-faint); direction:ltr; unicode-bidi:isolate; margin-left:6px; vertical-align:super; }
+
+.translation-block{ background:var(--paper-card); border:1px solid var(--rule); padding:30px 38px; border-radius:16px; box-shadow:0 1px 2px rgba(20,15,8,.05), 0 10px 28px -10px rgba(20,15,8,.14); break-inside:avoid; }
+.translation-block ol{ margin:0; padding-left:1.4em; }
+.translation-block li{ margin-bottom:.6em; }
+.translation-block li::marker{ font-family:var(--font-utility); color:var(--ink-faint); font-size:.8rem; }
+
+/* -- revision zone: deliberately contrasting "ink" ground, always its
+      own fresh page/screen block, never a subtle shade of the main
+      parchment -- */
+.revision-zone{
+  background:var(--ink); color:var(--parchment);
+  /* Redefine the zone theming block once — every callout adapts
+     of every category adapts automatically from here. Adding a
+     seventh visual zone later means adding one block like this, not
+     touching .callout--* rules again. */
+  --zone-fg:              #E7DBC0;
+  --zone-def-bg:          rgba(127,160,201,0.13);  --zone-def-border:        #7FA0C9;
+  --zone-concept-bg:      rgba(127,182,154,0.13);  --zone-concept-border:    #7FB69A;
+  --zone-tip-bg:          rgba(212,169,76,0.12);   --zone-tip-border:        #D4A94C;
+  --zone-mistake-bg:      rgba(217,138,122,0.12);  --zone-mistake-border:    #D98A7A;
+  --zone-memory-bg:       rgba(181,131,174,0.13);  --zone-memory-border:     #B583AE;
+  --zone-highyield-bg:    rgba(224,184,92,0.12);   --zone-highyield-border:  #E0B85C;
+}
+.revision-zone .callout{ border:1px solid rgba(255,255,255,0.09); border-left-width:5px; }
+.revision-leaf{ max-width:1520px; margin:0 auto; padding:56px 64px 72px; }
+.revision-kicker{
+  font-family:var(--font-utility); text-transform:uppercase; letter-spacing:.14em;
+  font-size:.78rem; color:var(--chapter-accent); margin-bottom:.3em;
+}
+.revision-zone h2{ color:var(--parchment); }
+.revision-zone .section::before{ background:linear-gradient(90deg, transparent, #5a4c38 18%, #5a4c38 82%, transparent); }
+.revision-zone .section::after{ background:var(--ink); color:var(--chapter-accent); }
+.revision-kicker + .section::before, .revision-kicker + .section::after{ content:none; }
+.revision-zone .section-body{ padding-right:0; }
+.revision-zone .section-number{ color:var(--chapter-accent); }
+.revision-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:22px; }
+.revision-card{ background:#3A2E20; border:1px solid #5a4c38; border-radius:14px; box-shadow:0 1px 2px rgba(0,0,0,.15), 0 8px 22px -8px rgba(0,0,0,.3); padding:22px 26px; break-inside:avoid; color:var(--parchment); }
+.revision-card h3{ margin-top:0; font-size:1.05rem; color:#F0E4C8; }
+.revision-card ul{ padding-left:1.2em; margin:0; }
+.revision-card li{ margin-bottom:.5em; font-size:.92rem; }
+.revision-zone p{ color:#E7DBC0; }
+.revision-zone table th{ background:#4a3c28; color:var(--parchment); }
+.revision-zone table td{ border-bottom-color:#5a4c38; }
+.revision-zone tr:nth-child(even) td{ background:rgba(201,180,138,0.06); }
+.exam-q{ margin-bottom:.9em; }
+.exam-q .qtype{ font-family:var(--font-utility); font-size:.65rem; text-transform:uppercase; letter-spacing:.06em; color:var(--chapter-accent); font-weight:700; }
+
+blockquote{
+  margin:1.2em 0; padding:2px 0 2px 20px; border-left:3px solid var(--rule-strong);
+  font-style:italic; color:var(--ink-soft);
+}
+
+.chip{ display:inline-block; font-family:var(--font-utility); font-size:.68rem; font-weight:600; padding:2px 8px; border-radius:10px; background:var(--parchment-deep); color:var(--ink-soft); }
+
+.hint{ font-size:.72rem; color:#C9B48A; font-family:var(--font-utility); }
+
+/* ============================================================
+   PAGED MEDIA ENGINE — fixed 16:9 geometry in SCREEN AND PRINT.
+   Important: the off-screen compositor uses regular screen CSS.
+   ALL dimensions needed by JS must be defined here, NEVER only
+   inside @media print. A page is never taller than one sheet.
+   ============================================================ */
+#print-root{ display:none; }
+.pagination-measure-rig{
+  position:fixed!important;top:0!important;left:-30000px!important;
+  width:13.333in!important;visibility:hidden!important;
+  pointer-events:none!important;z-index:-1!important;
+}
+@page{ size:13.333in 7.5in; margin:0; }
+.printed-page{
+  box-sizing:border-box;position:relative;
+  width:13.333in;height:7.5in;min-height:7.5in;max-height:7.5in;
+  background:var(--parchment);color:var(--ink);overflow:hidden;
+  font-size:15px;line-height:1.48;
+  break-after:page;page-break-after:always;
+  --zone-fg:var(--ink);
+}
+.printed-page.theme-ink{
+  background:var(--ink);color:var(--parchment);
+  --zone-fg: #E7DBC0;
+  --zone-def-bg:rgba(127,160,201,.13);--zone-def-border:#7FA0C9;
+  --zone-concept-bg:rgba(127,182,154,.13);--zone-concept-border:#7FB69A;
+  --zone-tip-bg:rgba(212,169,76,.12);--zone-tip-border:#D4A94C;
+  --zone-mistake-bg:rgba(217,138,122,.12);--zone-mistake-border:#D98A7A;
+  --zone-memory-bg:rgba(181,131,174,.13);--zone-memory-border:#B583AE;
+  --zone-highyield-bg:rgba(224,184,92,.12);--zone-highyield-border:#E0B85C;
+}
+.printed-page .printed-body{
+  position:absolute;left:.62in;right:.62in;top:1.04in;bottom:.91in;
+  height:auto;min-height:0;overflow:visible;
+}
+.printed-page.opener .printed-body{
+  left:.72in;right:.72in;top:.52in;bottom:.52in;
+}
+.printed-page .page-header-band{
+  position:absolute;top:.47in;left:.62in;right:.62in;height:.35in;
+  display:flex;align-items:center;
+  font-family:var(--font-utility);font-size:10pt;letter-spacing:.045em;
+  text-transform:uppercase;color:var(--ink-soft);
+  border-bottom:1px solid var(--rule-strong);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.printed-page .page-header-band span{
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+.printed-page.theme-ink .page-header-band{
+  color:#C9B48A;border-bottom-color:#6b5c46;
+}
+.printed-page .page-footer-band{
+  position:absolute;bottom:.43in;left:.62in;right:.62in;height:.3in;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--font-utility);font-size:9pt;color:var(--ink-faint);
+  border-top:1px solid var(--rule);
+}
+.printed-page.theme-ink .page-footer-band{
+  color:#C9B48A;border-top-color:#6b5c46;
+}
+.printed-page.opener .page-header-band,.printed-page.opener .page-footer-band{display:none;}
+.printed-page .printed-body > :first-child{margin-top:0;}
+.printed-page .page-section-heading{
+  margin:16px 0 12px;padding:10px 0 0;
+  border-top:1px solid var(--rule);
+}
+.printed-page .page-section-heading:first-child{margin-top:0;}
+.printed-page .page-section-heading .section-number{
+  font-family:var(--font-display);font-size:.73rem;color:var(--chapter-accent);
+  display:block;margin-bottom:3px;
+}
+.printed-page .page-section-heading h2{
+  font-size:1.55rem;line-height:1.18;margin:0;
+}
+.printed-page.theme-ink .page-section-heading{border-top-color:#66543c;}
+.printed-page.theme-ink h1,.printed-page.theme-ink h2,.printed-page.theme-ink h3{color:#F0E4C8;}
+.printed-page.theme-ink .page-section-heading h2{color:#F0E4C8;}
+.printed-page.theme-ink p,.printed-page.theme-ink li{color:#E7DBC0;}
+.printed-page.theme-ink .callout{border-color:rgba(255,255,255,.1);border-left-width:5px;}
+.printed-page.theme-ink .callout p{color:var(--zone-fg);}
+.printed-page.theme-ink .revision-card li{color:#E7DBC0;}
+.printed-page.theme-ink .revision-card h3{color:#F0E4C8;}
+.printed-page.theme-ink table th{background:#4a3c28;color:#F0E4C8;}
+.printed-page.theme-ink table td{border-bottom-color:#5a4c38;}
+.printed-page.theme-ink .exam-q .qtype{color:#D4A94C;}
+.printed-page .printed-body > p{
+  margin:0 0 .7em;orphans:2;widows:2;
+}
+.printed-page .printed-body > h3{font-size:1.1rem;margin:1em 0 .45em;}
+.printed-page .printed-body .callout{
+  margin:.8em 0;padding:12px 16px;backdrop-filter:none;-webkit-backdrop-filter:none;
+  break-inside:auto;
+}
+.printed-page .printed-body .callout .tag{font-size:.68rem;}
+.printed-page .callout-grid{margin:.8em 0;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+.printed-page .callout-grid .callout{margin:0;}
+.printed-page table{
+  font-size:.78rem;margin:.7em 0;border-radius:12px;
+  break-inside:auto;overflow:visible;
+}
+.printed-page table th{padding:7px 10px;font-size:.68rem;}
+.printed-page table td{padding:7px 10px;}
+.printed-page .printed-body > .table-caption{font-size:.7rem;margin:-.2em 0 .8em;}
+.printed-page .translation-block{
+  padding:14px 22px;margin:.6em 0;break-inside:auto;
+}
+.printed-page .translation-block li{margin:0 0 .26em;}
+.printed-page .transcription{
+  padding:15px 22px;font-size:1rem;line-height:1.7;
+  column-count:3;column-gap:22px;break-inside:auto;
+}
+.printed-page figure.manuscript{padding:14px;gap:18px;break-inside:auto;}
+.printed-page figure.manuscript img{max-height:250px;}
+.printed-page .revision-grid{gap:12px;grid-template-columns:repeat(2,minmax(0,1fr));}
+.printed-page .revision-card{padding:15px 18px;break-inside:auto;}
+.printed-page .revision-card li{font-size:.82rem;margin-bottom:.27em;}
+.printed-page .revision-card h3{font-size:.95rem;}
+.printed-page .exam-q{margin-bottom:.55em;}
+.printed-page .fragment-continued{margin-top:0!important;}
+.printed-page .fragment-start{margin-bottom:0!important;}
+.printed-page.opener .chapter-title-page{
+  min-height:0;margin:0;padding:20px 26px;
+  justify-content:flex-start;border-radius:14px;
+}
+.printed-page.opener .chapter-title-page h1{
+  font-size:2.45rem;line-height:1.1;margin-bottom:.15em;
+}
+.printed-page.opener .chapter-title-page .reading-eyebrow{margin-bottom:7px;}
+.printed-page.opener .chapter-title-page .subtitle{font-size:.98rem;margin-bottom:.75em;}
+.printed-page.opener .chapter-title-page .gold-rule{margin:0 0 .7em;}
+.printed-page.opener .chapter-title-page .opener-split{
+  grid-template-columns:1fr 1.15fr;gap:24px;
+}
+.printed-page.opener .chapter-title-page .thesis-block p{font-size:.87rem;line-height:1.43;}
+.printed-page.opener .chapter-title-page .roadmap{
+  margin-top:0;padding:13px 15px;font-size:.75rem;line-height:1.36;
+}
+.printed-page.opener .chapter-title-page .roadmap li{margin-bottom:.22em;}
+.printed-page.opener .chapter-title-page .source-cite{
+  font-size:.67rem;margin-top:.6em;padding-top:.4em;
+}
+.printed-page.opener .book-cover{
+  background:transparent;min-height:0;
+}
+.printed-page.opener .book-cover .cover-leaf{
+  min-height:0;max-width:none;justify-content:center;
+  height:100%;padding:25px 38px;
+}
+.printed-page.opener .book-cover .cover-title{font-size:3rem;}
+.printed-page.opener .book-cover .cover-subtitle{margin-bottom:1.8em;}
+.printed-page .printed-contents-title{
+  font-family:var(--font-display);font-size:2rem;color:#F0E4C8;
+  margin:0 0 .15em;
+}
+.printed-page .printed-contents-scope{
+  color:#C9B48A;font-family:var(--font-utility);font-size:.8rem;
+  margin:0 0 1em;
+}
+.printed-page .printed-toc-entry{
+  display:flex;align-items:center;gap:13px;padding:11px 10px;
+  text-decoration:none;color:#E7DBC0!important;
+  border-bottom:1px solid #51412f;font-family:var(--font-utility);
+  font-size:.83rem;min-height:48px;
+}
+.printed-page .printed-toc-index{color:#D4A94C;min-width:27px;}
+.printed-page .printed-toc-label{color:#C9B48A;min-width:98px;}
+.printed-page .printed-toc-title{color:#F0E4C8;flex:1;}
+/* Explicitly respect HTML hidden attribute even with author CSS. */
+.range-warning[hidden]{display:none!important;}
+
+@media print{
+  html,body{margin:0!important;padding:0!important;background:var(--parchment);}
+  #book,.app-chrome,.no-print,#reading-header,#panel-toggle,#side-panel,#panel-backdrop,.pagination-measure-rig{
+    display:none!important;
+  }
+  #print-root{display:block!important;}
+  .printed-page{margin:0!important;break-after:page;page-break-after:always;}
+  #print-root>.printed-page:last-child{break-after:auto;page-break-after:auto;}
+  *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important;}
+  .printed-page .callout{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+  a{color:inherit;}
+}
+
+@media (max-width:900px){
+  #toc{ display:none; }
+  .opener-split{ grid-template-columns:1fr; }
+  .roadmap{ margin-top:1.2em; }
+  .chapter-title-page{ margin:0; padding:32px 24px; }
+  .chapter-title-page h1{ font-size:2.3rem; }
+}
+
+/* Mobile-only chapter opener: reset the desktop grid-column:2 placement.
+   Otherwise CSS Grid creates an implicit second column and crushes the thesis. */
+@media screen and (max-width:900px){
+  .chapter-title-page .opener-split{
+    grid-template-columns:minmax(0,1fr);
+    column-gap:0;
+  }
+  .chapter-title-page .thesis-block,
+  .chapter-title-page .roadmap{
+    grid-column:1;
+  }
+  .chapter-title-page .roadmap{ margin-top:1.2em; }
+}
+
+/* Oversized-component resilience: test/layout uses the same exact rules. */
+.printed-page li.list-item-continued{list-style:none;}
+.printed-page .table-row-continued td,.printed-page .table-row-continued th{
+  border-top:1px dashed var(--rule);vertical-align:top;
+}
+.printed-page figure svg,.printed-page .diagram svg,
+.printed-page figure canvas,.printed-page .diagram canvas{
+  max-width:100%;max-height:4.5in;height:auto;width:auto;object-fit:contain;
+}
+.printed-page figure img{max-width:100%;height:auto;object-fit:contain;}
+
+/* Empty edition: render a friendly screen-only handover, never a phantom PDF page. */
+.empty-dossier-state[hidden] { display: none !important; }
+.empty-dossier-state { max-width: 730px; margin: 26px auto 75px; padding: 27px 34px;
+  border: 1px solid rgba(162,124,53,.33); border-radius: 22px;
+  background: rgba(255,252,241,.8); box-shadow: 0 7px 35px rgba(70,47,25,.09); }
+.empty-dossier-state h2 { margin: 0 0 9px; }
+.empty-dossier-state p { margin: 0; line-height: 1.65; }
+.toc-empty { font-size: .9rem; line-height: 1.55; color: var(--ink, #46362e); opacity: .8; }
+@media print { .empty-dossier-state { display: none !important; } }
+/* New edition: answer-shape exam questions in a compact responsive grid.
+   Prevents a single dangling long-essay question from occupying an entire
+   final revision page. All question content remains in the document. */
+.exam-question-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.exam-question-grid .exam-q{padding:12px 15px;border:1px solid rgba(201,180,138,.18);border-radius:12px;
+ background:rgba(255,255,255,.025);margin:0;}
+.exam-question-grid .exam-q p{margin:5px 0 0;font-size:.91rem;line-height:1.45;}
+.printed-page .exam-question-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;}
+.printed-page .exam-question-grid .exam-q{padding:9px 12px;}
+.printed-page .exam-question-grid .exam-q p{font-size:.80rem;line-height:1.3;}
+@media(max-width:700px){.exam-question-grid{grid-template-columns:1fr;}}
+/* Semantically meaningful flow diagrams. Clear numbered nodes, no decorative art. */
+.process-strip{display:flex;align-items:stretch;justify-content:space-between;gap:6px;
+ margin:1.4em 0 .6em;padding:13px 14px;border:1px solid var(--rule);
+ border-radius:16px;background:linear-gradient(120deg,var(--paper-card),var(--parchment-deep));
+ box-shadow:0 2px 10px rgba(20,15,8,.06);}
+.process-step{flex:1;min-width:0;padding:9px 8px;border-radius:11px;
+ background:rgba(255,255,255,.55);border:1px solid rgba(184,137,42,.2);text-align:center;}
+.process-step .step-no{display:block;font:600 .66rem var(--font-utility);letter-spacing:.07em;color:var(--chapter-accent);margin-bottom:4px;}
+.process-step strong{display:block;font:600 .87rem var(--font-display);color:var(--ink);}
+.process-step small{display:block;font:.69rem var(--font-utility);color:var(--ink-soft);margin-top:4px;}
+.process-arrow{display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:bold;color:var(--chapter-accent);}
+.printed-page .process-strip{gap:5px;padding:8px;break-inside:avoid;}
+.printed-page .process-step{padding:7px 6px;}
+.printed-page .process-step strong{font-size:.78rem;}
+.printed-page .process-step small{font-size:.6rem;}
+@media(max-width:650px){.process-strip{flex-wrap:wrap;}.process-step{min-width:120px;}.process-arrow{display:none;}}
+
+.passage{display:grid;grid-template-columns:minmax(0,1.78fr) minmax(0,1fr);gap:clamp(24px,3vw,44px);margin:0 0 1.05em;align-items:start}
+.passage .prose{min-width:0;font-size:1.18rem;line-height:1.53;max-width:65ch}
+.passage .prose>p,.passage .prose>ul,.passage .prose>ol{margin:0}
+.passage aside{border-left:1px solid var(--rule);padding-left:15px;min-width:0}
+.passage .callout,.printed-page .passage .callout{margin:0 0 6px;padding:10px 13px;height:auto}
+.passage .prose>.callout{margin-top:.6em}
+.passage .callout p{font-size:.88rem;line-height:1.35}
+.printed-page .passage{grid-template-columns:minmax(0,1.78fr) minmax(0,1fr);gap:32px;margin-bottom:12px}
+.printed-page .passage .prose{font-size:19.2px;line-height:1.38;max-width:65ch}
+.printed-page .passage .callout p{font-size:14px;line-height:1.32}
+@media screen and (max-width:850px){.leaf .passage{display:block}.leaf .passage aside{margin:12px 0}.leaf{padding:26px 18px}.leaf .chapter-title-page{margin:0}.leaf .section-body{min-width:0}.leaf .section-body>table{display:block;overflow-x:auto}.leaf .section{max-width:100%}}
+
+@media screen and (max-width:850px){.revision-leaf{padding:30px 18px}.revision-grid,.revision-zone .callout-grid{grid-template-columns:minmax(0,1fr)}.revision-leaf table{display:block;overflow-x:auto}.chapter-title-page h1,.cover-title{overflow-wrap:anywhere}.chapter,.chapter *{min-width:0}.passage .prose{overflow-wrap:break-word}}
+
+
+/* OPTIMIZED PASSAGE-LINKED PRINT SIDEBAR — v2
+   Unlike the former passage grid, the narrative is paginated in a dedicated
+   continuous column. Study cards are placed only AFTER the main pagination,
+   without determining where the next paragraph or section begins. */
+.printed-page.theme-parchment .printed-body.dossier-dual{
+  display:grid;grid-template-columns:minmax(0,1fr) 306px;column-gap:24px;
+  align-items:stretch;align-content:stretch;
+}
+.printed-page .page-main-column,.printed-page .page-note-column{
+  height:100%;max-height:100%;min-height:0;min-width:0;
+  overflow:visible;box-sizing:border-box;
+}
+.printed-page .page-note-column{border-left:1px solid var(--rule);padding-left:12px;}
+.printed-page .page-main-column > :first-child{margin-top:0!important;}
+.printed-page .page-main-column > p,
+.printed-page .page-main-column > ul,
+.printed-page .page-main-column > ol,
+.printed-page .page-main-column > blockquote{
+  font-size:18.3px;line-height:1.36;margin:0 0 .50em;
+}
+.printed-page .page-main-column > h3{
+  font-size:1.1rem;line-height:1.25;margin:.85em 0 .32em;
+}
+.printed-page .page-main-column .page-section-heading{margin:8px 0 8px;padding-top:7px;}
+.printed-page .page-main-column .page-section-heading:first-child{margin-top:0;}
+.printed-page .page-main-column table{font-size:.75rem;margin:.42em 0;}
+.printed-page .page-main-column table th,
+.printed-page .page-main-column table td{padding:6px 7px;}
+.printed-page .page-main-column .process-strip{margin:.42em 0;padding:8px;}
+.printed-page .page-note-column .callout{
+  margin:0 0 11px;padding:10px 12px;border-left-width:4px;
+  font-size:12.9px;line-height:1.35;box-shadow:none;
+  break-inside:avoid;overflow-wrap:anywhere;
+}
+.printed-page .page-note-column .callout p{font-size:12.9px;line-height:1.35;margin:0;}
+.printed-page .page-note-column .callout .tag{font-size:10px;line-height:1.32;letter-spacing:.035em;margin:0 0 5px;}
+.printed-page .page-note-column .note-tail{font-size:10px;letter-spacing:.05em;color:var(--ink-faint)}
+/* Screen: each semantic study cue is in aside, not part of the main prose.
+   At phone widths the aside follows the passage it helps explain. */
+.leaf .passage .prose .callout{display:none;}
+@media screen and (min-width:851px){
+  .leaf .passage{grid-template-columns:minmax(0,1.78fr) minmax(0,1fr);}
+  .leaf .passage .prose{max-width:64ch;}
+}
+
+/* SCREEN — decoupled section lanes. A tall sidebar card never blocks the next
+   paragraph; notes remain linked to their original passages. */
+@media screen and (min-width:851px){
+ .leaf .section-body{padding-right:350px;min-height:0;position:relative;}
+ .leaf .section-body>.passage{display:block;position:relative;margin:0 0 .9em;min-height:0;}
+ .leaf .passage .prose{max-width:64ch;line-height:1.5;}
+ .leaf .passage aside{position:absolute;right:-338px;top:0;width:315px;box-sizing:border-box;}
+}
+@media screen and (max-width:850px){
+ .leaf .section-body{padding-right:0!important;min-height:0!important;}
+ .leaf .passage{display:block!important;}
+ .leaf .passage aside{position:static!important;top:auto!important;right:auto!important;width:auto!important;margin-top:12px;}
+}
+</style>
+<style>
+/* Offline app affordances: additional screen-only UI, no change to print compositor. */
+#pwa-control button { margin: 7px 6px 3px 0; padding: 9px 12px; border: 1px solid var(--rule-strong); border-radius: 7px; background: var(--ink); color: var(--parchment); cursor: pointer; font: 600 12px var(--font-utility); }
+#pwa-control button:disabled { opacity: .5; cursor: wait; }
+#pwa-control #pwa-install { background: var(--rule-strong); color: #211b14; }
+#pwa-status { font-family: var(--font-utility); font-size: 12px; line-height: 1.55; color: var(--ink-soft); margin: 6px 0; }
+#pwa-control .pwa-hint { margin: 8px 0 0; font-family: var(--font-utility); font-size: 11px; line-height: 1.5; color: var(--ink-soft); }
+@media print { #pwa-control { display: none !important; } }
+#edition-notice{position:fixed;right:16px;bottom:16px;z-index:200;display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:min(520px,calc(100vw - 32px));padding:13px 15px;border:1px solid var(--rule-strong);border-radius:13px;background:var(--ink);color:var(--parchment);box-shadow:0 10px 28px rgba(0,0,0,.24);font:600 13px/1.5 var(--font-utility)}
+#edition-notice[hidden]{display:none!important}
+#edition-notice button{border:1px solid var(--rule-strong);border-radius:8px;padding:8px 11px;cursor:pointer;font:600 12px var(--font-utility)}
+#edition-reload{background:var(--rule-strong);color:var(--ink)}
+#edition-dismiss{background:transparent;color:var(--parchment)}
+@media print{#edition-notice{display:none!important}}
+</style>
+<link rel="stylesheet" href="./reader-ui.css">
+</head>
+<body>
+<!-- Shared, self-contained reader icons. The print compositor never uses these. -->
+<svg xmlns="http://www.w3.org/2000/svg" class="reader-icon-sprite" aria-hidden="true"
+     focusable="false" width="0" height="0">
+  <symbol id="lit-icon-search" viewBox="0 0 24 24">
+    <circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/>
+  </symbol>
+  <symbol id="lit-icon-x" viewBox="0 0 24 24">
+    <path d="M18 6 6 18M6 6l12 12"/>
+  </symbol>
+  <symbol id="lit-icon-menu" viewBox="0 0 24 24">
+    <path d="M4 7h16M4 12h16M4 17h16"/>
+  </symbol>
+  <symbol id="lit-icon-chevron" viewBox="0 0 24 24">
+    <path d="m9 18 6-6-6-6"/>
+  </symbol>
+  <symbol id="lit-icon-book" viewBox="0 0 24 24">
+    <path d="M12 6.2c-2.5-1.7-5.5-2-9-1.5v14c3.5-.5 6.5-.2 9 1.5m0-14c2.5-1.7 5.5-2 9-1.5v14c-3.5-.5-6.5-.2-9 1.5m0-14v14"/>
+  </symbol>
+  <symbol id="lit-icon-tools" viewBox="0 0 24 24">
+    <path d="M4 7h16M4 17h16M4 12h16"/><circle cx="8" cy="7" r="2" fill="currentColor" stroke="none"/><circle cx="16" cy="17" r="2" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="lit-icon-bookmark" viewBox="0 0 24 24">
+    <path d="M5 4.5A1.5 1.5 0 0 1 6.5 3h11A1.5 1.5 0 0 1 19 4.5V21l-7-4.5L5 21Z"/>
+  </symbol>
+  <symbol id="lit-icon-save" viewBox="0 0 24 24">
+    <path d="M12 3v12m0 0-4-4m4 4 4-4M4 16v4h16v-4"/>
+  </symbol>
+</svg>
+
+<header id="reading-header" class="app-chrome no-print">
+  <div class="reading-header-inner">
+    <span id="rh-chapter-tag">—</span>
+    <span id="rh-chapter-title">Complete Literature Dossier</span>
+    <button id="reader-search-toggle" type="button" class="reader-search-toggle"
+            aria-controls="reader-search-input" aria-expanded="false"
+            aria-label="Open search"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-search"></use></svg></button>
+    <div class="reader-search-wrap" role="search" aria-label="Search all Literature notes">
+      <span class="reader-search-symbol" aria-hidden="true"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-search"></use></svg></span>
+      <input id="reader-search-input" type="search" autocomplete="off" spellcheck="false"
+             aria-label="Search the complete Literature dossier"
+             aria-controls="reader-search-results" aria-expanded="false"
+             placeholder="Search all notes…">
+      <button id="reader-search-close" type="button" aria-label="Clear search" hidden><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-x"></use></svg></button>
+    </div>
+    <span class="rh-book-meter" aria-hidden="true">BOOK <strong id="rh-book-percent">0%</strong></span>
+    <div id="rh-chapter-ring" class="rh-reading-ring" role="progressbar"
+         aria-label="Progress through current reading" aria-valuemin="0"
+         aria-valuemax="100" aria-valuenow="0"
+         aria-valuetext="No reading selected">
+      <span id="rh-chapter-percent" aria-hidden="true">—</span>
+    </div>
+  </div>
+  <div id="rh-book-track" class="progress-track" role="progressbar"
+       aria-label="Progress through the complete Literature dossier"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div id="progress-fill" class="progress-fill"></div>
+  </div>
+  <div id="reader-search-results" role="region" aria-label="Literature search results" hidden></div>
+</header>
+
+<div class="panel-widget app-chrome no-print">
+  <button id="panel-toggle" type="button" aria-label="Open index and tools"
+          aria-controls="side-panel" aria-expanded="false"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-menu"></use></svg></button>
+  <div id="panel-backdrop"></div>
+  <div id="side-panel" role="dialog" aria-modal="true"
+       aria-label="Reading index and tools" aria-hidden="true" inert>
+    <div class="panel-heading">
+      <span class="panel-heading-title">Literature dossier</span>
+      <button id="panel-close" type="button" aria-label="Close sidebar"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-x"></use></svg></button>
+    </div>
+    <div class="panel-tabs" role="tablist" aria-label="Literature sidebar">
+      <button id="tab-index" class="panel-tab" type="button" role="tab"
+              data-tab="index" aria-controls="panel-index" aria-selected="true"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-book"></use></svg><span>Index</span></button>
+      <button id="tab-tools" class="panel-tab" type="button" role="tab"
+              data-tab="tools" aria-controls="panel-tools" aria-selected="false"
+              tabindex="-1"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-tools"></use></svg><span>Tools</span></button>
+    </div>
+    <div id="panel-index" class="panel-pane" role="tabpanel" aria-labelledby="tab-index">
+      <div class="reader-resume-shortcut">
+        <button type="button" class="reader-resume-button" disabled><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-bookmark"></use></svg><span class="reader-resume-label">Continue Reading</span></button>
+        <span class="reader-resume-caption">Your reading position will be saved on this device.</span>
+      </div>
+      <div class="panel-section">
+        <h4>Reading index</h4>
+        <div id="toc-list"></div>
+      </div>
+    </div>
+    <div id="panel-tools" class="panel-pane" role="tabpanel" aria-labelledby="tab-tools" hidden>
+      <div class="reader-resume-shortcut">
+        <button type="button" class="reader-resume-button" disabled><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-bookmark"></use></svg><span class="reader-resume-label">Continue Reading</span></button>
+        <span class="reader-resume-caption">Your reading position will be saved on this device.</span>
+      </div>
+      <section class="panel-section" aria-label="Reading display">
+        <h4>Reading display</h4>
+        <label class="toggle-row" for="lit-show-revisions">
+          <input type="checkbox" id="lit-show-revisions" checked>
+          Show revision/summary sections on screen
+        </label>
+        <p class="hint">This preference is saved on this device. It does not change what you select for printing.</p>
+      </section>
+      <section class="panel-section" aria-label="Print and export">
+        <h4>Print / Export</h4>
+        <div class="range-controls">
+          <label for="range-spec">Readings</label>
+          <input type="text" id="range-spec"
+                 placeholder="e.g. 1-5,8,12-10" value="" autocomplete="off">
+        </div>
+        <p class="hint" style="margin-top:6px;">Comma-separated. Ranges (<code>1-5</code>) or single readings (<code>8</code>), in any order — printed in the order you type them.</p>
+        <div id="range-warning" class="range-warning" hidden></div>
+        <span id="range-status"></span>
+        <label class="toggle-row">
+          <input type="checkbox" id="toggle-revision" checked>
+          Include revision/summary pages in print
+        </label>
+        <label class="toggle-row">
+          <input type="checkbox" id="toggle-contents-page" checked>
+          Include a Contents page in print
+        </label>
+        <div class="panel-buttons">
+          <button class="ghost" id="btn-reset-range" type="button">All readings</button>
+          <button id="btn-print" type="button">Print / Export PDF</button>
+        </div>
+        <p class="hint" style="margin-top:14px;">For a PDF with genuine sidebar bookmarks, use the local <strong>export_bookmarked.py</strong> publishing command. Browser printing cannot guarantee PDF bookmark outlines. Set <strong>Margins → None</strong> and enable <strong>Background graphics</strong>.</p>
+      </section>
+      <section id="pwa-control" class="panel-section app-chrome no-print" aria-label="Offline app">
+        <h4>Install &amp; offline reading</h4>
+        <p id="pwa-status" role="status" aria-live="polite">Checking saved copy…</p>
+        <p id="pwa-edition" class="pwa-hint">Saved edition: checking…</p>
+        <button id="pwa-save" type="button"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-save"></use></svg><span>Save / refresh offline copy</span></button>
+        <button id="pwa-install" type="button" hidden>Install app</button>
+        <p class="pwa-hint">All readings live inside the saved dossier. On iPhone, use Share → Add to Home Screen; on Chrome or Edge, use Install app. Browser storage may be cleared by the device.</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<main id="book">
+
+    <div class="book-cover" id="book-cover">
+      <div class="leaf cover-leaf">
+        <div class="cover-kicker">Daraja Hadi Ashar</div>
+        <h1 class="cover-title">Complete Literature Dossier Notes</h1>
+        <hr class="cover-rule">
+        <p class="cover-subtitle" id="cover-scope">Readings 01–02 · Current edition</p>
+        <div class="cover-signoff">
+          <span class="signoff-name">Mohammed Husain Ujjainwala</span>
+          TR: 25368 · Hadi Ashar 1448H
+        </div>
+      </div>
+    </div>
+
+    <section id="empty-dossier-state" class="empty-dossier-state no-print" hidden>
+      <h2>Ready for the first reading</h2>
+      <p>This edition has no active readings yet. New scholarly notes will appear here as they are added.</p>
+    </section>
+
+    
