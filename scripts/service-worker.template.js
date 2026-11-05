@@ -7,6 +7,7 @@ const BOOK_CACHE = CACHE_PREFIX + '__CACHE_REVISION__';
 const FONT_CACHE = '11am-lit-fonts-v1';
 const APP_SHELL = [
   './index.html', './manifest.webmanifest', './offline-update.js',
+  './reader-search.js', './reader-ui.js', './reader-ui.css',
   './icons/icon-192.png', './icons/icon-512.png',
   './og-image.png', './404.html', './sitemap.xml'
 ];

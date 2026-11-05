@@ -12,6 +12,7 @@ ROOT=Path(__file__).resolve().parents[1]
 BASE="https://mohdujjain.github.io/11am-literature/"
 EXPECTED=list(range(1,19))+list(range(20,27))
 ASSETS=["index.html","manifest.webmanifest","offline-update.js",
+        "reader-ui.js","reader-search.js","reader-ui.css",
         "icons/icon-192.png","icons/icon-512.png","og-image.png",
         "404.html","sitemap.xml","service-worker.js"]
 
@@ -76,6 +77,30 @@ def main():
     assert '<script src="./offline-update.js" defer></script>' in html
     assert 'id="pwa-save"' in html and 'id="pwa-install"' in html
     assert "window.DossierPrint" in html,"Existing print compositor missing"
+    # All 25 readings remain intact, while the sidebar only navigates readings.
+    assert 'id="reader-search-input"' in html
+    assert 'id="reader-search-results"' in html
+    assert 'role="search"' in html
+    assert html.count('role="tab"')==2 and html.count('role="tabpanel"')==2
+    for panel_id in ["panel-index","panel-tools","toc-list","lit-show-revisions",
+                     "btn-print","range-spec","pwa-save","toggle-revision",
+                     "toggle-contents-page","rh-chapter-tag"]:
+        assert html.count('id="'+panel_id+'"')==1,panel_id
+    assert html.count('class="reader-resume-button"')==2
+    assert '<script src="./reader-search.js" defer></script>' in html
+    assert '<script src="./reader-ui.js" defer></script>' in html
+    assert '<link rel="stylesheet" href="./reader-ui.css">' in html
+    assert "var coverLink = document.createElement('a')" not in html
+    assert "headerTag.textContent = String(active.num).padStart(2, '0')" in html
+    controls=(ROOT/"reader-ui.js").read_text(encoding="utf-8")
+    assert "window.LiteratureSearch.find" in controls
+    assert "11am-literature-show-revisions-v1" in controls
+    assert "11am-literature-reading-position-v1" in controls
+    assert "id=\"panel-close\"" in html
+    skin=(ROOT/"reader-ui.css").read_text(encoding="utf-8")
+    assert "body.lit-revisions-hidden #book > .chapter > .revision-zone" in skin
+    assert ".reader-search-hit-target{outline:none!important;" in skin
+
     assert html.count('id="rh-book-track"')==1
     assert html.count('id="rh-book-percent"')==1
     assert html.count('id="rh-chapter-ring"')==1

@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 SOURCES=[
     "index.html", "manifest.webmanifest", "offline-update.js",
+    "reader-search.js", "reader-ui.js", "reader-ui.css",
     "icons/icon-192.png", "icons/icon-512.png",
     "og-image.png", "404.html", "sitemap.xml",
     "scripts/service-worker.template.js",

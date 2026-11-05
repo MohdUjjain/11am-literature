@@ -50,3 +50,11 @@ The dossier has processed every assigned reading except **Reading 19**, which re
 ## Reading progress indicators
 
 The reader's sticky top rail tracks **continuous progress through the entire dossier**, including the cover and the published readings; it never resets when a new reading begins. A separate circular indicator shows **completion of the currently visible reading**, including that reading's revision pages, and resets for the next reading. The reserved Reading 19 is not counted as published content. Both controls are screen-only, and the landscape PDF print compositor remains unchanged.
+
+## Search and sidebar organisation
+
+The sticky reading header now includes **Search all notes**, a local full-text search over the available academic readings (headings, paragraphs, passage-linked notes, lists, tables and revision sections). Search results are ranked, labelled by reading and section, and jump to the corresponding text. Search works offline because both the indexer and the reader content are saved in the PWA. The sidebar has two tabs: **Index** for the reading tree, and **Tools** for on-screen revision/summary visibility, print/export selection, and offline installation. The Cover link was removed from the reading index; the optional printable Contents page remains available under Tools.
+
+Revision/summary visibility is saved locally on the device; hiding on screen does not remove it from print/export unless the separate printing checkbox is unchecked. **Continue Reading** appears in both tabs and remembers the most recent reading and approximate position in local device storage. Opening the reader does not automatically jump away from the cover; the choice to resume is explicit.
+
+The sticky header shows only the reading number followed by its title. Book-wide progress and the independent circular reading progress are unchanged in their semantics.

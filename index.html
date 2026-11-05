@@ -812,13 +812,22 @@ blockquote{
 #edition-dismiss{background:transparent;color:var(--parchment)}
 @media print{#edition-notice{display:none!important}}
 </style>
+<link rel="stylesheet" href="./reader-ui.css">
 </head>
 <body>
 
 <header id="reading-header" class="app-chrome no-print">
   <div class="reading-header-inner">
-    <span id="rh-chapter-tag">Cover</span>
+    <span id="rh-chapter-tag">—</span>
     <span id="rh-chapter-title">Complete Literature Dossier</span>
+    <div class="reader-search-wrap" role="search" aria-label="Search all Literature notes">
+      <span class="reader-search-symbol" aria-hidden="true">⌕</span>
+      <input id="reader-search-input" type="search" autocomplete="off" spellcheck="false"
+             aria-label="Search the complete Literature dossier"
+             aria-controls="reader-search-results" aria-expanded="false"
+             placeholder="Search all notes…">
+      <button id="reader-search-close" type="button" aria-label="Clear search" hidden>×</button>
+    </div>
     <span class="rh-book-meter" aria-hidden="true">BOOK <strong id="rh-book-percent">0%</strong></span>
     <div id="rh-chapter-ring" class="rh-reading-ring" role="progressbar"
          aria-label="Progress through current reading" aria-valuemin="0"
@@ -832,51 +841,77 @@ blockquote{
        aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
     <div id="progress-fill" class="progress-fill"></div>
   </div>
+  <div id="reader-search-results" aria-label="Literature search results" hidden></div>
 </header>
 
 <div class="panel-widget app-chrome no-print">
-  <button id="panel-toggle" type="button" aria-label="Contents and export" aria-expanded="false">☰</button>
+  <button id="panel-toggle" type="button" aria-label="Open index and tools"
+          aria-controls="side-panel" aria-expanded="false">☰</button>
   <div id="panel-backdrop"></div>
   <div id="side-panel" aria-hidden="true">
-    <button id="panel-close" type="button" aria-label="Close">✕</button>
-
-    <div class="panel-section">
-      <h4>Contents</h4>
-      <div id="toc-list"></div>
+    <button id="panel-close" type="button" aria-label="Close sidebar">✕</button>
+    <div class="panel-tabs" role="tablist" aria-label="Literature sidebar">
+      <button id="tab-index" class="panel-tab" type="button" role="tab"
+              data-tab="index" aria-controls="panel-index" aria-selected="true">Index</button>
+      <button id="tab-tools" class="panel-tab" type="button" role="tab"
+              data-tab="tools" aria-controls="panel-tools" aria-selected="false"
+              tabindex="-1">Tools</button>
     </div>
-
-    <div class="panel-section">
-      <h4>Export</h4>
-      <div class="range-controls">
-        <label for="range-spec">Chapters</label>
-        <input type="text" id="range-spec" placeholder="e.g. 1-5,8,12-10" value="" autocomplete="off">
+    <div id="panel-index" class="panel-pane" role="tabpanel" aria-labelledby="tab-index">
+      <div class="reader-resume-shortcut">
+        <button type="button" class="reader-resume-button" disabled>↪ Continue Reading</button>
+        <span class="reader-resume-caption">Your reading position will be saved on this device.</span>
       </div>
-      <p class="hint" style="margin-top:6px;">Comma-separated. Ranges (<code>1-5</code>) or single chapters (<code>8</code>), in any order — printed in the order you type them.</p>
-      <div id="range-warning" class="range-warning" hidden></div>
-      <span id="range-status"></span>
-      <label class="toggle-row">
-        <input type="checkbox" id="toggle-revision" checked>
-        Include revision/summary pages
-      </label>
-      <label class="toggle-row">
-        <input type="checkbox" id="toggle-contents-page" checked>
-        Include a Contents page
-      </label>
-      <div class="panel-buttons">
-        <button class="ghost" id="btn-reset-range" type="button">All chapters</button>
-        <button id="btn-print" type="button">Print / Export PDF</button>
+      <div class="panel-section">
+        <h4>Reading index</h4>
+        <div id="toc-list"></div>
       </div>
-      <p class="hint" style="margin-top:14px;">For a PDF with genuine sidebar bookmarks, use the local <strong>export_bookmarked.py</strong> publishing command. The browser’s ordinary Print dialog cannot guarantee PDF bookmark outlines. In the print dialog: set <strong>Margins → None</strong> and turn on <strong>Background graphics</strong> — otherwise colour will not bleed to the edge.</p>
     </div>
-  
-    <section id="pwa-control" class="panel-section app-chrome no-print" aria-label="Offline app">
-      <h4>Install &amp; offline reading</h4>
-      <p id="pwa-status" role="status" aria-live="polite">Checking saved copy…</p>
-      <button id="pwa-save" type="button">Save / refresh offline copy</button>
-      <button id="pwa-install" type="button" hidden>Install app</button>
-      <p class="pwa-hint">All chapters live inside the saved reader. On iPhone, use Share → Add to Home Screen; on Chrome or Edge, use Install app. Cached content persists unless you clear site data or the browser reclaims storage.</p>
-    </section>
-
+    <div id="panel-tools" class="panel-pane" role="tabpanel" aria-labelledby="tab-tools" hidden>
+      <div class="reader-resume-shortcut">
+        <button type="button" class="reader-resume-button" disabled>↪ Continue Reading</button>
+        <span class="reader-resume-caption">Your reading position will be saved on this device.</span>
+      </div>
+      <section class="panel-section" aria-label="Reading display">
+        <h4>Reading display</h4>
+        <label class="toggle-row" for="lit-show-revisions">
+          <input type="checkbox" id="lit-show-revisions" checked>
+          Show revision/summary sections on screen
+        </label>
+        <p class="hint">This preference is saved on this device. It does not change what you select for printing.</p>
+      </section>
+      <section class="panel-section" aria-label="Print and export">
+        <h4>Print / Export</h4>
+        <div class="range-controls">
+          <label for="range-spec">Readings</label>
+          <input type="text" id="range-spec"
+                 placeholder="e.g. 1-5,8,12-10" value="" autocomplete="off">
+        </div>
+        <p class="hint" style="margin-top:6px;">Comma-separated. Ranges (<code>1-5</code>) or single readings (<code>8</code>), in any order — printed in the order you type them.</p>
+        <div id="range-warning" class="range-warning" hidden></div>
+        <span id="range-status"></span>
+        <label class="toggle-row">
+          <input type="checkbox" id="toggle-revision" checked>
+          Include revision/summary pages in print
+        </label>
+        <label class="toggle-row">
+          <input type="checkbox" id="toggle-contents-page" checked>
+          Include a Contents page in print
+        </label>
+        <div class="panel-buttons">
+          <button class="ghost" id="btn-reset-range" type="button">All readings</button>
+          <button id="btn-print" type="button">Print / Export PDF</button>
+        </div>
+        <p class="hint" style="margin-top:14px;">For a PDF with genuine sidebar bookmarks, use the local <strong>export_bookmarked.py</strong> publishing command. Browser printing cannot guarantee PDF bookmark outlines. Set <strong>Margins → None</strong> and enable <strong>Background graphics</strong>.</p>
+      </section>
+      <section id="pwa-control" class="panel-section app-chrome no-print" aria-label="Offline app">
+        <h4>Install &amp; offline reading</h4>
+        <p id="pwa-status" role="status" aria-live="polite">Checking saved copy…</p>
+        <button id="pwa-save" type="button">Save / refresh offline copy</button>
+        <button id="pwa-install" type="button" hidden>Install app</button>
+        <p class="pwa-hint">All readings live inside the saved dossier. On iPhone, use Share → Add to Home Screen; on Chrome or Edge, use Install app. Browser storage may be cleared by the device.</p>
+      </section>
+    </div>
   </div>
 </div>
 
@@ -1234,15 +1269,6 @@ blockquote{
     if(scope) scope.textContent = chapters.length
       ? chapters.length + ' reading' + (chapters.length === 1 ? '' : 's') + ' available'
       : 'New readings forthcoming';
-
-    var cover = document.getElementById('book-cover');
-    if(cover){
-      var coverLink = document.createElement('a');
-      coverLink.href = '#book-cover';
-      coverLink.textContent = 'Cover';
-      coverLink.style.cssText = 'display:block; font-weight:600; color:var(--ink); margin-bottom:1.2em; font-size:.88rem;';
-      list.appendChild(coverLink);
-    }
 
     if(!chapters.length){
       var notice=document.createElement('p');
@@ -2195,11 +2221,10 @@ blockquote{
       var accent = getComputedStyle(active.el).getPropertyValue('--chapter-accent').trim() ||
                    'var(--rule-strong)';
       var inRevision = active.revision &&
+                       active.revision.getClientRects().length > 0 &&
                        active.revision.getBoundingClientRect().top <= readingLine;
-      // Keep the title readable beside the ring on narrow phone screens.
-      headerTag.textContent = window.innerWidth <= 530
-        ? 'Reading ' + String(active.num).padStart(2, '0')
-        : active.tag;
+      // The header shows only the reading number; the full title is adjacent.
+      headerTag.textContent = String(active.num).padStart(2, '0');
       headerTag.style.color = accent;
       headerTitle.textContent = active.title + (inRevision ? ' — Revision' : '');
       ring.style.setProperty('--reading-angle', (chapterProgress * 100) + '%');
@@ -2428,6 +2453,8 @@ blockquote{
 }());
 
 </script>
+<script src="./reader-search.js" defer></script>
+<script src="./reader-ui.js" defer></script>
 <script src="./offline-update.js" defer></script>
 
 </body>

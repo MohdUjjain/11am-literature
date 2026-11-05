@@ -40,7 +40,8 @@ function chapter(number,start,height,revisionStart){
         return {textContent:'Reading '+String(number).padStart(2,'0')+' · Literature Dossier'};
       if(selector.includes(' h1'))return {textContent:'Title '+number};
       if(selector==='.revision-zone')
-        return {getBoundingClientRect:()=>({top:revisionStart-win.scrollY})};
+        return {getClientRects:()=>[1],
+                getBoundingClientRect:()=>({top:revisionStart-win.scrollY})};
       return null;
     }
   };
@@ -74,7 +75,7 @@ const book1=move(1500);
 const reading1=Number(percent.textContent.replace('%',''));
 assert.equal(book1,21);
 assert.equal(reading1,32);
-assert.equal(label.textContent,'Reading 01','Mobile labels must stay compact');
+assert.equal(label.textContent,'01','Reading header must use the number only');
 assert.equal(title.textContent,'Title 1');
 assert.equal(track.values['aria-valuenow'],'21');
 assert.equal(ring.values['aria-valuenow'],'32');
@@ -84,13 +85,13 @@ assert.equal(title.textContent,'Title 1 — Revision');
 assert.equal(Number(percent.textContent.replace('%','')),100);
 const bookNext=move(3300);
 assert.ok(bookNext>bookRevision,'Whole-book bar must not reset for the next reading');
-assert.equal(label.textContent,'Reading 20');
+assert.equal(label.textContent,'20');
 assert.equal(title.textContent,'Title 20');
 assert.equal(Number(percent.textContent.replace('%','')),2,'Chapter ring should reset');
 win.innerWidth=1200;
 listeners.resize();
-assert.equal(label.textContent,'Reading 20 · Literature Dossier',
-  'Desktop must retain its full eyebrow');
+assert.equal(label.textContent,'20',
+  'Desktop must also use only the reading number');
 assert.equal(move(7000),100);
 assert.equal(percent.textContent,'100%','Last reading must reach completion');
 assert.equal(track.values['aria-valuenow'],'100');
