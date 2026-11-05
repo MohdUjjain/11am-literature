@@ -2540,7 +2540,7 @@ blockquote{
         return navigator.serviceWorker.ready.then(function () {
           return cachedBook(reg).then(function (ready) {
             say(ready ? 'Full dossier saved on this device. Available without internet, subject to browser storage limits.' : 'The offline copy is being prepared. Use Save offline copy to retry.');
-            return editionStatus(reg).then(showEdition).catch(function(){showEdition(null);});
+            editionStatus(reg).then(showEdition).catch(function(){showEdition(null);});
           }).then(function () { return reg; });
         });
       }).then(function (reg) {
