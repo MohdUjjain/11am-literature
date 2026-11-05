@@ -815,18 +815,49 @@ blockquote{
 <link rel="stylesheet" href="./reader-ui.css">
 </head>
 <body>
+<!-- Shared, self-contained reader icons. The print compositor never uses these. -->
+<svg xmlns="http://www.w3.org/2000/svg" class="reader-icon-sprite" aria-hidden="true"
+     focusable="false" width="0" height="0">
+  <symbol id="lit-icon-search" viewBox="0 0 24 24">
+    <circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/>
+  </symbol>
+  <symbol id="lit-icon-x" viewBox="0 0 24 24">
+    <path d="M18 6 6 18M6 6l12 12"/>
+  </symbol>
+  <symbol id="lit-icon-menu" viewBox="0 0 24 24">
+    <path d="M4 7h16M4 12h16M4 17h16"/>
+  </symbol>
+  <symbol id="lit-icon-chevron" viewBox="0 0 24 24">
+    <path d="m9 18 6-6-6-6"/>
+  </symbol>
+  <symbol id="lit-icon-book" viewBox="0 0 24 24">
+    <path d="M12 6.2c-2.5-1.7-5.5-2-9-1.5v14c3.5-.5 6.5-.2 9 1.5m0-14c2.5-1.7 5.5-2 9-1.5v14c-3.5-.5-6.5-.2-9 1.5m0-14v14"/>
+  </symbol>
+  <symbol id="lit-icon-tools" viewBox="0 0 24 24">
+    <path d="M4 7h16M4 17h16M4 12h16"/><circle cx="8" cy="7" r="2" fill="currentColor" stroke="none"/><circle cx="16" cy="17" r="2" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="lit-icon-bookmark" viewBox="0 0 24 24">
+    <path d="M5 4.5A1.5 1.5 0 0 1 6.5 3h11A1.5 1.5 0 0 1 19 4.5V21l-7-4.5L5 21Z"/>
+  </symbol>
+  <symbol id="lit-icon-save" viewBox="0 0 24 24">
+    <path d="M12 3v12m0 0-4-4m4 4 4-4M4 16v4h16v-4"/>
+  </symbol>
+</svg>
 
 <header id="reading-header" class="app-chrome no-print">
   <div class="reading-header-inner">
     <span id="rh-chapter-tag">—</span>
     <span id="rh-chapter-title">Complete Literature Dossier</span>
+    <button id="reader-search-toggle" type="button" class="reader-search-toggle"
+            aria-controls="reader-search-input" aria-expanded="false"
+            aria-label="Open search"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-search"></use></svg></button>
     <div class="reader-search-wrap" role="search" aria-label="Search all Literature notes">
-      <span class="reader-search-symbol" aria-hidden="true">⌕</span>
+      <span class="reader-search-symbol" aria-hidden="true"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-search"></use></svg></span>
       <input id="reader-search-input" type="search" autocomplete="off" spellcheck="false"
              aria-label="Search the complete Literature dossier"
              aria-controls="reader-search-results" aria-expanded="false"
              placeholder="Search all notes…">
-      <button id="reader-search-close" type="button" aria-label="Clear search" hidden>×</button>
+      <button id="reader-search-close" type="button" aria-label="Clear search" hidden><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-x"></use></svg></button>
     </div>
     <span class="rh-book-meter" aria-hidden="true">BOOK <strong id="rh-book-percent">0%</strong></span>
     <div id="rh-chapter-ring" class="rh-reading-ring" role="progressbar"
@@ -841,26 +872,29 @@ blockquote{
        aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
     <div id="progress-fill" class="progress-fill"></div>
   </div>
-  <div id="reader-search-results" aria-label="Literature search results" hidden></div>
+  <div id="reader-search-results" role="region" aria-label="Literature search results" hidden></div>
 </header>
 
 <div class="panel-widget app-chrome no-print">
   <button id="panel-toggle" type="button" aria-label="Open index and tools"
-          aria-controls="side-panel" aria-expanded="false">☰</button>
+          aria-controls="side-panel" aria-expanded="false"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-menu"></use></svg></button>
   <div id="panel-backdrop"></div>
   <div id="side-panel" role="dialog" aria-modal="true"
        aria-label="Reading index and tools" aria-hidden="true" inert>
-    <button id="panel-close" type="button" aria-label="Close sidebar">✕</button>
+    <div class="panel-heading">
+      <span class="panel-heading-title">Literature dossier</span>
+      <button id="panel-close" type="button" aria-label="Close sidebar"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-x"></use></svg></button>
+    </div>
     <div class="panel-tabs" role="tablist" aria-label="Literature sidebar">
       <button id="tab-index" class="panel-tab" type="button" role="tab"
-              data-tab="index" aria-controls="panel-index" aria-selected="true">Index</button>
+              data-tab="index" aria-controls="panel-index" aria-selected="true"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-book"></use></svg><span>Index</span></button>
       <button id="tab-tools" class="panel-tab" type="button" role="tab"
               data-tab="tools" aria-controls="panel-tools" aria-selected="false"
-              tabindex="-1">Tools</button>
+              tabindex="-1"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-tools"></use></svg><span>Tools</span></button>
     </div>
     <div id="panel-index" class="panel-pane" role="tabpanel" aria-labelledby="tab-index">
       <div class="reader-resume-shortcut">
-        <button type="button" class="reader-resume-button" disabled>↪ Continue Reading</button>
+        <button type="button" class="reader-resume-button" disabled><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-bookmark"></use></svg><span class="reader-resume-label">Continue Reading</span></button>
         <span class="reader-resume-caption">Your reading position will be saved on this device.</span>
       </div>
       <div class="panel-section">
@@ -870,7 +904,7 @@ blockquote{
     </div>
     <div id="panel-tools" class="panel-pane" role="tabpanel" aria-labelledby="tab-tools" hidden>
       <div class="reader-resume-shortcut">
-        <button type="button" class="reader-resume-button" disabled>↪ Continue Reading</button>
+        <button type="button" class="reader-resume-button" disabled><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-bookmark"></use></svg><span class="reader-resume-label">Continue Reading</span></button>
         <span class="reader-resume-caption">Your reading position will be saved on this device.</span>
       </div>
       <section class="panel-section" aria-label="Reading display">
@@ -908,7 +942,7 @@ blockquote{
       <section id="pwa-control" class="panel-section app-chrome no-print" aria-label="Offline app">
         <h4>Install &amp; offline reading</h4>
         <p id="pwa-status" role="status" aria-live="polite">Checking saved copy…</p>
-        <button id="pwa-save" type="button">Save / refresh offline copy</button>
+        <button id="pwa-save" type="button"><svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-save"></use></svg><span>Save / refresh offline copy</span></button>
         <button id="pwa-install" type="button" hidden>Install app</button>
         <p class="pwa-hint">All readings live inside the saved dossier. On iPhone, use Share → Add to Home Screen; on Chrome or Edge, use Install app. Browser storage may be cleared by the device.</p>
       </section>
@@ -1293,7 +1327,8 @@ blockquote{
       toggle.type = 'button';
       toggle.className = 'toc-toggle';
       toggle.setAttribute('aria-expanded', 'false');
-      toggle.textContent = '▸';
+      toggle.setAttribute('aria-label','Expand sections for Reading '+num);
+      toggle.innerHTML = '<svg class="reader-icon" aria-hidden="true" focusable="false"><use href="#lit-icon-chevron"></use></svg>';
 
       var a = document.createElement('a');
       a.href = '#' + ch.id;
@@ -1304,6 +1339,8 @@ blockquote{
       wrap.appendChild(row);
 
       var ul = document.createElement('ul');
+      ul.id = 'toc-sections-'+num;
+      toggle.setAttribute('aria-controls',ul.id);
       ch.querySelectorAll('.section > h2').forEach(function(h){
         var sec = h.closest('.section');
         if(!sec.id) return;
@@ -1320,7 +1357,7 @@ blockquote{
       function setOpen(open){
         wrap.classList.toggle('open', open);
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        toggle.textContent = open ? '▾' : '▸';
+        toggle.setAttribute('aria-label',(open?'Collapse':'Expand')+' sections for Reading '+num);
       }
       toggle.addEventListener('click', function(e){
         e.preventDefault();
@@ -1330,7 +1367,11 @@ blockquote{
           if(other !== wrap){
             other.classList.remove('open');
             var otherToggle = other.querySelector('.toc-toggle');
-            if(otherToggle){ otherToggle.setAttribute('aria-expanded','false'); otherToggle.textContent = '▸'; }
+            if(otherToggle){
+              otherToggle.setAttribute('aria-expanded','false');
+              otherToggle.setAttribute('aria-label',
+                'Expand sections for Reading '+other.querySelector('a').getAttribute('href').replace('#chapter-',''));
+            }
           }
         });
         setOpen(willOpen);
@@ -2272,11 +2313,12 @@ blockquote{
                        active.revision.getBoundingClientRect().top <= readingLine;
       // The header shows only the reading number; the full title is adjacent.
       headerTag.textContent = String(active.num).padStart(2, '0');
-      headerTag.style.color = accent;
+      headerTag.style.color =
+        'color-mix(in srgb, ' + accent + ' 40%, var(--parchment))';
       headerTitle.textContent = active.title + (inRevision ? ' — Revision' : '');
       ring.style.setProperty('--reading-angle', (chapterProgress * 100) + '%');
       ring.style.setProperty('--ring-accent',
-                             'color-mix(in srgb, ' + accent + ' 55%, var(--rule-strong))');
+                             'color-mix(in srgb, ' + accent + ' 40%, var(--parchment))');
       ring.setAttribute('aria-valuenow', String(pct));
       ring.setAttribute('aria-valuetext',
                         'Reading ' + active.num + ': ' + pct + '% complete');

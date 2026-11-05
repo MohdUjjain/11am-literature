@@ -92,6 +92,17 @@ def main():
     assert '<link rel="stylesheet" href="./reader-ui.css">' in html
     assert "var coverLink = document.createElement('a')" not in html
     assert "headerTag.textContent = String(active.num).padStart(2, '0')" in html
+    assert 'id="reader-search-toggle"' in html
+    assert 'id="reader-search-results" role="region"' in html
+    assert 'class="panel-heading"' in html
+    assert html.count('class="reader-resume-label"')==2
+    assert html.count('<symbol id="lit-icon-')>=8
+    assert 'aria-controls="reader-search-input" aria-expanded="false"' in html
+    assert "color-mix(in srgb, ' + accent + ' 40%, var(--parchment))" in html
+    polish=(ROOT/"reader-ui.css").read_text(encoding="utf-8")
+    assert '--lit-chapter-on-light' in polish and '--lit-chapter-on-dark' in polish
+    assert 'height:100dvh' in polish and 'position:sticky;top:56px' in polish
+    assert '#reading-header.search-open .reader-search-wrap' in polish
     controls=(ROOT/"reader-ui.js").read_text(encoding="utf-8")
     assert "window.LiteratureSearch.find" in controls
     assert "11am-literature-show-revisions-v1" in controls

@@ -46,6 +46,8 @@ jobs:
         run: node tests/test_reader_navigation.mjs
       - name: Verify Pass A reliable resume, hidden sections, and drawer focus
         run: node tests/test_pass_a.mjs
+      - name: Check Pass B accessible colors, mobile search and icon semantics
+        run: node tests/test_reader_polish.mjs
       - name: Verify offline refresh and update status logic
         run: node tests/test_offline_refresh.mjs
       - name: Verify reproduced assets are checked in (pull requests)

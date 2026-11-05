@@ -13,6 +13,7 @@
   var lastCapturedAt = 0, resumeNavigatingUntil = 0;
   var searchEntries = null, results = [], shown = 0, searchTimer = null;
   var searchBox = null, searchResults = null, closeSearchButton = null;
+  var searchToggle = null, searchHeader = null;
   var pageSize = 24;
 
   function getStored(key) {
@@ -165,9 +166,10 @@
     var heading = description && description.querySelector(':scope > h2');
     resumeButtons.forEach(function(button){
       button.disabled = !saved;
-      button.textContent = saved
-        ? '↪ Continue Reading ' + saved.number
-        : '↪ Continue Reading';
+      var label=button.querySelector && button.querySelector('.reader-resume-label');
+      var caption=saved ? 'Continue Reading ' + saved.number : 'Continue Reading';
+      if(label) label.textContent=caption;
+      else button.textContent='↪ '+caption; // Supports older copies with no icon span.
     });
     Array.prototype.forEach.call(document.querySelectorAll('.reader-resume-caption'),
       function(caption){
@@ -287,22 +289,56 @@
     if(searchResults) searchResults.hidden=false;
     if(searchBox) searchBox.setAttribute('aria-expanded','true');
   }
+  // Direction is inferred from the first strong letter: Arabic fragments
+  // read RTL; English titles containing Arabic quotations remain LTR/auto.
+  function resultDirection(el,text) {
+    var strong=String(text||'').match(/[A-Za-z\u0590-\u05FF\u0600-\u06FF]/);
+    var arabic=strong && /[\u0600-\u06FF]/.test(strong[0]);
+    var hebrew=strong && /[\u0590-\u05FF]/.test(strong[0]);
+    el.setAttribute('dir',arabic||hebrew?'rtl':'auto');
+    if(arabic)el.setAttribute('lang','ar');
+    else if(hebrew)el.setAttribute('lang','he');
+  }
+  function mobileSearchMode(){
+    return window.matchMedia
+      ? window.matchMedia('(max-width:850px)').matches
+      : window.innerWidth <= 850;
+  }
+  function expandMobileSearch(){
+    if(!searchToggle || !searchHeader || !mobileSearchMode())return;
+    searchHeader.classList.add('search-open');
+    searchToggle.setAttribute('aria-expanded','true');
+    searchToggle.setAttribute('aria-label','Close search');
+    searchBox.focus();
+  }
+  function collapseMobileSearch(){
+    if(!searchToggle || !searchHeader || !mobileSearchMode())return;
+    searchHeader.classList.remove('search-open');
+    searchToggle.setAttribute('aria-expanded','false');
+    searchToggle.setAttribute('aria-label','Open search');
+    closeResults();
+    searchBox.blur();
+  }
   function resultButton(hit){
     var entry = hit.entry;
     var button=document.createElement('button');
     button.type='button';button.className='reader-result';
-    button.setAttribute('role','option');
+    // Native buttons provide better semantics than orphan role="option"
+    // controls without a corresponding listbox.
     var title=document.createElement('strong');
     title.className='reader-result-title';
     title.textContent = 'Reading ' + entry.chapter + ' · ' + entry.title;
+    resultDirection(title,title.textContent);
     var section=document.createElement('span');
     section.className='reader-result-section';
     section.textContent = entry.section + (entry.revision ? ' · Revision' : '');
+    resultDirection(section,section.textContent);
     var snippet=document.createElement('span');
     snippet.className='reader-result-snippet';
     snippet.textContent=window.LiteratureSearch.excerpt(
       entry.text, searchBox.value, 190
     );
+    resultDirection(snippet,snippet.textContent);
     button.appendChild(title);button.appendChild(section);button.appendChild(snippet);
     button.addEventListener('click',function(){jumpTo(hit);});
     return button;
@@ -330,6 +366,7 @@
     target.classList.add('reader-search-hit-target');
     target.scrollIntoView({behavior:'smooth',block:'center'});
     closeResults();
+    collapseMobileSearch();
     searchBox.blur();
     lastHitTimer=setTimeout(function(){
       target.classList.remove('reader-search-hit-target');
@@ -358,7 +395,14 @@
     searchBox=$('reader-search-input');
     searchResults=$('reader-search-results');
     closeSearchButton=$('reader-search-close');
+    searchToggle=$('reader-search-toggle');
+    searchHeader=$('reading-header');
     if(!searchBox||!searchResults||!closeSearchButton||!window.LiteratureSearch)return;
+    if(searchToggle) searchToggle.addEventListener('click',function(){
+      if(searchHeader && searchHeader.classList.contains('search-open'))
+        collapseMobileSearch();
+      else expandMobileSearch();
+    });
     searchBox.addEventListener('input',function(){
       if(searchTimer)clearTimeout(searchTimer);
       searchTimer=setTimeout(renderResults,140);
@@ -371,7 +415,7 @@
     });
     searchBox.addEventListener('keydown',function(event){
       if(event.key==='Escape'){
-        event.preventDefault();closeResults();searchBox.blur();
+        event.preventDefault();closeResults();collapseMobileSearch();searchBox.blur();
       }else if(event.key==='Enter'){
         event.preventDefault();
         if(results.length)jumpTo(results[0]);
@@ -407,7 +451,7 @@
                   (document.activeElement&&document.activeElement.isContentEditable);
       if((event.key==='/'&&!editing) ||
          ((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k')){
-        event.preventDefault();searchBox.focus();searchBox.select();
+        event.preventDefault();expandMobileSearch();searchBox.focus();searchBox.select();
       }
     });
   }

@@ -66,3 +66,17 @@ The sticky header shows only the reading number followed by its title. Book-wide
 - **Sticky-header navigation:** Anchor offsets follow the measured header height, including its two-row mobile layout.
 - **Sidebar focus:** The offscreen drawer is inert when closed, has dialog semantics while open, keeps keyboard Tab focus inside, and restores focus to its launcher on Escape or dismissal. Navigating to a reading instead focuses the destination.
 - **Offline update/refresh:** The action explicitly checks for a newer service-worker edition when online, verifies the active edition's complete cache with an `EDITION_STATUS` worker response, and distinguishes a successfully checked copy from an offline or incomplete update check. Optional font preparation remains independent of book availability.
+
+
+## Pass B — visual and accessibility polish
+
+This is a **screen-interface update only**. Every reading's scholarly text, the six permanent learning-aid category pigments, the 25 original chapter accent hues, and the landscape PDF print compositor remain unchanged.
+
+- **Role-specific contrast:** Decorative chapter accents retain their hues; small text on the opener uses a darker blend and chapter numbers on the dark header use a lighter blend. All 25 chapter hues are checked for small-text contrast against their actual opener backgrounds and the dark header.
+- **Sticky sidebar navigation:** A fixed-in-view drawer heading and sticky Index/Tools tabs remain reachable while scrolling long chapter trees. The drawer fits dynamic mobile viewport height and includes safe-area padding.
+- **Touch and keyboard:** Consistent 44px interactive controls, larger chapter toggles, coherent focus outlines and retained Pass A drawer focus management.
+- **Compact mobile search:** A search icon in the sticky header expands the full search box only when needed, giving back vertical reading space. The slash and Ctrl+K shortcuts open it on mobile too.
+- **Arabic and bilingual results:** Search excerpts infer text direction from their first strong character; Arabic excerpts use the existing Amiri family, RTL alignment and generous line height. Search result buttons retain native button semantics.
+- **Unified icons and typography:** Self-contained 24px stroke SVG symbols for the reader's search, menu, close, tabs, resume, offline-save and expandable navigation controls; no external icon font or added dependency. Print/export action text and the print compositor are unchanged.
+
+The new test at tests/test_reader_polish.mjs checks the actual chapter palette, interaction markup, touch dimensions, text direction, responsive-search behavior and print separation.
