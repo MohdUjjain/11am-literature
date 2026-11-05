@@ -40,6 +40,8 @@ jobs:
         run: python tests/verify_publication.py
       - name: Simulate offline install, navigation and failed updates
         run: node tests/test_service_worker.mjs
+      - name: Verify continuous book progress and individual reading rings
+        run: node tests/test_reading_progress.mjs
       - name: Verify reproduced assets are checked in (pull requests)
         if: github.event_name == 'pull_request'
         run: git diff --exit-code -- service-worker.js og-image.png

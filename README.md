@@ -46,3 +46,7 @@ The dossier has processed every assigned reading except **Reading 19**, which re
 - **Offline editions:** `scripts/service-worker.template.js` is the authored worker; `scripts/build.py` writes `service-worker.js` with a content-derived cache revision. `offline-update.js` offers a reload once a new service worker takes control. The PWA stays scoped to `/11am-literature/` and never pre-caches PDFs.
 - **Build/verification:** `.github/workflows/verify-pages.yml` regenerates image and worker, checks the source ZIP can reassemble the 25-reading book, validates publication metadata, and simulates offline loading and interrupted installation. On main it commits only the regenerated publishing assets when they differ; it does not alter the notes or print compositor.
 - **Local verification:** `python -m pip install Pillow==12.3.0`, `python scripts/render_social.py`, `python scripts/build.py`, `python scripts/verify_source_archive.py`, `python tests/verify_publication.py`, `node tests/test_service_worker.mjs`, then `python scripts/build.py --check`.
+
+## Reading progress indicators
+
+The reader's sticky top rail tracks **continuous progress through the entire dossier**, including the cover and the published readings; it never resets when a new reading begins. A separate circular indicator shows **completion of the currently visible reading**, including that reading's revision pages, and resets for the next reading. The reserved Reading 19 is not counted as published content. Both controls are screen-only, and the landscape PDF print compositor remains unchanged.

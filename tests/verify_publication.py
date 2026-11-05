@@ -76,6 +76,17 @@ def main():
     assert '<script src="./offline-update.js" defer></script>' in html
     assert 'id="pwa-save"' in html and 'id="pwa-install"' in html
     assert "window.DossierPrint" in html,"Existing print compositor missing"
+    assert html.count('id="rh-book-track"')==1
+    assert html.count('id="rh-book-percent"')==1
+    assert html.count('id="rh-chapter-ring"')==1
+    assert html.count('id="rh-chapter-percent"')==1
+    assert html.count('id="progress-fill"')==1
+    assert 'aria-label="Progress through the complete Literature dossier"' in html
+    assert 'aria-label="Progress through current reading"' in html
+    assert "document.documentElement.scrollHeight - window.innerHeight" in html
+    assert "chapters[i].el.getBoundingClientRect().top <= readingLine" in html
+    assert "active.revision.getBoundingClientRect().top <= readingLine" in html
+
     manifest=json.loads((ROOT/"manifest.webmanifest").read_text(encoding="utf-8"))
     assert manifest["id"]=="/11am-literature/"
     assert manifest["start_url"]==manifest["scope"]=="./"

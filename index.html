@@ -126,25 +126,58 @@ p{ margin:0 0 1em; }
    ============================================================ */
 .app-chrome{ font-family:var(--font-utility); }
 
-/* -- sticky reading header: chapter title + scroll progress -- */
+/* -- sticky reader header: one continuous book rail, separate chapter ring.
+   Screen only; printed page composition remains completely independent. -- */
 #reading-header{
   position:sticky; top:0; z-index:60;
   background:var(--ink);
 }
 .reading-header-inner{
-  display:flex; align-items:baseline; gap:10px;
-  padding:9px 62px 7px 16px;
+  display:flex; align-items:center; gap:10px;
+  min-height:53px; padding:7px 63px 7px 16px;
   overflow:hidden; white-space:nowrap;
 }
-#rh-chapter-tag{ font-family:var(--font-display); font-weight:600; font-size:.8rem; color:var(--rule-strong); flex:none; }
-#rh-chapter-title{ font-size:.82rem; color:#D9CBAE; text-overflow:ellipsis; overflow:hidden; }
-.progress-track{ height:3px; background:rgba(255,255,255,0.09); }
-.progress-fill{
-  height:100%; width:0%;
-  background:linear-gradient(90deg, var(--rule-strong), var(--chapter-accent));
-  transition:background .3s ease;
+#rh-chapter-tag{
+  font-family:var(--font-display); font-weight:600; font-size:.8rem;
+  color:var(--rule-strong); flex:none;
 }
-#reading-header.mode-revision .progress-fill{ background:var(--chapter-accent); }
+#rh-chapter-title{
+  font-size:.82rem; color:#D9CBAE; text-overflow:ellipsis;
+  overflow:hidden; min-width:0; flex:1 1 auto;
+}
+.rh-book-meter{
+  flex:none; display:flex; gap:6px; align-items:baseline;
+  color:#D9CBAE; font:600 10px var(--font-utility);
+  letter-spacing:.06em;
+}
+#rh-book-percent{color:var(--parchment);font-size:12px;letter-spacing:0;}
+.rh-reading-ring{
+  --reading-angle:0%;
+  --ring-accent:var(--rule-strong);
+  flex:none;display:grid;place-items:center;
+  width:36px;height:36px;border-radius:50%;position:relative;
+  background:conic-gradient(var(--ring-accent) var(--reading-angle),rgba(255,255,255,.16) 0);
+}
+.rh-reading-ring::before{
+  content:'';position:absolute;inset:4px;
+  background:var(--ink);border-radius:50%;
+}
+.rh-reading-ring > span{
+  position:relative; color:var(--parchment);
+  font:700 10px var(--font-utility);font-variant-numeric:tabular-nums;
+}
+.progress-track{
+  height:3px; background:rgba(255,255,255,.09);overflow:hidden;
+}
+.progress-fill{
+  height:100%;width:0%;background:var(--rule-strong);
+  transition:width .12s linear;
+}
+@media screen and (max-width:530px){
+  .reading-header-inner{gap:8px;padding-left:12px;}
+  .rh-book-meter{font-size:0;gap:0;letter-spacing:0;}
+  #rh-book-percent{font-size:11px;}
+}
 
 /* -- floating trigger + slide-out panel (Contents + Export merged) -- */
 .panel-widget{ position:relative; }
@@ -784,10 +817,21 @@ blockquote{
 
 <header id="reading-header" class="app-chrome no-print">
   <div class="reading-header-inner">
-    <span id="rh-chapter-tag">—</span>
-    <span id="rh-chapter-title"></span>
+    <span id="rh-chapter-tag">Cover</span>
+    <span id="rh-chapter-title">Complete Literature Dossier</span>
+    <span class="rh-book-meter" aria-hidden="true">BOOK <strong id="rh-book-percent">0%</strong></span>
+    <div id="rh-chapter-ring" class="rh-reading-ring" role="progressbar"
+         aria-label="Progress through current reading" aria-valuemin="0"
+         aria-valuemax="100" aria-valuenow="0"
+         aria-valuetext="No reading selected">
+      <span id="rh-chapter-percent" aria-hidden="true">—</span>
+    </div>
   </div>
-  <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+  <div id="rh-book-track" class="progress-track" role="progressbar"
+       aria-label="Progress through the complete Literature dossier"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div id="progress-fill" class="progress-fill"></div>
+  </div>
 </header>
 
 <div class="panel-widget app-chrome no-print">
@@ -2078,81 +2122,105 @@ blockquote{
     });
   }
 
-  // Sticky header title + scroll-synced progress bar. Tracks whichever
-  // chapter's main content (or revision zone) currently occupies the
-  // viewport centre, so this works unmodified as more chapters are
-  // appended — nothing here is hardcoded to chapter 1.
+  // Distinct progress indicators: full-book rail + current-reading ring.
+  // Use each .chapter's complete on-screen height, including its revision zone.
+  // The book rail follows document scroll, never resetting at chapter boundaries.
   function initReadingProgress(){
     var headerTag = document.getElementById('rh-chapter-tag');
     var headerTitle = document.getElementById('rh-chapter-title');
     var fill = document.getElementById('progress-fill');
-    var header = document.getElementById('reading-header');
-    if(!fill || !header) return;
+    var bookTrack = document.getElementById('rh-book-track');
+    var bookPercent = document.getElementById('rh-book-percent');
+    var ring = document.getElementById('rh-chapter-ring');
+    var chapterPercent = document.getElementById('rh-chapter-percent');
+    if(!headerTag || !headerTitle || !fill || !bookTrack ||
+       !bookPercent || !ring || !chapterPercent) return;
 
-    var targets = [];
-    function collectTargets(){
-      targets = [];
-      var cover = document.querySelector('.book-cover .cover-leaf');
-      if(cover) targets.push({ el: cover, tag: 'Cover', title: 'Complete Literature Dossier', mode: 'cover' });
-      document.querySelectorAll('.chapter').forEach(function(ch){
-        var eyebrowEl = ch.querySelector('.chapter-title-page .reading-eyebrow');
-        var titleEl = ch.querySelector('.chapter-title-page h1');
-        var tag = eyebrowEl ? eyebrowEl.textContent : ('Chapter ' + ch.getAttribute('data-chapter'));
-        var title = titleEl ? titleEl.textContent : '';
-        var mainLeaf = ch.querySelector(':scope > .leaf');
-        var revLeaf = ch.querySelector(':scope > .revision-zone > .revision-leaf');
-        if(mainLeaf) targets.push({ el: mainLeaf, tag: tag, title: title, mode: 'main' });
-        if(revLeaf) targets.push({ el: revLeaf, tag: tag, title: title + ' — Revision', mode: 'revision' });
+    var chapters = [];
+    function collectChapters(){
+      chapters = Array.from(document.querySelectorAll('#book > .chapter')).map(function(ch){
+        var eyebrow = ch.querySelector('.chapter-title-page .reading-eyebrow');
+        var title = ch.querySelector('.chapter-title-page h1');
+        return {
+          el:ch,
+          num:ch.getAttribute('data-chapter'),
+          tag:eyebrow ? eyebrow.textContent : 'Reading ' + ch.getAttribute('data-chapter'),
+          title:title ? title.textContent : '',
+          revision:ch.querySelector('.revision-zone')
+        };
       });
     }
 
+    function clamp(n){ return Math.max(0, Math.min(1, n)); }
     var ticking = false;
     function update(){
       ticking = false;
-      if(!targets.length) return;
-      var vh = window.innerHeight;
-      var centre = window.scrollY + vh / 2;
+      var scrollMax = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      var full = scrollMax ? clamp(window.scrollY / scrollMax) : 0;
+      var fullPct = Math.round(full * 100);
+      fill.style.width = (full * 100) + '%';
+      bookTrack.setAttribute('aria-valuenow', String(fullPct));
+      bookTrack.setAttribute('aria-valuetext', fullPct + '% through the complete dossier');
+      bookPercent.textContent = fullPct + '%';
+
+      // A reference point below the sticky header identifies the active reading
+      // consistently across title pages, main notes and all revision pages.
+      var readingLine = window.innerHeight * .36;
       var active = null;
-      for(var i = 0; i < targets.length; i++){
-        var t = targets[i];
-        var rect = t.el.getBoundingClientRect();
-        var top = rect.top + window.scrollY;
-        var bottom = top + rect.height;
-        if(centre >= top && centre <= bottom){
-          active = t; active._top = top; active._height = rect.height; break;
+      for(var i=0; i<chapters.length; i++){
+        if(chapters[i].el.getBoundingClientRect().top <= readingLine){
+          active = chapters[i];
+        }else{
+          break;
         }
       }
       if(!active){
-        var best = null, bestDist = Infinity;
-        targets.forEach(function(t){
-          var rect = t.el.getBoundingClientRect();
-          var top = rect.top + window.scrollY, bottom = top + rect.height;
-          var dist = centre < top ? (top - centre) : (centre > bottom ? (centre - bottom) : 0);
-          if(dist < bestDist){ bestDist = dist; best = t; best._top = top; best._height = rect.height; }
-        });
-        active = best;
+        headerTag.textContent = 'Cover';
+        headerTag.style.color = '';
+        headerTitle.textContent = 'Complete Literature Dossier';
+        ring.style.setProperty('--reading-angle', '0%');
+        ring.style.setProperty('--ring-accent', 'var(--rule-strong)');
+        ring.setAttribute('aria-valuenow', '0');
+        ring.setAttribute('aria-valuetext', 'No reading selected');
+        chapterPercent.textContent = '—';
+        return;
       }
-      if(!active) return;
-      var chapterEl = active.el.closest('.chapter');
-      var accent = (chapterEl ? getComputedStyle(chapterEl).getPropertyValue('--chapter-accent').trim() : '') || 'var(--rule-strong)';
-      headerTag.textContent = active.tag;
-      headerTag.style.color = (chapterEl && accent) ? accent : '';
-      headerTitle.textContent = active.title;
-      var progress = (window.scrollY - active._top) / Math.max(1, (active._height - vh));
-      progress = Math.max(0, Math.min(1, progress));
-      fill.style.width = (progress * 100) + '%';
-      header.classList.toggle('mode-revision', active.mode === 'revision');
-      fill.style.background = (active.mode === 'revision')
-        ? accent
-        : ('linear-gradient(90deg, var(--rule-strong), ' + accent + ')');
+
+      var rect = active.el.getBoundingClientRect();
+      var chapterProgress = clamp((readingLine - rect.top) / Math.max(1, rect.height));
+      // The last reading must reach 100% at the actual end of the book.
+      if(active === chapters[chapters.length-1] && scrollMax > 0 &&
+         window.scrollY >= scrollMax - 2) chapterProgress = 1;
+      var pct = Math.round(chapterProgress * 100);
+      var accent = getComputedStyle(active.el).getPropertyValue('--chapter-accent').trim() ||
+                   'var(--rule-strong)';
+      var inRevision = active.revision &&
+                       active.revision.getBoundingClientRect().top <= readingLine;
+      // Keep the title readable beside the ring on narrow phone screens.
+      headerTag.textContent = window.innerWidth <= 530
+        ? 'Reading ' + String(active.num).padStart(2, '0')
+        : active.tag;
+      headerTag.style.color = accent;
+      headerTitle.textContent = active.title + (inRevision ? ' — Revision' : '');
+      ring.style.setProperty('--reading-angle', (chapterProgress * 100) + '%');
+      ring.style.setProperty('--ring-accent',
+                             'color-mix(in srgb, ' + accent + ' 55%, var(--rule-strong))');
+      ring.setAttribute('aria-valuenow', String(pct));
+      ring.setAttribute('aria-valuetext',
+                        'Reading ' + active.num + ': ' + pct + '% complete');
+      chapterPercent.textContent = pct + '%';
     }
-    function onScroll(){
-      if(!ticking){ ticking = true; requestAnimationFrame(update); }
+    function requestUpdate(){
+      if(!ticking){ ticking=true; requestAnimationFrame(update); }
     }
 
-    collectTargets();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', function(){ collectTargets(); update(); });
+    collectChapters();
+    window.addEventListener('scroll', requestUpdate, {passive:true});
+    window.addEventListener('resize', requestUpdate);
+    window.addEventListener('pageshow', requestUpdate);
+    window.addEventListener('load', requestUpdate);
+    if(document.fonts && document.fonts.ready)
+      document.fonts.ready.then(requestUpdate).catch(function(){});
     update();
   }
 
