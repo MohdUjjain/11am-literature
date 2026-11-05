@@ -1,6 +1,6 @@
 # 11AM Literature Dossier
 
-**An installable, offline-ready literary study companion.** Published readings: **01–18, 20–23**; Reading 19 remains reserved and unassigned. The entire available reading dossier lives inside a single HTML file, with full passage-linked study sidebars and six-part revision sections for each chapter.
+**An installable, offline-ready literary study companion.** Published readings: **01–18, 20–25**; Reading 19 remains reserved and unassigned. The entire available reading dossier lives inside a single HTML file, with full passage-linked study sidebars and six-part revision sections for each chapter.
 
 **[Read / install the study app](https://mohdujjain.github.io/11am-literature/)**
 
@@ -32,7 +32,6 @@ Use browser Developer Tools → Application → Service Workers and Cache Storag
 
 Editorial caveat: these are study notes generated from supplied academic reading explainers, and have not been independently verified against original publications.
 
+## Latest dossier release — Readings 24–25
 
-## Latest dossier release — Readings 22–23
-
-Current volume: **22 completed readings** (Reading 19 reserved); full PDF baseline **239 landscape pages, 336 real bookmarks**, and 22 Contents links. The two newest chapters are **The Monetary History of Egypt, 642–1517** and **1068 in the Fayyum**. All 47 new sidebar notes are placed on pages containing their linked passages. PWA offline cache: `11am-lit-reader-01-23-v2`. The editable source archive is under `source/`.
+Current volume: **24 completed readings** (Reading 19 reserved); 261 pages in the first full-composition check, 259 pages after removing two almost-empty continuation pages through editorial compression. The two new chapters are **Fāṭimid Archivalia** and **Al-Muʿtaṣim’s “Bridge of Toil”**. All **47 new** sidebar cards remain on the same pages as their anchors; the sole inherited exception is the Reading 04 offline-font card. Cache version: `11am-lit-reader-01-25-v3`. The editable modular source is archived under `source/`.
