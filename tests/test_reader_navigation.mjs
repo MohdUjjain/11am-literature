@@ -65,6 +65,21 @@ assert.equal(engine.find(index,'').length,0);
 assert.equal(engine.find(index,'nonexistent academic expression').length,0);
 assert.ok(engine.excerpt('Long example '.repeat(40),'example',90).length<=92);
 
+// Pass C1: stable, distinct anchors and Unicode-accurate match offsets.
+assert.equal(new Set(index.map(x=>x.anchorId)).size,index.length);
+assert.ok(index.every(x=>/^lit-hit-/.test(x.anchorId)));
+const arabic=engine.excerptMatch('Before بِسْمِ اللَّهِ after','بسم الله',100);
+assert.ok(arabic.parts.some(x=>x.match && x.text.includes('بِسْمِ اللَّه')));
+const latin=engine.excerptMatch('An important Fāṭimid petition','fatimid',100);
+assert.ok(latin.parts.some(x=>x.match && x.text==='Fāṭimid'));
+const compound=engine.excerptMatch('A muḥammad and a Muḥammad','muhammad',100);
+assert.equal(compound.parts.filter(x=>x.match).length,2);
+assert.ok(uiCode.includes('renderedQuery!==searchBox.value.trim()'),
+  'Enter and result selection must reject old search state');
+assert.ok(uiCode.includes('window.history.pushState'),
+  'Search navigation must produce a browser-history fragment');
+assert.ok(skin.includes('.reader-result-match'));
+
 // The search must live in the sticky header rather than in the side drawer.
 const header=html.slice(html.indexOf('<header id="reading-header"'),
                         html.indexOf('</header>')+9);
