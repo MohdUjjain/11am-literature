@@ -21,6 +21,8 @@ try {
     const context=await browser.newContext({viewport:{width,height:850},
       reducedMotion:'reduce'});
     const page=await context.newPage();
+    page.setDefaultTimeout(12000);
+    console.log('Chromium viewport',width);
     await page.goto(url,{waitUntil:'domcontentloaded'});
     await page.locator('#reader-search-input').waitFor({state:'attached'});
     const viewport=await page.evaluate(()=>({
@@ -96,6 +98,7 @@ try {
     }
     await page.screenshot({path:'test-artifacts/reader-'+width+'.png'});
     await context.close();
+    console.log('PASS viewport',width);
   }
   // Arabic search, revision visibility and persisted preference on real DOM.
   const context=await browser.newContext({viewport:{width:390,height:844},
