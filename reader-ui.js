@@ -23,10 +23,21 @@
   function setStored(key,value) {
     try {window.localStorage.setItem(key,value);} catch (_) {}
   }
+  // Temporary reveals belong to a single navigation destination, not to the
+  // user's persistent visibility preference.
+  function clearTemporaryRevisions(except) {
+    document.querySelectorAll('.lit-temporary-revision').forEach(function(zone) {
+      if(zone!==except)zone.classList.remove('lit-temporary-revision');
+    });
+  }
   // A temporary reveal does not change the reader's saved hide preference.
   function revealRevisionTarget(target) {
     var revision = target && target.closest && target.closest('.revision-zone');
-    if (!revision || visibleRevisions()) return false;
+    if (!revision || visibleRevisions()) {
+      clearTemporaryRevisions(null);
+      return false;
+    }
+    clearTemporaryRevisions(revision);
     revision.classList.add('lit-temporary-revision');
     window.dispatchEvent(new Event('resize'));
     return true;
@@ -273,6 +284,14 @@
       var target=document.getElementById(id);
       if(target)revealRevisionTarget(target);
     },true);
+    // Dismissing a temporary reveal by navigating to a different visible
+    // section must not overwrite the stored revision preference.
+    window.addEventListener('hashchange',function() {
+      var id;
+      try {id=decodeURIComponent(window.location.hash.slice(1));}catch(_){return;}
+      var destination=document.getElementById(id);
+      if(destination)revealRevisionTarget(destination);
+    });
     if(visibilityInput) visibilityInput.addEventListener('change',function(){
       showRevisions(visibilityInput.checked,true);
     });
@@ -370,7 +389,7 @@
     // A button created for a previous query must never navigate after typing.
     if(renderedQuery!==searchBox.value.trim()) {renderResults();return;}
     var target=hit.entry.destination || hit.entry.el;
-    if(hit.entry.revision)revealRevisionTarget(target);
+    revealRevisionTarget(target);
     if(lastHit)lastHit.classList.remove('reader-search-hit-target');
     if(lastHitTimer)clearTimeout(lastHitTimer);
     lastHit=target;
