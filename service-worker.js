@@ -3,7 +3,7 @@
  * Browser storage can be evicted and fonts are always optional.
  */
 const CACHE_PREFIX = '11am-lit-reader-';
-const BOOK_CACHE = CACHE_PREFIX + '946b47fd4e04';
+const BOOK_CACHE = CACHE_PREFIX + 'prewarm-542ddff52a85';
 const FONT_CACHE = '11am-lit-fonts-v1';
 const APP_SHELL = [
   './index.html', './manifest.webmanifest', './offline-update.js',
@@ -36,6 +36,54 @@ self.addEventListener('activate', event => {
   })());
 });
 self.addEventListener('message', event => {
+  if (event.data?.type === 'PREPARE_FONTS') {
+    const port = event.ports?.[0];
+    event.waitUntil((async () => {
+      // Limit the request and accept only the two actual Google Fonts hosts.
+      // No external assets are bundled with the repository.
+      const requested = Array.isArray(event.data.urls) ? event.data.urls.slice(0, 90) : [];
+      const urls = [...new Set(requested.filter(v => typeof v === 'string' && v.length < 2048))]
+        .map(v => { try { return new URL(v); } catch { return null; } })
+        .filter(url => url && allowedFont(url));
+      let stored = 0, reused = 0, failed = 0;
+      try {
+        const cache = await caches.open(FONT_CACHE);
+        // Bound concurrent CDN requests so mobile devices are not overwhelmed.
+        for (let i = 0; i < urls.length; i += 5) {
+          const batch = urls.slice(i, i + 5);
+          const outcomes = await Promise.allSettled(batch.map(async url => {
+            const key = url.href;
+            if (await cache.match(key, {ignoreVary: true})) {
+              reused++;
+              return;
+            }
+            // CSS may be opaque; font binaries permit CORS. Neither is a
+            // requirement for the core offline book to install or remain saved.
+            const mode = url.hostname === 'fonts.gstatic.com' ? 'cors' : 'no-cors';
+            const response = await fetch(key, {mode, credentials: 'omit'});
+            if (!response.ok && response.type !== 'opaque') {
+              throw new Error('Font response could not be cached');
+            }
+            await cache.put(key, response.clone());
+            stored++;
+          }));
+          failed += outcomes.filter(result => result.status === 'rejected').length;
+        }
+        port?.postMessage({
+          type: 'FONTS_PREPARED', requested: urls.length,
+          fontFiles: urls.filter(url => url.hostname === 'fonts.gstatic.com').length,
+          stored, reused, failed
+        });
+      } catch (error) {
+        port?.postMessage({
+          type: 'FONTS_PREPARED', requested: urls.length,
+          stored, reused, failed: Math.max(1, urls.length - stored - reused),
+          error: String(error)
+        });
+      }
+    })());
+    return;
+  }
   if (event.data?.type !== 'SAVE_READER') return;
   const port = event.ports?.[0];
   event.waitUntil((async () => {
