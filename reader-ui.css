@@ -400,3 +400,10 @@
     overflow-wrap:anywhere;
   }
 }
+
+/* Long transliterated terms in labels and headings must wrap as well as prose.
+   Prefer wrapping over nested scroll containers: vertical reading position
+   remains owned by the document. Screen-only; the print compositor is intact. */
+@media screen and (max-width:850px) {
+  #book .chapter .leaf { overflow-wrap:anywhere; }
+}
