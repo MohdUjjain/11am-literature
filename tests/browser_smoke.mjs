@@ -23,10 +23,21 @@ try {
     const page=await context.newPage();
     await page.goto(url,{waitUntil:'domcontentloaded'});
     await page.locator('#reader-search-input').waitFor({state:'attached'});
-    const horizontal=await page.evaluate(()=>({
-      doc:document.documentElement.scrollWidth,
-      viewport:window.innerWidth
-    }));
+    const horizontal=await page.evaluate(()=>{
+      const width=window.innerWidth;
+      const offenders=Array.from(document.querySelectorAll('body *'))
+        .map(el=>({el,rect:el.getBoundingClientRect()}))
+        .filter(({el,rect})=>rect.width>0 && rect.height>0 &&
+          rect.right>width+4 && rect.left<width &&
+          getComputedStyle(el).visibility!=='hidden')
+        .sort((a,b)=>b.rect.right-a.rect.right).slice(0,12)
+        .map(({el,rect})=>({
+          tag:el.tagName,id:el.id,cls:String(el.className||'').slice(0,100),
+          left:Math.round(rect.left),right:Math.round(rect.right),
+          width:Math.round(rect.width)
+        }));
+      return {doc:document.documentElement.scrollWidth,viewport:width,offenders};
+    });
     assert.ok(horizontal.doc<=horizontal.viewport+3,
       'Unexpected horizontal overflow at '+width+'px: '+JSON.stringify(horizontal));
     await page.locator('#panel-toggle').click();
