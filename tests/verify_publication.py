@@ -94,6 +94,9 @@ def main():
         if p!="service-worker.js":
             assert "'./"+p+"'" in worker or p=="index.html",f"Not precached: {p}"
     assert "cache.addAll(APP_SHELL)" in worker
+    assert "PREPARE_FONTS" in worker and "FONTS_PREPARED" in worker
+    assert "fonts.gstatic.com" in worker and "FONT_CACHE" in worker
+    assert "prepareFonts(reg)" in html and "document.fonts.load" in html
     assert "skipWaiting()" in worker
     assert "CACHE_PREFIX" in worker
     assert "new URL(self.registration.scope)" in worker

@@ -2224,6 +2224,64 @@ blockquote{
       reg.active.postMessage({type: 'SAVE_READER'}, [channel.port2]);
     });
   }
+
+  // Proactively load the same typefaces already linked in this document.
+  // This runs after the book is saved, and font failures never undo that save.
+  async function prepareFonts(reg) {
+    if (!navigator.onLine || !reg.active) return {skipped:true};
+    var latin = 'Literature Dossier: ideas, evidence, argument; ā ī ū ʿ ḍ ḥ ṣ ṭ';
+    var arabic = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ؛ الأدب واللغة والرِّسَائِل ١٢٣';
+    var faces = [
+      ['400 16px "Fraunces"',latin],['500 16px "Fraunces"',latin],
+      ['600 16px "Fraunces"',latin],['700 16px "Fraunces"',latin],
+      ['400 16px "Spectral"',latin],['500 16px "Spectral"',latin],
+      ['600 16px "Spectral"',latin],['700 16px "Spectral"',latin],
+      ['400 14px "IBM Plex Sans"',latin],['500 14px "IBM Plex Sans"',latin],
+      ['600 14px "IBM Plex Sans"',latin],['700 14px "IBM Plex Sans"',latin],
+      ['400 18px "Amiri"',arabic],['700 18px "Amiri"',arabic],
+      ['400 18px "Aref Ruqaa"',arabic],['700 18px "Aref Ruqaa"',arabic],
+      ['400 14px "IBM Plex Sans Arabic"',arabic],
+      ['500 14px "IBM Plex Sans Arabic"',arabic],
+      ['600 14px "IBM Plex Sans Arabic"',arabic]
+    ];
+    if (document.fonts && document.fonts.load) {
+      // Bounded waiting is intentional: a remote font server must not
+      // indefinitely delay the reader's already completed offline save.
+      await Promise.race([
+        Promise.allSettled(faces.map(function (face) {
+          return document.fonts.load(face[0],face[1]);
+        })),
+        new Promise(function(resolve) { setTimeout(resolve,12000); })
+      ]);
+    }
+    var urls = new Set();
+    var stylesheet = document.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+    if (stylesheet) urls.add(stylesheet.href);
+    if (typeof performance !== 'undefined' && performance.getEntriesByType) {
+      performance.getEntriesByType('resource').forEach(function (entry) {
+        if (/^https:\/\/fonts\.(?:googleapis|gstatic)\.com\//.test(entry.name)) {
+          urls.add(entry.name);
+        }
+      });
+    }
+    if (!urls.size) return {skipped:true};
+    return new Promise(function(resolve,reject) {
+      var channel = new MessageChannel();
+      var timeout = setTimeout(function () {
+        channel.port1.close();
+        reject(Error('Optional font preparation timed out'));
+      },30000);
+      channel.port1.onmessage = function (event) {
+        clearTimeout(timeout);
+        channel.port1.close();
+        var result = event.data || {};
+        if (result.type === 'FONTS_PREPARED') resolve(result);
+        else reject(Error('Unexpected font preparation response'));
+      };
+      reg.active.postMessage({type:'PREPARE_FONTS',urls:Array.from(urls)},[channel.port2]);
+    });
+  }
+
   function setup() {
     status = document.getElementById('pwa-status');
     saveButton = document.getElementById('pwa-save');
@@ -2249,11 +2307,29 @@ blockquote{
             await askWorker(reg);
             var stored = await cachedBook(reg);
             if (!stored) throw Error('Cache verification failed');
+            say('Full dossier saved. Preparing Latin and Arabic fonts for offline use…');
+            var fonts = null;
+            try { fonts = await prepareFonts(reg); }
+            catch (_) { fonts = {failed:1}; }
             var persistent = false;
             if (navigator.storage && navigator.storage.persist) {
               try { persistent = await navigator.storage.persist(); } catch (_) {}
             }
-            say(persistent ? 'Full dossier saved with persistent storage requested successfully.' : 'Full dossier saved for offline reading. The browser may reclaim cached storage if the device runs low.');
+            var message = persistent
+              ? 'Full dossier saved with persistent storage enabled.'
+              : 'Full dossier saved for offline reading. The browser may reclaim cached storage.';
+            if (fonts && fonts.fontFiles > 0 && !fonts.failed) {
+              message += ' Font resources have also been prepared for offline reading.';
+            } else if (fonts && fonts.fontFiles > 0 && fonts.failed) {
+              message += ' Some font files could not be saved; readable fallback fonts remain available.';
+            } else if (fonts && fonts.failed) {
+              message += ' Font preparation was unavailable; readable fallback fonts remain available.';
+            } else if (fonts && fonts.skipped) {
+              message += ' Font preparation requires an internet connection.';
+            } else {
+              message += ' Font stylesheet prepared; additional font files are saved as the browser loads them.';
+            }
+            say(message);
           } catch (err) { say('Offline save needs a working connection: ' + err.message); }
           finally { saveButton.disabled = false; }
         });
