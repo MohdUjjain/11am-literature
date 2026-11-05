@@ -118,15 +118,24 @@
   }
   function excerptMatch(text, query, maxChars) {
     var mapped = mappedText(String(text || '').replace(/\s+/g,' '));
-    var terms = normalize(query).split(' ').filter(Boolean);
+    var phrase = normalize(query);
+    var terms = phrase.split(' ').filter(Boolean);
     var hits = [];
-    terms.forEach(function(term) {
+    // Prefer highlighting the complete phrase, including spaces and marks.
+    var phraseAt = phrase ? mapped.value.indexOf(phrase) : -1;
+    var matchingTerms = phraseAt >= 0 ? [phrase] : terms;
+    matchingTerms.forEach(function(term) {
       var at = 0, pos;
       while ((pos = mapped.value.indexOf(term,at)) >= 0) {
         var from = mapped.offsets[pos];
         var last = mapped.offsets[pos + term.length - 1];
-        if (from !== undefined && last !== undefined)
-          hits.push([from,last+1]);
+        if (from !== undefined && last !== undefined) {
+          var finish = last + 1;
+          while (finish < mapped.source.length &&
+                 /[\u0300-\u036f\u064b-\u065f\u0670]/.test(mapped.source[finish]))
+            finish++;
+          hits.push([from,finish]);
+        }
         at = pos + Math.max(1,term.length);
         if (hits.length > 1000) break;
       }
