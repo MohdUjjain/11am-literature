@@ -381,31 +381,22 @@
 /* Modal drawer blocks background reading scroll; screen only. */
 @media screen { body.lit-drawer-open {overflow:hidden;} }
 
-/* Pass C3: tables nested inside passage prose or learning cards must
-   scroll within their own reading width on narrow screens, just as direct
-   section tables already do. Print geometry and table semantics are untouched. */
+/* Pass C3: prevent scholarly tables from widening the mobile document.
+   Fixed layout keeps cells in normal reading flow instead of introducing
+   nested vertical scroll containers that break Resume Reading. Print and
+   original table markup remain untouched. */
 @media screen and (max-width:850px) {
   #book .chapter table {
-    display:block;
+    display:table;
+    table-layout:fixed;
+    width:100%;
     max-width:100%;
-    overflow-x:auto;
-    overscroll-behavior-x:contain;
+    overflow:visible;
   }
-}
-
-/* Some legacy wide table row-groups extend beyond their table's own scroll
-   box in Chromium. The section is the reliable horizontal scrollport, while
-   keeping every scholarly cell visible and retaining native print layout. */
-@media screen and (max-width:850px) {
-  #book .chapter .leaf .section-body {
-    max-width:100%;
-    overflow-x:auto;
-    overscroll-behavior-x:contain;
+  #book .chapter table th,
+  #book .chapter table td {
+    min-width:0;
+    white-space:normal;
+    overflow-wrap:anywhere;
   }
-}
-
-/* Contain wide scholarly table descendants in their chapter's own screen scrollport.
-   The landscape print layout and compositor are unaffected. */
-@media screen and (max-width:850px) {
-  #book .chapter .leaf { overflow-x:auto; overscroll-behavior-x:contain; }
 }
