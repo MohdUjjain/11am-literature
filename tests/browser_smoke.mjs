@@ -130,9 +130,18 @@ try {
   let reading=installed.pages()[0] || await installed.newPage();
   await reading.goto(url,{waitUntil:'domcontentloaded'});
   await reading.locator('#chapter-12 .section[id]').first()
-    .evaluate(el=>el.scrollIntoView({block:'start'}));
-  await reading.waitForTimeout(1500);
-  await reading.evaluate(()=>window.dispatchEvent(new Event('scroll')));
+    .evaluate(el=>el.scrollIntoView({behavior:'instant',block:'center'}));
+  await reading.waitForTimeout(1400);
+  const atDestination=await reading.evaluate(()=>{
+    const ch=document.getElementById('chapter-12');
+    const r=ch.getBoundingClientRect();
+    return {y:window.scrollY,top:r.top,bottom:r.bottom};
+  });
+  assert.ok(atDestination.y>1000 && atDestination.top<350 && atDestination.bottom>350,
+    'Browser must physically reach Reading 12 before saving: '+JSON.stringify(atDestination));
+  // Pagehide is the durable browser-exit capture, not a synthetic throttled
+  // scroll event that may compete with smooth scrolling or previous checkpoints.
+  await reading.evaluate(()=>window.dispatchEvent(new Event('pagehide')));
   const checkpoint=await reading.evaluate(()=>
     JSON.parse(localStorage.getItem('11am-literature-reading-position-v1')));
   assert.equal(checkpoint?.chapter,'12');
