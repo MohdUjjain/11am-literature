@@ -43,8 +43,10 @@ try {
     await page.locator('#panel-toggle').click();
     await assert.doesNotReject(()=>page.locator('#panel-tools').count());
     assert.equal(await page.locator('#side-panel').getAttribute('aria-hidden'),'false');
+    assert.equal(await page.locator('#book').evaluate(el=>el.inert),true);
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#side-panel').getAttribute('aria-hidden'),'true');
+    assert.equal(await page.locator('#book').evaluate(el=>el.inert),false);
     if(width<=850) await page.locator('#reader-search-toggle').click();
     const search=page.locator('#reader-search-input');
     await search.fill('fatimid');
