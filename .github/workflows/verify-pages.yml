@@ -18,7 +18,7 @@ jobs:
   verify:
     name: Rebuild and verify hosting assets
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Checkout publication sources
         uses: actions/checkout@v4
@@ -50,9 +50,25 @@ jobs:
         run: node tests/test_reader_polish.mjs
       - name: Verify offline refresh and update status logic
         run: node tests/test_offline_refresh.mjs
-      - name: Verify reproduced assets are checked in (pull requests)
+      - name: Run browser-level viewport and navigation checks
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.58.2
+          npx playwright install --with-deps chromium
+          node tests/browser_smoke.mjs
+      - name: Upload browser screenshots for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: literature-chromium-smoke
+          path: test-artifacts/
+          if-no-files-found: ignore
+      - name: Verify reproducible worker and unchanged preview (pull requests)
         if: github.event_name == 'pull_request'
-        run: git diff --exit-code -- service-worker.js og-image.png
+        run: |
+          python scripts/build.py --check
+          git diff --exit-code -- og-image.png
+          # The worker is regenerated and committed by the main-branch job.
+          # Reader-source PRs do not need to check in an interim stale worker.
       - name: Commit regenerated publishing assets (main only)
         if: github.event_name != 'pull_request'
         run: |
