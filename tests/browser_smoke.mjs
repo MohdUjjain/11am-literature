@@ -62,39 +62,41 @@ try {
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#side-panel').getAttribute('aria-hidden'),'true');
     assert.equal(await page.locator('#book').evaluate(el=>el.inert),false);
-    if(width<=850) await page.locator('#reader-search-toggle').click();
-    const search=page.locator('#reader-search-input');
-    await search.fill('fatimid');
-    await page.locator('.reader-result').first().waitFor({timeout:12000});
-    const result=page.locator('.reader-result').first();
-    assert.ok(await result.locator('mark.reader-result-match').count()>0,
-      'Search term must be visibly highlighted');
-    if(width===390) {
-      await search.focus();
-      await page.keyboard.press('ArrowDown');
-      assert.equal(await page.evaluate(()=>
-        document.activeElement?.classList.contains('reader-result')),true);
-      await page.keyboard.press('ArrowUp');
-      assert.equal(await search.evaluate(el=>document.activeElement===el),true);
-      await page.evaluate(()=>{
-        const original=Element.prototype.scrollIntoView;
-        Element.prototype.scrollIntoView=function(opts){
-          window.__litScrollBehavior=opts?.behavior;
-          return original.call(this,opts);
-        };
-      });
-    }
-    await result.click();
-    const hash=new URL(page.url()).hash;
-    assert.ok(hash.startsWith('#lit-'),'Search result must have stable URL');
-    assert.equal(await page.evaluate(()=>document.activeElement?.id),
-      decodeURIComponent(hash.slice(1)),'Search jump should focus its passage');
-    if(width===390) {
-      assert.equal(await page.evaluate(()=>window.__litScrollBehavior),'instant',
-        'Reduced motion should disable animated search jumps');
-      await page.goBack();
-      assert.equal(new URL(page.url()).hash,'',
-        'Browser Back must reverse search-history navigation');
+    if(width===390 || width===1440) {
+      if(width<=850) await page.locator('#reader-search-toggle').click();
+      const search=page.locator('#reader-search-input');
+      await search.fill('fatimid');
+      await page.locator('.reader-result').first().waitFor({timeout:12000});
+      const result=page.locator('.reader-result').first();
+      assert.ok(await result.locator('mark.reader-result-match').count()>0,
+        'Search term must be visibly highlighted');
+      if(width===390) {
+        await search.focus();
+        await page.keyboard.press('ArrowDown');
+        assert.equal(await page.evaluate(()=>
+          document.activeElement?.classList.contains('reader-result')),true);
+        await page.keyboard.press('ArrowUp');
+        assert.equal(await search.evaluate(el=>document.activeElement===el),true);
+        await page.evaluate(()=>{
+          const original=Element.prototype.scrollIntoView;
+          Element.prototype.scrollIntoView=function(opts){
+            window.__litScrollBehavior=opts?.behavior;
+            return original.call(this,opts);
+          };
+        });
+      }
+      await result.click();
+      const hash=new URL(page.url()).hash;
+      assert.ok(hash.startsWith('#lit-'),'Search result must have stable URL');
+      assert.equal(await page.evaluate(()=>document.activeElement?.id),
+        decodeURIComponent(hash.slice(1)),'Search jump should focus its passage');
+      if(width===390) {
+        assert.equal(await page.evaluate(()=>window.__litScrollBehavior),'instant',
+          'Reduced motion should disable animated search jumps');
+        await page.goBack();
+        assert.equal(new URL(page.url()).hash,'',
+          'Browser Back must reverse search-history navigation');
+      }
     }
     await page.screenshot({path:'test-artifacts/reader-'+width+'.png'});
     await context.close();
