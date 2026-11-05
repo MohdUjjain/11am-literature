@@ -108,9 +108,10 @@ try {
   const page=await context.newPage();
   await page.goto(url,{waitUntil:'domcontentloaded'});
   await page.locator('#reader-search-toggle').click();
-  await page.locator('#reader-search-input').fill('بسم الله');
+  await page.locator('#reader-search-input').fill('اثبتت الحجج');
   await page.locator('.reader-result').first().waitFor({timeout:12000});
-  assert.ok(await page.locator('.reader-result-snippet[dir="rtl"]').count()>0);
+  assert.ok(await page.locator('.reader-result-snippet mark.reader-result-match').first().count()>0,
+    'Arabic query must highlight its actual scholarly text even inside mixed-direction cells');
   await context.close();
   // Real browser shutdown/restart: local checkpoints must remain usable.
   const profile='/tmp/literature-c3-profile';
