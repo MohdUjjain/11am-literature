@@ -81,7 +81,25 @@
   .reader-resume-button:disabled{opacity:.5;cursor:not-allowed;}
   .reader-resume-caption{font:400 11px var(--font-utility);color:var(--ink-soft);}
   body.lit-revisions-hidden #book > .chapter > .revision-zone{display:none!important;}
+  body.lit-revisions-hidden #book > .chapter > .revision-zone.lit-temporary-revision{
+    display:block!important;
+  }
+  html{scroll-padding-top:var(--lit-header-offset,86px);}
+  #book .chapter[id],#book .section[id]{
+    scroll-margin-top:var(--lit-header-offset,86px);
+  }
   #side-panel{padding-top:53px;}
+  #side-panel[inert]{pointer-events:none;}
+  #side-panel:focus{outline:0;}
+  #side-panel .panel-tab:focus-visible,
+  #side-panel button:focus-visible,
+  #side-panel a:focus-visible,
+  #side-panel input:focus-visible{
+    outline:2px solid var(--rule-strong);outline-offset:2px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #side-panel,#panel-backdrop,.progress-fill{transition:none!important;}
+  }
   #panel-toggle{z-index:80;}
   @media (max-width:850px){
     .reading-header-inner{

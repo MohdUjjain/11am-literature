@@ -848,7 +848,8 @@ blockquote{
   <button id="panel-toggle" type="button" aria-label="Open index and tools"
           aria-controls="side-panel" aria-expanded="false">☰</button>
   <div id="panel-backdrop"></div>
-  <div id="side-panel" aria-hidden="true">
+  <div id="side-panel" role="dialog" aria-modal="true"
+       aria-label="Reading index and tools" aria-hidden="true" inert>
     <button id="panel-close" type="button" aria-label="Close sidebar">✕</button>
     <div class="panel-tabs" role="tablist" aria-label="Literature sidebar">
       <button id="tab-index" class="panel-tab" type="button" role="tab"
@@ -2126,25 +2127,71 @@ blockquote{
     var closeBtn = document.getElementById('panel-close');
     if(!toggle || !panel) return;
 
+    function focusableControls(){
+      return Array.from(panel.querySelectorAll(
+        'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),' +
+        'textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+      )).filter(function(el){
+        return !el.closest('[hidden]') && !!el.getClientRects().length &&
+               el.tabIndex !== -1 && !el.inert;
+      });
+    }
     function open(){
-      panel.classList.add('open'); backdrop.classList.add('open');
-      toggle.setAttribute('aria-expanded','true'); panel.setAttribute('aria-hidden','false');
+      panel.inert = false;
+      panel.removeAttribute('inert');
+      panel.classList.add('open');
+      backdrop.classList.add('open');
+      toggle.setAttribute('aria-expanded','true');
+      panel.setAttribute('aria-hidden','false');
+      var activeTab = panel.querySelector('.panel-tab[aria-selected="true"]');
+      (activeTab || closeBtn).focus();
     }
-    function close(){
-      panel.classList.remove('open'); backdrop.classList.remove('open');
-      toggle.setAttribute('aria-expanded','false'); panel.setAttribute('aria-hidden','true');
+    function close(restoreFocus){
+      if(!panel.classList.contains('open')) return;
+      panel.classList.remove('open');
+      backdrop.classList.remove('open');
+      toggle.setAttribute('aria-expanded','false');
+      // Move focus out before applying inert + aria-hidden.
+      if(restoreFocus) toggle.focus();
+      else if(panel.contains(document.activeElement)) document.activeElement.blur();
+      panel.inert = true;
+      panel.setAttribute('inert','');
+      panel.setAttribute('aria-hidden','true');
     }
+    panel.inert = true;
+    panel.setAttribute('inert','');
     toggle.addEventListener('click', function(){
-      panel.classList.contains('open') ? close() : open();
+      panel.classList.contains('open') ? close(true) : open();
     });
-    closeBtn.addEventListener('click', close);
-    backdrop.addEventListener('click', close);
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape') close();
+    closeBtn.addEventListener('click',function(){close(true);});
+    backdrop.addEventListener('click',function(){close(true);});
+    document.addEventListener('keydown',function(e){
+      if(!panel.classList.contains('open'))return;
+      if(e.key==='Escape'){
+        e.preventDefault();close(true);
+      }else if(e.key==='Tab'){
+        var options=focusableControls();
+        if(!options.length){e.preventDefault();closeBtn.focus();return;}
+        var current=options.indexOf(document.activeElement);
+        if(e.shiftKey && current<=0){
+          e.preventDefault();options[options.length-1].focus();
+        }else if(!e.shiftKey && (current===options.length-1 || current<0)){
+          e.preventDefault();options[0].focus();
+        }
+      }
     });
-    // clicking a TOC link inside the panel should also close it (mobile)
-    document.getElementById('toc-list').addEventListener('click', function(e){
-      if(e.target.tagName === 'A') close();
+    // Let native fragment navigation update the URL, while moving focus to
+    // the destination instead of back to the drawer's menu button.
+    document.getElementById('toc-list').addEventListener('click',function(e){
+      var a=e.target.closest && e.target.closest('a[href^="#"]');
+      if(!a)return;
+      var id=decodeURIComponent(a.getAttribute('href').slice(1));
+      var dest=document.getElementById(id);
+      close(false);
+      if(dest) requestAnimationFrame(function(){
+        if(!dest.hasAttribute('tabindex'))dest.setAttribute('tabindex','-1');
+        dest.focus({preventScroll:true});
+      });
     });
   }
 
@@ -2299,23 +2346,76 @@ blockquote{
   var status, saveButton, installButton, installEvent = null;
   var isSecure = location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   function say(message) { if (status) status.textContent = message; }
-  function cachedBook(reg) {
-    if (!('caches' in window)) return Promise.resolve(false);
-    return caches.match(new URL('./index.html', reg.scope).href).then(Boolean).catch(function () { return false; });
-  }
-  function askWorker(reg) {
-    return new Promise(function (resolve, reject) {
-      if (!reg.active) return reject(Error('No active offline worker'));
-      var channel = new MessageChannel();
-      var timeout = setTimeout(function () { reject(Error('Offline save timed out')); }, 20000);
-      channel.port1.onmessage = function (evt) {
-        clearTimeout(timeout);
+  function askWorker(reg,type,timeoutMs) {
+    return new Promise(function(resolve,reject){
+      var worker=reg.active;
+      if(!worker)return reject(Error('No active offline worker'));
+      var channel=new MessageChannel();
+      var timer=setTimeout(function(){
         channel.port1.close();
-        var v = evt.data || {};
-        if (v.ok) resolve(v); else reject(Error(v.error || 'Offline cache failed'));
+        reject(Error('Offline worker did not respond'));
+      },timeoutMs||12000);
+      channel.port1.onmessage=function(event){
+        clearTimeout(timer);channel.port1.close();
+        var data=event.data||{};
+        if(type==='SAVE_READER'){
+          if(data.ok)resolve(data);
+          else reject(Error(data.error||'Offline save failed'));
+        }else if(data.type==='EDITION_STATUS'){
+          resolve(data);
+        }else{
+          reject(Error('Unexpected offline worker response'));
+        }
       };
-      reg.active.postMessage({type: 'SAVE_READER'}, [channel.port2]);
+      worker.postMessage({type:type},[channel.port2]);
     });
+  }
+  function editionStatus(reg){
+    return askWorker(reg,'EDITION_STATUS',4500);
+  }
+  async function cachedBook(reg){
+    try {
+      var report=await editionStatus(reg);
+      return !!report.ready;
+    }catch(_){
+      // Upgrade compatibility: older installed workers did not implement
+      // EDITION_STATUS. An old cached copy is not proof of current version.
+      if(!('caches' in window))return false;
+      return caches.match(new URL('./index.html',reg.scope).href)
+        .then(Boolean).catch(function(){return false;});
+    }
+  }
+  function withTimeout(task,ms) {
+    var timer;
+    return Promise.race([
+      task,
+      new Promise(function(_,reject){
+        timer=setTimeout(function(){reject(Error('Update check timed out'));},ms);
+      })
+    ]).finally(function(){clearTimeout(timer);});
+  }
+  async function checkForEdition(reg) {
+    if(!navigator.onLine)return {checked:false,reason:'offline'};
+    try {
+      await withTimeout(reg.update(),14000);
+      var pending=reg.installing||reg.waiting;
+      if(pending && pending.state!=='activated'){
+        var ready=await withTimeout(new Promise(function(resolve){
+          function changed(){
+            if(['activated','redundant'].indexOf(pending.state)>=0){
+              pending.removeEventListener('statechange',changed);
+              resolve(pending.state==='activated');
+            }
+          }
+          pending.addEventListener('statechange',changed);
+          changed();
+        }),12000).catch(function(){return false;});
+        if(!ready)return {checked:false,reason:'pending'};
+      }
+      return {checked:true};
+    }catch(error){
+      return {checked:false,reason:'connection',error:String(error)};
+    }
   }
 
   // Proactively load the same typefaces already linked in this document.
@@ -2395,36 +2495,53 @@ blockquote{
       }).then(function (reg) {
         saveButton.addEventListener('click', async function () {
           saveButton.disabled = true;
-          say('Refreshing the complete offline copy…');
+          say('Checking for a newer edition before verifying the offline copy…');
           try {
-            await askWorker(reg);
-            var stored = await cachedBook(reg);
-            if (!stored) throw Error('Cache verification failed');
-            say('Full dossier saved. Preparing Latin and Arabic fonts for offline use…');
-            var fonts = null;
-            try { fonts = await prepareFonts(reg); }
-            catch (_) { fonts = {failed:1}; }
-            var persistent = false;
-            if (navigator.storage && navigator.storage.persist) {
-              try { persistent = await navigator.storage.persist(); } catch (_) {}
+            var previous=await editionStatus(reg).catch(function(){return null;});
+            var check=await checkForEdition(reg);
+            say(check.checked ? 'Update check completed. Verifying saved reading files…'
+                              : 'Verifying saved reading files; the update check was unavailable…');
+            var saved=await askWorker(reg,'SAVE_READER',20000);
+            var latest=await editionStatus(reg).catch(function(){return null;});
+            if(!saved.ok || (latest && !latest.ready) ||
+               !(await cachedBook(reg))) throw Error('Offline cache verification failed');
+            var changed=!!(previous && latest && previous.edition!==latest.edition);
+            var notice=document.getElementById('edition-notice');
+            var updateReady=changed||!!(notice && !notice.hidden);
+            var message=updateReady
+              ? 'New edition saved. Select Reload updated guide to read the updated copy.'
+              : check.checked
+                ? 'Offline copy verified. No newer edition detected during this check.'
+                : check.reason==='offline'
+                  ? 'Saved copy verified. An update check requires an internet connection.'
+                  : 'Saved copy verified, but the update check could not finish. Try again online.';
+            say(message + ' Preparing optional Latin and Arabic fonts…');
+            var fonts=null;
+            try {fonts=await prepareFonts(reg);}
+            catch(_){fonts={failed:1};}
+            var persistent=false;
+            if(navigator.storage && navigator.storage.persist){
+              try{persistent=await navigator.storage.persist();}catch(_){}
             }
-            var message = persistent
-              ? 'Full dossier saved with persistent storage enabled.'
-              : 'Full dossier saved for offline reading. The browser may reclaim cached storage.';
-            if (fonts && fonts.fontFiles > 0 && !fonts.failed) {
-              message += ' Font resources have also been prepared for offline reading.';
-            } else if (fonts && fonts.fontFiles > 0 && fonts.failed) {
-              message += ' Some font files could not be saved; readable fallback fonts remain available.';
-            } else if (fonts && fonts.failed) {
-              message += ' Font preparation was unavailable; readable fallback fonts remain available.';
-            } else if (fonts && fonts.skipped) {
-              message += ' Font preparation requires an internet connection.';
-            } else {
-              message += ' Font stylesheet prepared; additional font files are saved as the browser loads them.';
+            message+= persistent
+              ? ' Persistent storage enabled.'
+              : ' Browser storage may be reclaimed if space runs low.';
+            if(fonts && fonts.fontFiles>0 && !fonts.failed){
+              message+=' Font resources cached for offline reading.';
+            }else if(fonts && fonts.failed){
+              message+=' Some font resources could not be saved; fallback fonts remain available.';
+            }else if(fonts && fonts.skipped){
+              message+=navigator.onLine
+                ? ' No additional font URLs were available for preparation.'
+                : ' Font preparation skipped while offline.';
+            }else{
+              message+=' Available fonts are cached as they load.';
             }
             say(message);
-          } catch (err) { say('Offline save needs a working connection: ' + err.message); }
-          finally { saveButton.disabled = false; }
+          }catch(err){
+            say('Could not verify the offline copy: '+err.message+
+                '. Your previously saved edition remains available if cached.');
+          }finally{saveButton.disabled=false;}
         });
       }).catch(function (err) { say('Offline setup unavailable: ' + (err && err.message || err)); });
     window.addEventListener('beforeinstallprompt', function (evt) {

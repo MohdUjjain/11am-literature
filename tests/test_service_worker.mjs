@@ -68,6 +68,36 @@ assert.ok(stored.has(normalize('./og-image.png')));
 assert.ok(stored.has(normalize('./reader-search.js')));
 assert.ok(stored.has(normalize('./reader-ui.js')));
 assert.ok(stored.has(normalize('./reader-ui.css')));
+// Edition status must identify the currently installed complete shell, rather
+// than a stale book response from some other named cache.
+async function edition(browser){
+  let status=null;
+  await browser.event('message',{
+    data:{type:'EDITION_STATUS'},
+    ports:[{postMessage:value=>status=value}]
+  });
+  return status;
+}
+const beforeCleanup=await edition(a);
+assert.equal(beforeCleanup.type,'EDITION_STATUS');
+assert.equal(beforeCleanup.ready,true);
+assert.equal(beforeCleanup.edition,current);
+assert.equal(beforeCleanup.cached,beforeCleanup.required);
+const statusPort={received:null,postMessage(value){this.received=value}};
+await a.event('message',{
+  data:{type:'SAVE_READER'},ports:[statusPort]
+});
+assert.equal(statusPort.received.ok,true);
+assert.equal(statusPort.received.edition,current);
+const shell=a.stores.get(current);
+shell.entries.delete(normalize('./reader-ui.js'));
+const incomplete=await edition(a);
+assert.equal(incomplete.ready,false);
+assert.equal(incomplete.cached,incomplete.required-1);
+await a.event('message',{
+  data:{type:'SAVE_READER'},ports:[statusPort]
+});
+assert.equal((await edition(a)).ready,true,'SAVE_READER must restore missing required assets');
 await a.event('activate');
 assert.equal(a.stats.claim,1);
 assert.ok(!a.stores.has('11am-lit-reader-old-core'),'Old edition not cleared');

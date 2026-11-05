@@ -58,3 +58,11 @@ The sticky reading header now includes **Search all notes**, a local full-text s
 Revision/summary visibility is saved locally on the device; hiding on screen does not remove it from print/export unless the separate printing checkbox is unchecked. **Continue Reading** appears in both tabs and remembers the most recent reading and approximate position in local device storage. Opening the reader does not automatically jump away from the cover; the choice to resume is explicit.
 
 The sticky header shows only the reading number followed by its title. Book-wide progress and the independent circular reading progress are unchanged in their semantics.
+
+## Pass A — Reader reliability and interaction
+
+- **Continue Reading** now stores a stable section or passage identifier with a local offset, rather than only a percentage of the chapter's changing height. Existing percentage-only checkpoints remain readable and are converted during subsequent reading. The guide still opens at the cover until the user explicitly chooses to resume.
+- **Hidden revision links:** Following an index or search link to a hidden revision temporarily reveals the destination. The stored **Show revision/summary sections** preference remains unchanged; changing that toggle clears temporary reveals.
+- **Sticky-header navigation:** Anchor offsets follow the measured header height, including its two-row mobile layout.
+- **Sidebar focus:** The offscreen drawer is inert when closed, has dialog semantics while open, keeps keyboard Tab focus inside, and restores focus to its launcher on Escape or dismissal. Navigating to a reading instead focuses the destination.
+- **Offline update/refresh:** The action explicitly checks for a newer service-worker edition when online, verifies the active edition's complete cache with an `EDITION_STATUS` worker response, and distinguishes a successfully checked copy from an offline or incomplete update check. Optional font preparation remains independent of book availability.

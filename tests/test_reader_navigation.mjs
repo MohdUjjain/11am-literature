@@ -89,8 +89,21 @@ assert.ok(skin.includes('.reader-search-hit-target{outline:none!important;'),
 assert.doesNotThrow(()=>new Script(uiCode));
 assert.ok(uiCode.includes('setStored(STORE_VISIBILITY'));
 assert.ok(uiCode.includes('setStored(STORE_POSITION'));
-assert.ok(uiCode.includes('showRevisions(true,true)'),
-  'Opening a hidden revision search result must reveal it');
+assert.ok(uiCode.includes('revealRevisionTarget(target)'),
+  'Opening a hidden revision result should temporarily reveal the target');
+assert.ok(uiCode.includes("version:2,chapter:active.getAttribute('data-chapter')"),
+  'Resume checkpoints must use stable section/passages, not chapter percentages');
+assert.ok(uiCode.includes("setStored(STORE_VISIBILITY,show ? 'true' : 'false')"),
+  'Revision preference must persist independently of temporary reveals');
+assert.ok(skin.includes('.revision-zone.lit-temporary-revision'),
+  'Hidden revision destinations must be temporarily visible');
+assert.ok(skin.includes('--lit-header-offset'),
+  'Index anchor offsets must adapt to sticky header height');
+assert.ok(sidebar.includes('aria-modal="true"') && sidebar.includes(' inert>'),
+  'Closed drawer should be unfocusable and identified as modal');
+assert.ok(html.includes('function focusableControls()') &&
+          html.includes("panel.inert = true"),
+  'Drawer focus must be trapped and restored on close');
 assert.ok(uiCode.includes('recordPosition(true)'),
   'Resume position must persist on page hide');
 

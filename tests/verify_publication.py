@@ -133,6 +133,12 @@ def main():
     assert "PREPARE_FONTS" in worker and "FONTS_PREPARED" in worker
     assert "fonts.gstatic.com" in worker and "FONT_CACHE" in worker
     assert "prepareFonts(reg)" in html and "document.fonts.load" in html
+    assert "EDITION_STATUS" in worker and "EDITION_STATUS" in html
+    assert "reg.update()" in html and "checkForEdition(reg)" in html
+    assert "saved copy verified" in html.lower()
+    assert 'role="dialog" aria-modal="true"' in html
+    assert "panel.inert = true" in html
+    assert "var coverLink" not in html
     assert "skipWaiting()" in worker
     assert "CACHE_PREFIX" in worker
     assert "new URL(self.registration.scope)" in worker
