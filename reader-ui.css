@@ -380,3 +380,15 @@
 
 /* Modal drawer blocks background reading scroll; screen only. */
 @media screen { body.lit-drawer-open {overflow:hidden;} }
+
+/* Pass C3: tables nested inside passage prose or learning cards must
+   scroll within their own reading width on narrow screens, just as direct
+   section tables already do. Print geometry and table semantics are untouched. */
+@media screen and (max-width:850px) {
+  #book .chapter table {
+    display:block;
+    max-width:100%;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+  }
+}
