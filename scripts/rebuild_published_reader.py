@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Recreate index.html using the archived scholarly chapter build and the
-approved modern publication shell. No PDF generation or content rewriting.
+approved modern publication shell. The only presentation-level redaction removes
+25 user-requested source-information paragraphs from title pages. No PDF output.
 """
 from pathlib import Path
 import argparse
@@ -18,6 +19,15 @@ AFTER=ROOT/"source/publication-shell-after-chapters.html"
 PUBLISHED=ROOT/"index.html"
 CHAPTER=re.compile(r'<section\s+class="chapter"\s+data-chapter="(\d+)"',re.I)
 EXPECTED=list(range(1,19))+list(range(20,27))
+TITLE_SOURCE_RE=re.compile(r'<p class="source-cite">[^<]*</p>')
+
+def without_title_source_information(html, require_all=False):
+    """Approved presentation edit, never modify narrative, callouts or revision."""
+    cleaned, count=TITLE_SOURCE_RE.subn("",html)
+    if require_all and count!=len(EXPECTED):
+        raise AssertionError(f"Archived build must have {len(EXPECTED)} title notices; got {count}")
+    return cleaned
+
 
 def extract_chapters(html):
     matches=list(CHAPTER.finditer(html))
@@ -64,7 +74,11 @@ def main():
     args=parser.parse_args()
     original=PUBLISHED.read_text(encoding="utf-8")
     expected_body=extract_chapters(original)
-    source_body=rebuilt_source()
+    # The historical ZIP remains unmodified; remove only the explicitly
+    # rejected title-page source-information paragraphs when publishing.
+    source_body=without_title_source_information(rebuilt_source(),require_all=True)
+    if TITLE_SOURCE_RE.search(expected_body):
+        raise AssertionError("Published title-page source-information notice remains")
     if source_body!=expected_body:
         # Do not overwrite chapters or silently normalize scholarly markup.
         offset=next((i for i,(a,b) in enumerate(zip(source_body,expected_body))
