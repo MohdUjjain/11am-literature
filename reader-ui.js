@@ -108,6 +108,9 @@
     }
     // Recompute progress and passage-note geometry after hiding/showing zones.
     window.dispatchEvent(new Event('resize'));
+    // A search currently on screen must immediately respect the new boundary.
+    if(searchBox && searchResults && !searchResults.hidden && searchBox.value.trim())
+      renderResults();
   }
   function initTabs(){
     var tabs = Array.prototype.slice.call(document.querySelectorAll('.panel-tab'));
@@ -506,7 +509,11 @@
       try {id=decodeURIComponent(hash.slice(1));}catch(_){return;}
       var target=document.getElementById(id);
       if(target) {
-        revealRevisionTarget(target);
+        if(!visibleRevisions() && target.closest('.revision-zone')){
+          // A bookmarked search hit may predate a Hide Revision decision.
+          // Keep that boundary intact and land at its containing chapter.
+          target=target.closest('#book > .chapter') || target;
+        }
         target.scrollIntoView({block:'start',behavior:'instant'});
         if(!target.hasAttribute('tabindex'))target.setAttribute('tabindex','-1');
         target.focus({preventScroll:true});
