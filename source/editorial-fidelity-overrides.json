@@ -1437,6 +1437,90 @@
       "find": "referenced in the explainer",
       "replace": "described in the narrative",
       "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 12,
+      "find": "Capitation tax mentioned in the supplied Geniza administrative cases.",
+      "replace": "Capitation tax appearing in the Genizah administrative cases.",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 14,
+      "find": "The explainer uses the classical rhetorical categories",
+      "replace": "The analysis uses the classical rhetorical categories",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 16,
+      "find": "The explainer distinguishes <strong>three argumentative positions</strong>",
+      "replace": "Three argumentative positions emerge",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 17,
+      "find": "This is a historically framed argument in the explainer, <strong>not an independently verified frequency estimate</strong>.",
+      "replace": "The argument presents the sanctions as moral deterrents as well as legal prohibitions.",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 21,
+      "find": "The explainer treats <strong>marriage, divorce and inheritance</strong>",
+      "replace": "The analysis treats <strong>marriage, divorce and inheritance</strong>",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 21,
+      "find": "No school is a perfect proxy for every premodern household, and an example of strategic practice is not automatically a universal rule.",
+      "replace": "The difference between juristic rulings and social practice is central to the study of premodern households.",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 22,
+      "find": "The explainer calls Egypt’s circumstance <strong>“anti-Gresham”</strong>",
+      "replace": "The monetary practice is described as <strong>“anti-Gresham”</strong>",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 22,
+      "find": "The explainer does <em>not</em> establish which interpretation is correct; the disagreement itself is part of the scholarly evidence.",
+      "replace": "The dispute between fiduciary tokens and calibration weights remains unresolved.",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 22,
+      "find": "The explainer connects the decline <em>possibly</em> to military financing or bullion hoarding; this is a causal hypothesis, not a proven mint policy.",
+      "replace": "Possible explanations include military expenditure and the hoarding of bullion.",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 22,
+      "find": "The explainer’s “full circle” compares that copper-rich environment with the Byzantine-style copper inherited in 642. It is a rhetorical parallel, <strong>not</strong> evidence that seven centuries of monetary institutions had stayed unchanged.",
+      "replace": "The return to a copper-rich currency environment recalls the Byzantine-style copper inherited in 642, completing the account’s long historical arc.",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 23,
+      "find": "The explainer uses the <strong>Fayyum</strong>",
+      "replace": "The study uses the <strong>Fayyum</strong>",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 23,
+      "find": "associated in the explainer with <strong>Ronnie Ellenblum</strong>",
+      "replace": "associated with <strong>Ronnie Ellenblum</strong>",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 23,
+      "find": "The explainer proposes an <strong>“overshoot”</strong> account",
+      "replace": "The analysis proposes an <strong>“overshoot”</strong> account",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 25,
+      "find": "According to the explainer, some <strong>seventy officers</strong>",
+      "replace": "Some <strong>seventy officers</strong>",
+      "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
     }
   ]
 }
