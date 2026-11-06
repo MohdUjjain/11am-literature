@@ -356,6 +356,114 @@
       "find": "<div class=\"callout callout--mistake\" data-content-type=\"mistake\" data-note-id=\"s26-6-p0-n1\" data-pagination=\"allow-split\"><div class=\"tag\">Keep the chronology honest</div><p>The supplied excerpt does not date Ida Mae’s eventual move north; do not invent her departure year or route.</p></div>",
       "replace": "",
       "reason": "Remove assistant-added warning about missing dates, retain adjacent migration note"
+    },
+    {
+      "reading": 1,
+      "find": "although the collection name and Genizah context should not be conflated.",
+      "replace": "with Michaelides as the collection holding the manuscript and the Genizah as a comparative documentary context.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 3,
+      "find": "A mnemonic for the passage’s ethical argument, not an empirical law of grammar.",
+      "replace": "A mnemonic for the passage’s ethical argument.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 4,
+      "find": "these are their evaluative stereotypes, not objective truths.",
+      "replace": "this is the gendered moral vocabulary through which they evaluated rulers.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 4,
+      "find": "Chronology gathered from the explainer’s own dates; not an independent historical chronology.",
+      "replace": "Chronology of al-Afḍal’s rise and campaigns as presented in the reading.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 4,
+      "find": "⭐ High-yield · A hostile numerical claim, not a verified count",
+      "replace": "⭐ High-yield · Later chronicles' prisoner narrative",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 5,
+      "find": "Cultural stereotypes do not prove identity.",
+      "replace": "These images mark a foreign identity within the poetry.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 5,
+      "find": "This etymological account is attributed to the supplied text, not independently verified here.",
+      "replace": "The derivation forms part of the account’s interpretation of Ibn Mufarrigh’s double insult.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 5,
+      "find": "Common mistake · Attribute the etymology",
+      "replace": "Etymology · Rūsapīd and rūspī",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 10,
+      "find": "The important interpretive question is not whether these labels were objectively justified—the explainer does not independently adjudicate them—but how",
+      "replace": "The source shows how",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 10,
+      "find": "This is the movement’s ideological distinction, not a universal dictionary rule.",
+      "replace": "This distinction was central to the movement’s argument for autonomy.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 15,
+      "find": "Treat numeric claims and contemporary disputes as sourced accounts, not independently verified present facts.",
+      "replace": "The source describes a community that adopted modern communications for clerical organization, education and internal disputes.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 15,
+      "find": "Source-bound figure · 72×",
+      "replace": "Computer ownership comparison · 72×",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 16,
+      "find": "A text cataloguing disgrace is not a reliable independent record of the accusations it makes.",
+      "replace": "Polemical catalogues of disgrace served the Shuʿūbī literary contest over Arab and non-Arab prestige.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 16,
+      "find": "Such stories functioned as tools of political solidarity; the accounts of shared ancestry were used to support political alliances.",
+      "replace": "The stories of shared ancestry served arguments for political solidarity.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 20,
+      "find": "The source’s word “cycle” should not be flattened into identical stages mechanically repeated by all rulers. The examples are different:",
+      "replace": "The source illustrates its account of dynastic and urban change through different examples:",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 20,
+      "find": "Assess what the 1383 relationship and 1405 parallel loss of posts do and do not prove.",
+      "replace": "The meeting of 1383 and the parallel losses of office in 1405 are two milestones in the relationship between the historians.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 23,
+      "find": "Motive requires source caution",
+      "replace": "Lawāta and irrigation",
+      "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 23,
+      "find": "The account alleges deliberate restriction of water and grain by Lawāta groups; keep that attribution explicit.",
+      "replace": "The account describes Lawāta groups deliberately avoiding irrigation maintenance to restrict grain supply and drive up prices.",
+      "reason": "Remove editorial verification language not present in the supplied reading"
     }
   ]
 }
