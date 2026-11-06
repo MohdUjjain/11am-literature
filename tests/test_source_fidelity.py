@@ -42,7 +42,7 @@ def main():
         11: ["Hadar", "qiṣāṣ"],
         15: ["72 times more likely", "37%"],
         17: ["Muʿtazila", "ḥudūd"],
-        22: ["jeton", "Sayrafī"],
+        22: ["jeton", "dirham"],
         23: ["Lawāta", "360"],
         26: ["Ida Mae", "Chicago"],
     }.items():
