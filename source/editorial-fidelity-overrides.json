@@ -1149,6 +1149,192 @@
       "find": "Her eventual Chicago life should not be mistaken for proof that the northern city was free of hardship.",
       "replace": "Her Chicago life also reveals the hardships of northern urban life.",
       "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 1,
+      "find": "the explainer relates its introduction to al-Āmir's reign",
+      "replace": "its introduction is associated with al-Āmir's reign",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 3,
+      "find": "Meaning / role in the explainer",
+      "replace": "Meaning / role in the passage",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 4,
+      "find": "In the explainer, language legitimating al-Afḍal’s martial role.",
+      "replace": "Rhetoric legitimating al-Afḍal’s martial role.",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 7,
+      "find": "in the explainer",
+      "replace": "in Buyid politics",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 7,
+      "find": "The explainer’s description of a ruler",
+      "replace": "Description of a ruler",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 8,
+      "find": "while the sharp two-phase division remains the supplied explainer’s framework.",
+      "replace": "bringing the two phases of Fāṭimid Red Sea policy together.",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 12,
+      "find": "while individual chronological claims remain those of the supplied account.",
+      "replace": "within the historical framework of the cases discussed.",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "The supplied account describes the <strong>Dāʾūdī Bohras</strong>",
+      "replace": "The <strong>Dāʾūdī Bohras</strong> are described",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "The explainer traces the Dāʾūdī succession",
+      "replace": "The history traces the Dāʾūdī succession",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "This is the explainer’s contrast, not a comprehensive description of all other Muslim traditions.",
+      "replace": "The contrast illustrates the role of philosophical interpretation in this community’s religious outlook.",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "Explainer’s contrasting literalist model",
+      "replace": "Contrasting literalist model",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "The explainer describes suppression under Aurangzeb",
+      "replace": "The account describes suppression under Aurangzeb",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "Change described in the explainer",
+      "replace": "Historical development",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "The study cited in the explainer reports that Bohras at its observation point were",
+      "replace": "The study cited in the chapter reported that Bohras were",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "The comparison comes from the study discussed in the source.",
+      "replace": "This comparison illustrates the community’s early adoption of communications technology.",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "The explainer contrasts this access",
+      "replace": "The argument contrasts this access",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "A <strong>1975</strong> dataset cited in the explainer reported only",
+      "replace": "A <strong>1975</strong> dataset reported only",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 15,
+      "find": "Why does the explainer reject a simple tradition-versus-modernity opposition?",
+      "replace": "Why are tradition and modernity presented as complementary in Bohra institutional life?",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 16,
+      "find": "The supplied explainer presents <strong>Shuʿūbiyyah</strong>",
+      "replace": "<strong>Shuʿūbiyyah</strong> emerged",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 16,
+      "find": "The explainer starts with <em>ʿaṣabiyyah</em>",
+      "replace": "The historical account begins with <em>ʿaṣabiyyah</em>",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 16,
+      "find": "the explainer describes expanding influence",
+      "replace": "the discussion describes expanding influence",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 16,
+      "find": "The explainer names <em>Mathālib al-ʿArab</em>",
+      "replace": "The discussion names <em>Mathālib al-ʿArab</em>",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 16,
+      "find": "represented in the explainer through",
+      "replace": "represented through",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 16,
+      "find": "The explainer follows the polemic",
+      "replace": "The narrative follows the polemic",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 17,
+      "find": "The explainer also warns against translating every classical",
+      "replace": "Classical",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 17,
+      "find": "The strongest tension identified by the explainer is",
+      "replace": "The central tension is",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 17,
+      "find": "The theological foundation developed in the explainer is",
+      "replace": "The theological foundation is",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 17,
+      "find": "What the explainer emphasizes",
+      "replace": "Protected significance",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 17,
+      "find": "The explainer invokes a protest",
+      "replace": "The argument invokes a protest",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 17,
+      "find": "The explainer describes a decline",
+      "replace": "The historical account describes a decline",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 18,
+      "find": "It is crucial to distinguish <strong>the events narrated in the novel</strong> from <strong>psychological explanations supplied by the explainer</strong>.",
+      "replace": "Holden’s encounters and the recurring objects in the narrative reveal his emotional distress and desire for human connection.",
+      "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
     }
   ]
 }
