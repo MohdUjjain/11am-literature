@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Recreate index.html using the archived scholarly chapter build and the
-approved modern publication shell. The only presentation-level redaction removes
-25 user-requested source-information paragraphs from title pages. No PDF output.
+"""Recreate index.html from the immutable archived chapter build, approved
+publication shell, and separately reviewed source-fidelity editorial overrides.
+No PDF output; original scholarly archive remains intact.
 """
 from pathlib import Path
 import argparse
 import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -20,6 +21,7 @@ PUBLISHED=ROOT/"index.html"
 CHAPTER=re.compile(r'<section\s+class="chapter"\s+data-chapter="(\d+)"',re.I)
 EXPECTED=list(range(1,19))+list(range(20,27))
 TITLE_SOURCE_RE=re.compile(r'<p class="source-cite">[^<]*</p>')
+OVERRIDE_FILE=ROOT/"source/editorial-fidelity-overrides.json"
 
 def without_title_source_information(html, require_all=False):
     """Approved presentation edit, never modify narrative, callouts or revision."""
@@ -27,6 +29,48 @@ def without_title_source_information(html, require_all=False):
     if require_all and count!=len(EXPECTED):
         raise AssertionError(f"Archived build must have {len(EXPECTED)} title notices; got {count}")
     return cleaned
+
+
+def apply_editorial_overrides(html):
+    """Apply explicitly reviewed, chapter-scoped substitutions; fail on drift.
+
+    The source ZIP is a historical checkpoint. The editable published text is
+    derived from it, then corrected by this checked-in provenance overlay.
+    A missing or duplicate original passage must never be silently skipped.
+    """
+    payload=json.loads(OVERRIDE_FILE.read_text(encoding="utf-8"))
+    if payload.get("version")!=1:
+        raise AssertionError("Unsupported editorial override manifest version")
+    edits=payload.get("edits")
+    if not isinstance(edits,list) or not edits:
+        raise AssertionError("Empty editorial override manifest")
+    for item in edits:
+        n=int(item["reading"])
+        if n not in EXPECTED:
+            raise AssertionError(f"Unpublished target reading {n}")
+        chapter_matches=list(CHAPTER.finditer(html))
+        current=next((i for i,m in enumerate(chapter_matches)
+                      if int(m.group(1))==n),None)
+        if current is None:
+            raise AssertionError(f"Missing reading {n} for correction")
+        begin=chapter_matches[current].start()
+        end=(chapter_matches[current+1].start()
+             if current+1<len(chapter_matches) else len(html))
+        segment=html[begin:end]
+        old=item["find"]
+        new=item["replace"]
+        expected=int(item.get("expected",1))
+        if not old or old==new or expected<1:
+            raise AssertionError(f"Invalid editorial edit for reading {n}")
+        observed=segment.count(old)
+        if observed!=expected:
+            raise AssertionError(
+                f"Reading {n} editorial edit drift: expected {expected}, "
+                f"found {observed}: {old[:100]!r}")
+        html=html[:begin]+segment.replace(old,new)+html[end:]
+    if [int(m.group(1)) for m in CHAPTER.finditer(html)]!=EXPECTED:
+        raise AssertionError("Editorial overrides changed chapter inventory")
+    return html
 
 
 def extract_chapters(html):
@@ -76,7 +120,8 @@ def main():
     expected_body=extract_chapters(original)
     # The historical ZIP remains unmodified; remove only the explicitly
     # rejected title-page source-information paragraphs when publishing.
-    source_body=without_title_source_information(rebuilt_source(),require_all=True)
+    source_body=apply_editorial_overrides(
+        without_title_source_information(rebuilt_source(),require_all=True))
     if TITLE_SOURCE_RE.search(expected_body):
         raise AssertionError("Published title-page source-information notice remains")
     if source_body!=expected_body:
