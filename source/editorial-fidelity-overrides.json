@@ -1,0 +1,361 @@
+{
+  "version": 1,
+  "purpose": "Source-faithful editorial corrections applied after extracting the immutable original chapter archive.",
+  "edits": [
+    {
+      "reading": 1,
+      "find": "🟥 Common mistake · Do not reverse the roles",
+      "replace": "🟥 Common mistake · Petitioner and debtor",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 1,
+      "find": "Do not identify Sitt al-Ḥasab as the petitioner. She is the <strong>deceased debtor</strong>.",
+      "replace": "The petitioner is anonymous; Sitt al-Ḥasab is the <strong>deceased debtor</strong>.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 3,
+      "find": "Do not portray the narrator as anti-science: the dilemma is precision <em>and</em> presence.",
+      "replace": "The narrator contrasts scientific description with a language that recognizes the presence of living beings.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 3,
+      "find": "The number belongs to that narrated moment, not a present-day census.",
+      "replace": "The gathering reveals the fragility of linguistic transmission across generations.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 3,
+      "find": "<p><strong>Nine chairs:</strong> the narrator’s historical scene, <em>not</em> a current speaker census.</p>",
+      "replace": "<p><strong>Nine chairs:</strong> fluent Potawatomi speakers rise at the tribal gathering recalled by the narrator.</p>",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 3,
+      "find": "Common mistake · Do not turn personal testimony into a current statistic",
+      "replace": "Study scene · Nine mortal chairs",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 3,
+      "find": "Never cite the “nine speakers” scene as a verified 2026 statistic.",
+      "replace": "The narrator counts nine fluent speakers rising at the tribal gathering.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 4,
+      "find": "🟥 Common mistake · Report the gender hierarchy, do not endorse it",
+      "replace": "🟥 Historical rhetoric · Masculinity and passion",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 4,
+      "find": "The “feminine passion” contrast is a historical writer’s prejudice, not objective gender psychology.",
+      "replace": "Later chroniclers used a gendered opposition between reason and passion to portray al-Afḍal as unfit for rule.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 4,
+      "find": "<strong>100,000 prisoners</strong> is a hostile narrative claim, not verified administrative data.",
+      "replace": "Later hostile chronicles claim that <strong>100,000 prisoners</strong> were released after al-Afḍal’s death, depicting a ruler who imprisoned men and then forgot them.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 4,
+      "find": "Signal “later writers allege” for each episode; do not turn polemic into fact.",
+      "replace": "Later writers allege the jealousy and succession episodes as parts of their polemical portrait of al-Afḍal.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 5,
+      "find": "The <em>rūsapīd → rūspī</em> derivation is a source claim, not independently checked.",
+      "replace": "The account traces the sarcastic <em>rūsapīd</em> to the later Persian <em>rūspī</em>.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 5,
+      "find": "“Post-colonial” is the explainer’s interpretive label.",
+      "replace": "The poems use Persian expressions to contest boundaries between Arab and non-Arab identity.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 6,
+      "find": "“Ottoman” and some AH/AD dates in the supplied text are flagged; do not repeat as established facts.",
+      "replace": "The account describes administrative breakdown and warfare between Ottoman and Black troops during al-Shidda al-ʿUzma.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 6,
+      "find": "Common mistake · Source wording and dates need checking",
+      "replace": "Historical account · Factional conflict",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 6,
+      "find": "The sources disagree: this reading says <strong>466/1073</strong>; Reading 02 says <strong>466/1074</strong>.",
+      "replace": "This reading places Badr al-Jamālī’s intervention in <strong>466/1073</strong>.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 6,
+      "find": "Common mistake · Cross-reading date discrepancy",
+      "replace": "Chronology · Badr al-Jamālī’s intervention",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 7,
+      "find": "Common mistake · Avoid a rigid ethnic-religious equation",
+      "replace": "Concept · Ethnicity and affiliation",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 7,
+      "find": "Do not equate ethnic origin with religious doctrine.",
+      "replace": "Ethnic origins and religious affiliations did not correspond in a simple one-to-one pattern in Buyid Shiraz.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 7,
+      "find": "Library counts are reported in the source, not independently audited.",
+      "replace": "The described libraries illustrate the scholarly resources and court culture of Shiraz.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 7,
+      "find": "The image of rivals around a table recalls the source’s explanation of inclusion. It is a study analogy, not proof that conflict ceased.",
+      "replace": "Courtly discussion brought people with competing religious and political commitments into contact.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 8,
+      "find": "Do not mistake the dynasty’s two-century span for two centuries of fighting Crusaders.",
+      "replace": "The Fāṭimid dynasty ruled from 969 to 1171; its confrontation with the Crusaders belongs to the later period.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 8,
+      "find": "Common mistake · Keep dynastic duration separate from Crusader resistance",
+      "replace": "Chronology · Dynasty and Crusader period",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 8,
+      "find": "Common mistake · Date differs across supplied readings",
+      "replace": "Chronology · Badr al-Jamālī",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 8,
+      "find": "This reading dates Badr’s arrival <strong>1073</strong>; Reading 02 says <strong>466/1074</strong>.",
+      "replace": "This reading dates Badr al-Jamālī’s arrival to <strong>1073</strong>.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 9,
+      "find": "Describe both the cultural hostility and the philosophical issue; do not treat personal attacks as a logical refutation.",
+      "replace": "The dispute involved both cultural hostility and substantive disagreements about language, logic and argument.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 9,
+      "find": "The supplied account invokes Saussure as a <em>modern comparison</em>; it should not be mistaken for a historical influence upon the medieval authors.",
+      "replace": "The account uses Saussure as a <em>modern comparison</em> for the relation of sound and thought.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 9,
+      "find": "Common mistake · Saussure is retrospective",
+      "replace": "Analogy · Saussure and medieval language theory",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 9,
+      "find": "The modern comparison is an explanatory analogy, not a source used by the tenth-century disputants.",
+      "replace": "Saussure's analogy of sound and thought helps frame the Arabic debate's treatment of utterance, mental content and usage.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 10,
+      "find": "Present these categories as Malcolm X’s argument within the source, not an established description of all Black leadership.",
+      "replace": "Malcolm X used the “house Negro” and “field Negro” contrast to criticize leaders whom he regarded as aligned with white interests.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 10,
+      "find": "Explain what each analogy is meant to achieve. Attribute the speaker’s judgments rather than presenting them as uncontested historical conclusions.",
+      "replace": "The wolf-and-sheep and snake-bitten analogies framed Malcolm X’s response to the accusation of hatred as a question of self-protection.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 10,
+      "find": "The supplied account explains the NOI’s distinction; do not flatten both terms into the same meaning.",
+      "replace": "The Nation of Islam contrasted imposed segregation with voluntary separation.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 10,
+      "find": "Common mistake · Historical polemic ≠ objective fact",
+      "replace": "Historical argument · House and field",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 10,
+      "find": "Common mistake · Labels are attributed",
+      "replace": "Media framing · Hostile labels",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 11,
+      "find": "Sex, religious standing and freedom affect the schools’ rules differently. Do not infer a single uniform doctrine.",
+      "replace": "The schools differ in how sex, religious standing and freedom affect the rules of retaliation.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 11,
+      "find": "<div class=\"callout callout--mistake\" data-content-type=\"mistake\" data-note-id=\"s11-6-p1-n1\" data-pagination=\"allow-split\"><div class=\"tag\">Common mistake · Do not modernize the rule</div><p>The Hidāya examples are historical legal illustrations, not current instructions about permissible force.</p></div>",
+      "replace": "",
+      "reason": "Remove modern-day behavioral warning absent from source, keeping the adjacent Hadar definition"
+    },
+    {
+      "reading": 12,
+      "find": "Contrast elite norms with the litigant’s document; do not turn one case into a universal social rule.",
+      "replace": "Communal elites described petitions to state tribunals as informing, while a litigant’s document shows why an abused woman sought protection through those courts.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 13,
+      "find": "Do not narrate the boxing encounter as an event occurring outside Max’s mind.",
+      "replace": "The boxing encounter unfolds within Max’s imagination.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 14,
+      "find": "The supplied account stresses a rhetorical transition at the ending; it does not justify inventing a neat legal decision on animal rights.",
+      "replace": "The animal-human trial’s ending functions as a pedagogical and rhetorical transition intended to engage the reader.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 15,
+      "find": "Treat the figure as a claim tied to that study’s period, not a verified present-day statistic.",
+      "replace": "The comparison comes from the study discussed in the source.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 15,
+      "find": "The explainer’s historical comparison concerns computer ownership at the time of the cited study; it is not a 2026 census.",
+      "replace": "The source reports that Bohras were 72 times more likely to own a computer than the Indian norm at the study’s inception.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 15,
+      "find": "The source’s two-column typology is a rhetorical contrast; it does not establish that every other Muslim tradition rejects philosophy.",
+      "replace": "The comparison emphasizes the Bohra combination of professional education and commitment to Fāṭimid intellectual traditions.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 15,
+      "find": "These numbers indicate change over time within the source’s account. They do not mean every form of Bohra dress was newly created in the late twentieth century: the specific claim concerns the recent <em>uniformity</em> of communal markers.",
+      "replace": "These figures show how the directives of 1979 and 1981 established greater <em>uniformity</em> in communal dress.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 16,
+      "find": "their genealogical claims are not independently established here.",
+      "replace": "the accounts of shared ancestry were used to support political alliances.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 16,
+      "find": "Stories of shared ancestry served the polemic; the supplied explainer does not verify them as historical facts.",
+      "replace": "Stories of common Yemeni and Egyptian ancestry supported the anti-northern political alliance described in the account.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 17,
+      "find": "Historical examples and strong claims about transmission to Western natural rights are presented as claims of the supplied explainer; these notes do not independently establish their documentary genealogy.",
+      "replace": "The account traces connections between Islamic rationalist traditions and the later development of natural-rights thinking.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 17,
+      "find": "Resemblance and later engagement do not by themselves demonstrate a single direct chain of transmission.",
+      "replace": "The author describes Muslim rationalist inquiry as an important antecedent to later natural-rights thought.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 17,
+      "find": "Distinguish influence from proven borrowing",
+      "replace": "Rationalist influence and natural rights",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 17,
+      "find": "Name the punishments and explain the evidentiary barriers; do not erase either part.",
+      "replace": "The source juxtaposes the severe ḥudūd sanctions with evidentiary barriers, including the principle of shubha.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 18,
+      "find": "The suggestion of “identity fragmentation” is the supplied literary interpretation, not a psychiatric evaluation of the character.",
+      "replace": "Luce’s clinical language of psychological patterns distances him from Holden’s search for human understanding.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 20,
+      "find": "Do not equate praise with a fully realized system.",
+      "replace": "The source traces how al-Maqrīzī moved from admiration for Ibn Khaldūn to historical explanation through terminology and urban causation.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction",
+      "expected": 2
+    },
+    {
+      "reading": 21,
+      "find": "Do not infer that every culturally expected household task could be compelled by a judge.",
+      "replace": "The account distinguishes domestic moral expectations from obligations enforceable by a judge.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 22,
+      "find": "The 7:10 metrological relationship must not be read as gold–silver price equivalence.",
+      "replace": "The 7:10 relationship concerns coin weight, while gold–silver exchange was determined through market valuation.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 23,
+      "find": "The source juxtaposes 360 reputed villages with 63 reported later; it is not a controlled like-for-like survey.",
+      "replace": "The source contrasts the legend of 360 villages with a later report of 63 remaining villages.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 24,
+      "find": "A later quotation may preserve lost writing; it is not proof that its original institutional archive survives.",
+      "replace": "Later authors preserved passages of earlier Fāṭimid writing even when the original texts were lost.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 26,
+      "find": "Do not idealize Chicago",
+      "replace": "Chicago's street scene",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 26,
+      "find": "The religious-statuette anecdote illustrates social conformity; it must not erase the specific violence of anti-Black caste.",
+      "replace": "The Catholic-statuette anecdote illustrates conformity enforced by social expectations; the source also describes violence against Black residents under Southern racial caste.",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 26,
+      "find": "Not every example is equivalent",
+      "replace": "Social conformity and coercion",
+      "reason": "Remove assistant-origin warning or qualification while preserving the source's substantive distinction"
+    },
+    {
+      "reading": 26,
+      "find": "<div class=\"callout callout--mistake\" data-content-type=\"mistake\" data-note-id=\"s26-6-p0-n1\" data-pagination=\"allow-split\"><div class=\"tag\">Keep the chronology honest</div><p>The supplied excerpt does not date Ida Mae’s eventual move north; do not invent her departure year or route.</p></div>",
+      "replace": "",
+      "reason": "Remove assistant-added warning about missing dates, retain adjacent migration note"
+    }
+  ]
+}
