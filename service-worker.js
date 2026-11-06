@@ -3,11 +3,16 @@
  * Browser storage can be evicted and fonts are always optional.
  */
 const CACHE_PREFIX = '11am-lit-reader-';
-const BOOK_CACHE = CACHE_PREFIX + '9c168d851198';
+const BOOK_CACHE = CACHE_PREFIX + '10407037503a';
 const FONT_CACHE = '11am-lit-fonts-v1';
-const APP_SHELL = [
+// A release activates only when the actual book and its executable UI are cached.
+// Decorative and discovery assets are cached best-effort, without risking a
+// previously installed complete reading edition.
+const CORE_ASSETS = [
   './index.html', './manifest.webmanifest', './offline-update.js',
-  './reader-search.js', './reader-ui.js', './reader-ui.css',
+  './reader-search.js', './reader-ui.js', './reader-ui.css'
+];
+const OPTIONAL_ASSETS = [
   './icons/icon-192.png', './icons/icon-512.png',
   './og-image.png', './404.html', './sitemap.xml'
 ];
@@ -24,7 +29,9 @@ self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(BOOK_CACHE);
     // A partial download never becomes the active reader.
-    await cache.addAll(APP_SHELL);
+    await cache.addAll(CORE_ASSETS);
+    // Each optional asset is independent: a missing preview cannot fail install.
+    await Promise.allSettled(OPTIONAL_ASSETS.map(path => cache.addAll([path])));
     await self.skipWaiting();
   })());
 });
@@ -50,11 +57,11 @@ self.addEventListener('message', event => {
     event.waitUntil((async () => {
       try {
         const cache = await caches.open(BOOK_CACHE);
-        const assets = await Promise.all(APP_SHELL.map(p => cache.match(p)));
+        const assets = await Promise.all(CORE_ASSETS.map(p => cache.match(p)));
         port?.postMessage({
           type:'EDITION_STATUS', edition:BOOK_CACHE,
           ready:assets.every(Boolean), cached:assets.filter(Boolean).length,
-          required:APP_SHELL.length
+          required:CORE_ASSETS.length
         });
       } catch (error) {
         port?.postMessage({
@@ -119,11 +126,11 @@ self.addEventListener('message', event => {
     try {
       // Refreshing uses the current worker's complete required asset set.
       const cache = await caches.open(BOOK_CACHE);
-      const present = await Promise.all(APP_SHELL.map(p => cache.match(p)));
-      if (present.some(p => !p)) await cache.addAll(APP_SHELL);
-      const verified = await Promise.all(APP_SHELL.map(p => cache.match(p)));
+      const present = await Promise.all(CORE_ASSETS.map(p => cache.match(p)));
+      if (present.some(p => !p)) await cache.addAll(CORE_ASSETS);
+      const verified = await Promise.all(CORE_ASSETS.map(p => cache.match(p)));
       if (verified.some(p => !p)) throw new Error('Incomplete offline shell');
-      port?.postMessage({ok:true,edition:BOOK_CACHE,required:APP_SHELL.length});
+      port?.postMessage({ok:true,edition:BOOK_CACHE,required:CORE_ASSETS.length});
     } catch (error) {
       port?.postMessage({ok:false,error:String(error)});
     }
