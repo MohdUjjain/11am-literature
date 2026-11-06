@@ -1940,7 +1940,7 @@ blockquote{
       current.target.removeChild(sample);current.target.removeChild(head);
       return !ok;
     }
-    var notesPool=[], notesPlaced=0, noteFallthrough=[];
+    var notesPool=[], notesPlaced=0, noteFallthrough=[], notesCarried=0, noteContinuationPages=0;
     function flattenMainSection(sec){
       var body=sec.querySelector(':scope > .section-body');
       var stream=[];
@@ -2045,6 +2045,7 @@ blockquote{
         if(!fit)return false;
         original.appendChild(card);
         notesPlaced++;
+        if(carried)notesCarried++;
         return true;
       }
       function continuationPage(info){
@@ -2074,6 +2075,7 @@ blockquote{
         pageKinds[pageKinds.length-1].kind='notes-continuation';
         finish();
         notesPlaced++;
+        noteContinuationPages++;
       }
       notesPool.forEach(function(info){
         var matching=pages.filter(function(pg){
@@ -2099,7 +2101,6 @@ blockquote{
         });
         placed=candidates.some(function(pg){return tryOnPage(pg,info,true);});
         if(placed)return;
-        noteFallthrough.push(info);
         continuationPage(info);
       });
     }
@@ -2195,7 +2196,7 @@ blockquote{
     }
     function build(){
       root=document.getElementById('print-root');root.innerHTML='';
-      pageCounter=0;pageKinds=[];guard=0;textSplits=0;activeChapterNumber=null;notesPlaced=0;noteFallthrough=[];
+      pageCounter=0;pageKinds=[];guard=0;textSplits=0;activeChapterNumber=null;notesPlaced=0;noteFallthrough=[];notesCarried=0;noteContinuationPages=0;
       var chapters=Array.from(document.querySelectorAll('.chapter'));
       var ordered=PrintSelection.order.slice();
       if(PrintSelection.errors.length||!ordered.length){
@@ -2219,7 +2220,7 @@ blockquote{
                el.scrollHeight>el.clientHeight+EPS))overflows.push(i+1);
         });
         if(overflows.length)throw Error('Overflow in composed page(s): '+overflows.join(', '));
-        window.__dossierPrintDiagnostics={pages:pageCounter,kinds:pageKinds,textSplits:textSplits,overflows:overflows,selection:ordered,notesPlaced:notesPlaced,notesUnplaced:noteFallthrough.length};
+        window.__dossierPrintDiagnostics={pages:pageCounter,kinds:pageKinds,textSplits:textSplits,overflows:overflows,selection:ordered,notesPlaced:notesPlaced,notesUnplaced:noteFallthrough.length,notesCarried:notesCarried,notesContinuationPages:noteContinuationPages};
       }catch(e){
         root.innerHTML='';console.error('[Dossier compositor]',e);
         window.__dossierPrintDiagnostics={error:String(e),pages:pageCounter};
