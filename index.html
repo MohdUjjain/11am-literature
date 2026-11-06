@@ -1986,45 +1986,122 @@ blockquote{
       });
     }
     function placeNotesForChapter(chapterNum){
-      // Main narrative is already paginated. Cards do not block or extend its rows.
-      // A card may only occupy a sheet containing its passage/section (strict alignment).
+      // Finish the scholarly narrative before positioning its study notes.
+      // First try passage/section-anchored sheets, then adjacent chapter
+      // sheets with a visible section reference. Never discard a note or
+      // abort the chapter before its revision pages have been composed.
       var pages=Array.from(root.querySelectorAll('.printed-page.theme-parchment'))
         .filter(function(p){return p.dataset.printChapter===String(chapterNum);});
-      notesPool.forEach(function(info){
-        var ordered=pages.filter(function(pg){return Array.from(pg.querySelectorAll('.page-main-column [data-anchor]')).some(function(a){return a.dataset.anchor===info.anchor;});});
-        var sameSection=pages.filter(function(pg){return Array.from(pg.querySelectorAll('.page-main-column [data-section]')).some(function(a){return a.dataset.section===info.section;});});
-        sameSection.forEach(function(p){if(ordered.indexOf(p)<0)ordered.push(p);});
-        var found=false;
-        for(var i=0;i<ordered.length;i++){
-          var pg=ordered[i], card=info.card.cloneNode(true),copy=pg.cloneNode(true);
-          var aside=copy.querySelector('.page-note-column');if(!aside)continue;
-          var original=pg.querySelector('.page-note-column');
-          card.classList.add('side-note-card');card.setAttribute('data-note-anchor',info.anchor);
-          // Prefer a modest vertical alignment cue, but never reserve huge blank gaps.
-          var origMain=copy.querySelector('.page-main-column');
-          var ref=Array.from(origMain.querySelectorAll('[data-anchor]')).find(function(x){return x.dataset.anchor===info.anchor;});
-          var offset=ref?Math.max(0,ref.offsetTop):0;
-          var available=Math.max(0,offset-aside.scrollHeight);
-          var nudge=Math.min(54,available);
-          card.style.marginTop=nudge+'px';
-          aside.appendChild(card);
-          getRig().appendChild(copy);
-          var fit=copy.querySelector('.page-note-column').scrollHeight<=copy.querySelector('.page-note-column').clientHeight+EPS;
-          getRig().removeChild(copy);
-          if(!fit && nudge>0){card.style.marginTop='0px';copy=pg.cloneNode(true);copy.querySelector('.page-note-column').appendChild(card.cloneNode(true));getRig().appendChild(copy);fit=copy.querySelector('.page-note-column').scrollHeight<=copy.querySelector('.page-note-column').clientHeight+EPS;getRig().removeChild(copy);}
-          if(fit){
-            if(card.style.marginTop && !card.style.marginTop.endsWith('0px')){
-              var sclone=pg.cloneNode(true);sclone.querySelector('.page-note-column').appendChild(card.cloneNode(true));getRig().appendChild(sclone);
-              var confirmed=sclone.querySelector('.page-note-column').scrollHeight<=sclone.querySelector('.page-note-column').clientHeight+EPS;getRig().removeChild(sclone);
-              if(!confirmed)card.style.marginTop='0px';
-            }
-            original.appendChild(card);
-            found=true;notesPlaced++;break;
+      var chapter=document.querySelector('.chapter[data-chapter="'+chapterNum+'"]');
+      var accent=cssAccent(chapter);
+      var eyebrow=(chapter&&chapter.querySelector('.reading-eyebrow')||{textContent:'Reading '+chapterNum}).textContent;
+      function includesSource(pg, attr, key){
+        return Array.from(pg.querySelectorAll('.page-main-column ['+attr+']'))
+          .some(function(el){return el.getAttribute(attr)===key;});
+      }
+      function annotatedCard(info,carried){
+        var card=info.card.cloneNode(true);
+        card.classList.add('side-note-card');
+        card.setAttribute('data-note-anchor',info.anchor);
+        card.setAttribute('data-note-section',info.section);
+        card.style.marginTop='0px';
+        if(carried){
+          var origin=document.getElementById(info.section);
+          var number=origin&&origin.querySelector(':scope > .section-number');
+          var label=node('div','side-note-source',
+            'From '+(number?number.textContent.trim():info.section)+' · continued');
+          card.insertBefore(label,card.firstChild);
+          card.classList.add('side-note-carried');
+        }
+        return card;
+      }
+      function tryOnPage(pg,info,carried){
+        var original=pg.querySelector('.page-note-column');
+        if(!original)return false;
+        var card=annotatedCard(info,carried);
+        if(!carried){
+          var source=pg.querySelector('.page-main-column');
+          var ref=Array.from(source.querySelectorAll('[data-anchor]')).find(
+            function(x){return x.dataset.anchor===info.anchor;});
+          if(ref){
+            var available=Math.max(0,ref.offsetTop-original.scrollHeight);
+            card.style.marginTop=Math.min(54,available)+'px';
           }
         }
-        if(!found)noteFallthrough.push(info);
+        // Measure with the same original page in the hidden measurement rig.
+        // Do not trust an unmeasured append; the note lane has fixed height.
+        var copy=pg.cloneNode(true),col=copy.querySelector('.page-note-column');
+        col.appendChild(card.cloneNode(true));
+        getRig().appendChild(copy);
+        var fit=col.scrollHeight<=col.clientHeight+EPS;
+        getRig().removeChild(copy);
+        if(!fit && !carried && card.style.marginTop!=='0px'){
+          card.style.marginTop='0px';
+          copy=pg.cloneNode(true);col=copy.querySelector('.page-note-column');
+          col.appendChild(card.cloneNode(true));getRig().appendChild(copy);
+          fit=col.scrollHeight<=col.clientHeight+EPS;
+          getRig().removeChild(copy);
+        }
+        if(!fit)return false;
+        original.appendChild(card);
+        notesPlaced++;
+        return true;
+      }
+      function continuationPage(info){
+        // Last-resort lossless page when every existing note lane is full.
+        // The section and anchor are visible so this remains a scholarly
+        // cross-reference, not an orphaned or silently omitted annotation.
+        begin('parchment',eyebrow+' · Study notes continued',eyebrow,accent,false);
+        current.page.classList.add('notes-continuation-page');
+        current.page.setAttribute('data-note-section',info.section);
+        var sec=document.getElementById(info.section);
+        var heading=sec?sectionHeading(sec):node('h2','page-section-heading',info.section);
+        heading.removeAttribute('id');heading.dataset.section=info.section;
+        current.main.appendChild(heading);
+        current.main.appendChild(node('p','notes-continuation-hint',
+          'Study notes continued for this section.'));
+        var card=annotatedCard(info,true);
+        current.side.appendChild(card);
+        if(!pageFits(current)){
+          // A large indivisible note receives the wider main lane; never
+          // scale its text to unreadability or allow Chrome implicit pages.
+          current.side.removeChild(card);
+          current.main.appendChild(card);
+          if(!pageFits(current))
+            throw Error('Study note exceeds a whole page: '+
+              (info.card.dataset.noteId||info.anchor)+'@'+info.section);
+        }
+        pageKinds[pageKinds.length-1].kind='notes-continuation';
+        finish();
+        notesPlaced++;
+      }
+      notesPool.forEach(function(info){
+        var matching=pages.filter(function(pg){
+          return includesSource(pg,'data-anchor',info.anchor);
+        });
+        var section=pages.filter(function(pg){
+          return includesSource(pg,'data-section',info.section);
+        });
+        section.forEach(function(p){if(matching.indexOf(p)<0)matching.push(p);});
+        var placed=matching.some(function(pg){return tryOnPage(pg,info,false);});
+        if(placed)return;
+        // Prefer the next physical page and preserve section provenance
+        // in the note, then search backward within this chapter only.
+        var last=matching.length ? Math.max.apply(null,matching.map(
+          function(pg){return pages.indexOf(pg);})) : -1;
+        var candidates=pages.filter(function(pg){return matching.indexOf(pg)<0;});
+        candidates.sort(function(a,b){
+          function distance(pg){
+            var idx=pages.indexOf(pg);
+            return idx>last ? idx-last : (last-idx+1)+pages.length;
+          }
+          return distance(a)-distance(b);
+        });
+        placed=candidates.some(function(pg){return tryOnPage(pg,info,true);});
+        if(placed)return;
+        noteFallthrough.push(info);
+        continuationPage(info);
       });
-      if(noteFallthrough.length)throw Error('Unplaced passage notes: '+noteFallthrough.map(function(n){return n.card.dataset.noteId+'@'+n.section;}).join(', '));
     }
     function layoutOpener(source,theme,accent,id){
       if(!source) return;
