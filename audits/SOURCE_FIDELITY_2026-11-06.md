@@ -22,11 +22,11 @@ The 25 corresponding Google Docs and all 25 published chapters were compared at 
 |---|---:|---|
 | 01 | 6 | Petitioner/debtor roles; remove instructional warning |
 | 02 | 2 | Source-authored distinction between office title and actual authority retained |
-| 03 | 10 | Remove contemporary-census warnings; restore the narrated nine-speaker scene |
+| 03 | 11 | Remove contemporary-census warnings; restore the narrated nine-speaker scene |
 | 04 | 11 | Remove the assistant's gender judgment and verification warnings; preserve the source's contrast of laudatory and hostile chronicles |
 | 05 | 10 | Restore the source's asserted etymology and analysis of identity without independent-verification caveats |
 | 06 | 9 | Remove external historical/date checking; retain this reading's own chronology and terminology |
-| 07 | 8 | Present ethnicity, community and library culture as discussed in the source |
+| 07 | 9 | Present ethnicity, community and library culture as discussed in the source |
 | 08 | 10 | Retain this source's date and chronology without inserting cross-reading correction |
 | 09 | 13 | Keep Saussure as the source's modern analogy without instructions to the student |
 | 10 | 16 | Present Malcolm X's attributed arguments and media labels without added skepticism |
@@ -38,15 +38,15 @@ The 25 corresponding Google Docs and all 25 published chapters were compared at 
 | 16 | 18 | Restore the political function of genealogical rhetoric, without assistant-added doubts |
 | 17 | 18 | Restore source's affirmative account of rationalist influence and legal reasoning |
 | 18 | 6 | Discuss Luce's clinical language as literary analysis, not a medical disclaimer |
-| 20 | 15 | Retain the Khaldūnian argument and its chronological evidence without extra methodological warnings |
+| 20 | 17 | Retain the Khaldūnian argument and its chronological evidence without extra methodological warnings |
 | 21 | 14 | State the distinction between enforceable household law and ethical expectation |
 | 22 | 12 | Explain the metrological ratio in the source's terms |
-| 23 | 15 | Preserve the 360-village legend, later 63 count and Lawāta account without invented survey cautions |
+| 23 | 16 | Preserve the 360-village legend, later 63 count and Lawāta account without invented survey cautions |
 | 24 | 4 | Present preservation through later chronicles as described in the source |
 | 25 | 4 | Preserve the source's discussion of prophecy and rhetorical reversal without an added evaluative descriptor |
 | 26 | 10 | Remove invented-date and comparative-moral warnings while retaining the Mississippi and Chicago narrative |
 
-**Total:** 262 independently recorded correction rules; 264 exact replacement sites across all 25 published readings. Every published reading now has at least one documented correction after the additional provenance-language pass. This is *not* a count of all assertions in the dossier.
+**Total:** 267 independently recorded correction rules; 269 exact replacement sites across all 25 published readings. Every published reading now has at least one documented correction after the additional provenance-language pass. This is *not* a count of all assertions in the dossier.
 
 ## Second-pass discoveries
 
@@ -65,7 +65,9 @@ A deeper comparison of all 25 corresponding Drive explainers with the published 
 - **Five** uses of **supplied** remain, all with their ordinary factual meaning as a verb: al-Jāḥiẓ supplied a rhetorical vocabulary; later chroniclers supplied a shadow narrative; imported materials supplied shipbuilding; enforceable rights supplied legal tools; and Akhū Muḥsin supplied hostile allegations.
 - Natural physical and economic language such as **grain supply**, **seed supply**, **supply and demand**, **supplies to the Hijaz**, and **supply the ships** was deliberately retained. Removing these would damage the sources' substantive arguments.
 - A separate sweep removed further unsourced "not verified," "these notes do not endorse," and similar disclaimers, and repaired grammar after rewriting phrases.
-- The tracked overlay now contains **262 corrections, applied to 264 exact text sites**, including corrections inherited from the original audit.
+- The tracked overlay now contains **267 corrections, applied to 269 exact text sites**, including corrections inherited from the original audit.
+
+**Additional fidelity check:** A final source-to-prose comparison found extra unrequested hedges in the Reading 07 library figures, Reading 20's conclusion about the Khiṭaṭ, and Reading 23's discussion of tribal protection. These were replaced with the substantive interpretations given in the corresponding Drive notes, without introducing independent contemporary qualifications.
 
 ### Representative follow-up restorations
 
