@@ -38,6 +38,8 @@ jobs:
         run: python scripts/verify_source_archive.py
       - name: Prove full source-to-publication equivalence
         run: python scripts/rebuild_published_reader.py
+      - name: Guard source fidelity against restored editorial warnings
+        run: python tests/test_source_fidelity.py
       - name: Validate publication metadata and files
         run: python tests/verify_publication.py
       - name: Simulate offline install, navigation and failed updates
