@@ -825,6 +825,240 @@
       "find": "The supplied account follows",
       "replace": "The narrative follows",
       "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 14,
+      "find": "In the supplied analysis of the <em>Rasāʾil Ikhwān al-Ṣafāʾ</em>",
+      "replace": "In the study of the <em>Rasāʾil Ikhwān al-Ṣafāʾ</em>",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 14,
+      "find": "associated in the supplied account with tenth-century Basra",
+      "replace": "associated with tenth-century Basra",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 14,
+      "find": "The explainer’s guiding question",
+      "replace": "The central question",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 14,
+      "find": "The supplied trajectory passes",
+      "replace": "The discussion moves",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 14,
+      "find": "The source attributes a late tenth-century definitive form to the collection; that chronology is presented here as its claim.",
+      "replace": "The account places the collection’s definitive form in the late tenth century.",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 14,
+      "find": "The supplied explainer also stresses",
+      "replace": "The study also stresses",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 14,
+      "find": "In the supplied account, practical skill makes",
+      "replace": "Practical skill makes",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 14,
+      "find": "At the end of Epistle 52 the supplied account highlights",
+      "replace": "At the end of Epistle 52 the discussion highlights",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 15,
+      "find": "The supplied account interprets Bohra modernity",
+      "replace": "Bohra modernity is examined",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 15,
+      "find": "Jonah Blank is quoted in the supplied explainer as describing",
+      "replace": "Jonah Blank describes",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 15,
+      "find": "In the supplied chronology",
+      "replace": "In this historical sequence",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 15,
+      "find": "In this reading the two forces must be examined together.",
+      "replace": "The two developments are closely linked.",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 15,
+      "find": "the explainer describes both sides posting recordings",
+      "replace": "both sides posted recordings",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 15,
+      "find": "These are presented as ongoing debates described by the supplied text; the source does not establish their present status.",
+      "replace": "These debates illustrate how digital media enable competing claims and internal reform movements.",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 15,
+      "find": "Term</th><th>Meaning in the supplied reading",
+      "replace": "Term</th><th>Meaning",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 16,
+      "find": "The supplied text also attributes sharp tribal criticism",
+      "replace": "The narrative also attributes sharp tribal criticism",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 16,
+      "find": "These are positions attributed to disputants by the supplied account.",
+      "replace": "These opposing positions shaped the literary and ideological conflict.",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 16,
+      "find": "The supplied account describes the secretary",
+      "replace": "The account describes the secretary",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 16,
+      "find": "The supplied reading traces Shuʿūbiyyah",
+      "replace": "The history traces Shuʿūbiyyah",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 16,
+      "find": "Term</th><th>Meaning in the supplied reading",
+      "replace": "Term</th><th>Meaning",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 17,
+      "find": "The supplied explainer challenges the depiction",
+      "replace": "The argument challenges the depiction",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 17,
+      "find": "in the supplied account often",
+      "replace": "often",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 17,
+      "find": "These transmission claims belong to the supplied account and require separate historical verification if cited as settled intellectual genealogy.",
+      "replace": "The argument connects Muslim rationalist inquiry with the later development of Western natural-rights thought.",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 17,
+      "find": "These are interpretations advanced by the supplied authorial account, not a complete causal history of modern Islamic movements.",
+      "replace": "The argument identifies colonial rupture and antirationalist responses as obstacles to the continuation of living legal reasoning.",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 17,
+      "find": "The supplied argument begins",
+      "replace": "The argument begins",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 17,
+      "find": "Term</th><th>Meaning in the supplied reading",
+      "replace": "Term</th><th>Meaning",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 18,
+      "find": "The supplied interpretation follows Holden",
+      "replace": "The reading follows Holden",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 18,
+      "find": "as analyzed by the supplied explainer",
+      "replace": "in this analysis",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 18,
+      "find": "The supplied analysis treats Luce’s vocabulary as",
+      "replace": "Luce’s vocabulary becomes",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 18,
+      "find": "Term</th><th>Meaning in the supplied reading",
+      "replace": "Term</th><th>Meaning",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "The supplied explainer reads al-Maqrīzī’s <em>Khiṭaṭ</em>",
+      "replace": "The analysis reads al-Maqrīzī’s <em>Khiṭaṭ</em>",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "The supplied explainer asks whether",
+      "replace": "The central question is whether",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "The supplied account identifies four terms",
+      "replace": "Four terms emerge",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "in the supplied account, not interchangeable synonyms",
+      "replace": "in the argument, with distinct meanings",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "In the explainer’s reading of <em>Ittiʿāẓ al-ḥunafāʾ</em>",
+      "replace": "In <em>Ittiʿāẓ al-ḥunafāʾ</em>",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "while the explainer presents al-Maqrīzī’s family affiliation as especially personal",
+      "replace": "while al-Maqrīzī’s asserted family affiliation adds a personal element",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "The explainer argues that al-Maqrīzī’s <em>Khiṭaṭ</em>",
+      "replace": "Al-Maqrīzī’s <em>Khiṭaṭ</em>",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "Term</th><th>Meaning in the supplied reading",
+      "replace": "Term</th><th>Meaning",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 20,
+      "find": "Evidence in the supplied explainer",
+      "replace": "Evidence in the historical argument",
+      "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
     }
   ]
 }
