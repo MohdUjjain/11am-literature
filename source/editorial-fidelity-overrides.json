@@ -633,6 +633,198 @@
       "find": "Celebration associated in the explainer with the Nile reaching 16 cubits.",
       "replace": "Celebration associated with the Nile reaching 16 cubits.",
       "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 7,
+      "find": "The explainer first challenges the picture of Shiraz",
+      "replace": "The discussion challenges the picture of Shiraz",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 7,
+      "find": "Why does access to the king become a political resource in the explainer?",
+      "replace": "Why does access to the king become a political resource in Shiraz?",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 8,
+      "find": "The supplied account distinguishes",
+      "replace": "The history distinguishes",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 8,
+      "find": "The explainer traces a shift",
+      "replace": "The account traces a shift",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 8,
+      "find": "(dated 1073 in this explainer)",
+      "replace": "(1073)",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 8,
+      "find": "Five ḥarrāriq in the explainer",
+      "replace": "Five ḥarrāriq dispatched in 1118",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 8,
+      "find": "Define da‘wa, Kārim and ḥarrāriq as used in the explainer.",
+      "replace": "Define da‘wa, Kārim and ḥarrāriq and explain their roles in Fāṭimid Red Sea policy.",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 9,
+      "find": "The supplied account situates a disputation",
+      "replace": "A disputation took place",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 9,
+      "find": "The supplied account illustrates that universality",
+      "replace": "Mattā illustrates that universality",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 9,
+      "find": "Drawing on al-Jāḥiẓ in the supplied account",
+      "replace": "Drawing on al-Jāḥiẓ",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 9,
+      "find": "This is the supplied author’s evaluation of the argument, not a reported experiment performed by al-Fārābī.",
+      "replace": "The critique concerns the logical universality claimed by al-Fārābī.",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 9,
+      "find": "The supplied account thus describes a synthesis",
+      "replace": "The positions develop toward a synthesis",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 9,
+      "find": "in the supplied illustration",
+      "replace": "in the example",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 9,
+      "find": "The supplied narrative ends",
+      "replace": "The debate ends",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 9,
+      "find": "The supplied account dramatizes",
+      "replace": "The argument traces",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 10,
+      "find": "The supplied narrative treats",
+      "replace": "The narrative treats",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 10,
+      "find": "The supplied account follows",
+      "replace": "The chapter follows",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 10,
+      "find": "as the supplied account describes it",
+      "replace": "as the programme constructed it",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 10,
+      "find": "that comparison is a rhetorical analogy rather than measured evidence of equivalent public response",
+      "replace": "the comparison conveys the alarm the broadcast produced",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 10,
+      "find": "The supplied account presents this as evidence the media could not explain. It is an <strong>organizational testimony</strong>, not a controlled evaluation of treatment outcomes.",
+      "replace": "The account presents such rehabilitation as practical evidence of discipline and communal renewal that hostile coverage could not explain.",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 10,
+      "find": "By <strong>1961</strong>, the supplied narrative describes",
+      "replace": "By <strong>1961</strong>, the account describes",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 10,
+      "find": "NOI counter-frame in the supplied account",
+      "replace": "NOI counter-frame",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 11,
+      "find": "The classical law described in the supplied article",
+      "replace": "The classical homicide law discussed here",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 11,
+      "find": "The supplied account opens",
+      "replace": "The discussion opens",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 11,
+      "find": "The supplied account presents no private pardon once proceedings begin.",
+      "replace": "These offenses are treated as public claims not subject to private pardon once proceedings begin.",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 11,
+      "find": "Without conspiracy, the supplied account links",
+      "replace": "Without conspiracy, the law links",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 11,
+      "find": "four positions are supplied",
+      "replace": "four positions are distinguished",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 12,
+      "find": "The supplied study argues",
+      "replace": "The study argues",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 12,
+      "find": "The document is dated broadly <strong>from the mid-twelfth to mid-thirteenth century</strong> in the supplied text; that span extends beyond the end of Fāṭimid rule, so it illustrates a wider legal tension rather than securely dating every element to the dynasty.",
+      "replace": "The document dates broadly <strong>from the mid-twelfth to mid-thirteenth century</strong>, illustrating the recourse to state authority when communal mechanisms failed.",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 12,
+      "find": "The source associates these changes with Fāṭimid centralization around Badr al-Jamālī but supplies its own historical framing; the specific dates of the transformation would need independent checking against primary records.",
+      "replace": "Under Badr al-Jamālī’s Fāṭimid centralization, Jewish communal leaders adopted chancery formulae and symbols of sovereign authority.",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 13,
+      "find": "Across the scenes of Liesel Meminger and the hidden Max Vandenburg, the supplied explainer explores",
+      "replace": "The scenes of Liesel Meminger and the hidden Max Vandenburg show",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
+    },
+    {
+      "reading": 13,
+      "find": "The supplied account follows",
+      "replace": "The narrative follows",
+      "reason": "Present the supplied reading's argument directly, without reader-facing provenance caveats"
     }
   ]
 }
