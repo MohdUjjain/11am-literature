@@ -26,15 +26,15 @@ try{
    await page.goto(url,{waitUntil:'domcontentloaded'});
    await page.locator('#panel-toggle').waitFor();
    await page.locator('#panel-toggle').click();
-   await page.locator('.reader-resume-button').first.waitFor({state:'visible'});
-   assert.ok(await page.locator('.reader-resume-button').first.isEnabled(),'saved chapter remains continuable');
+   await page.locator('.reader-resume-button').first().waitFor({state:'visible'});
+   assert.ok(await page.locator('.reader-resume-button').first().isEnabled(),'saved chapter remains continuable');
    return {page,context};
  }
  {
   const {page,context}=await visit(fixture.changed,true);
   assert.equal(await page.locator('#'+fixture.deletedId).count(),0);
   assert.equal(JSON.parse(await page.evaluate(k=>localStorage.getItem(k),fixture.key)).anchor.key,fixture.deletedId);
-  await page.locator('.reader-resume-button').first.click();
+  await page.locator('.reader-resume-button').first().click();
   await page.waitForFunction(()=>window.scrollY>100);
   assert.equal(await page.evaluate(k=>localStorage.getItem(k),fixture.visibilityKey),'false');
   const bounds=await page.locator('#chapter-3').boundingBox();
@@ -43,7 +43,7 @@ try{
  }
  {
   const {page,context}=await visit(fixture.hiddenRevision,false);
-  await page.locator('.reader-resume-button').first.click();
+  await page.locator('.reader-resume-button').first().click();
   await page.waitForFunction(()=>document.querySelector('#chapter-3 .revision-zone')?.classList.contains('lit-temporary-revision'));
   assert.equal(await page.evaluate(k=>localStorage.getItem(k),fixture.visibilityKey),'false');
   assert.equal(await page.locator('#lit-show-revisions').isChecked(),false);
