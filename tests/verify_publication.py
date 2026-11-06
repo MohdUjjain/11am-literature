@@ -140,7 +140,9 @@ def main():
     for p in ASSETS:
         if p!="service-worker.js":
             assert "'./"+p+"'" in worker or p=="index.html",f"Not precached: {p}"
-    assert "cache.addAll(APP_SHELL)" in worker
+    assert "cache.addAll(CORE_ASSETS)" in worker
+    assert "OPTIONAL_ASSETS" in worker and "Promise.allSettled" in worker
+    assert "cache.addAll([path])" in worker
     assert "PREPARE_FONTS" in worker and "FONTS_PREPARED" in worker
     assert "fonts.gstatic.com" in worker and "FONT_CACHE" in worker
     assert "prepareFonts(reg)" in html and "document.fonts.load" in html
