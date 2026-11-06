@@ -464,6 +464,72 @@
       "find": "The account alleges deliberate restriction of water and grain by Lawāta groups; keep that attribution explicit.",
       "replace": "The account describes Lawāta groups deliberately avoiding irrigation maintenance to restrict grain supply and drive up prices.",
       "reason": "Remove editorial verification language not present in the supplied reading"
+    },
+    {
+      "reading": 3,
+      "find": "These are arguments and first-person observations <strong>made by the supplied explainer</strong>; its language statistics and speaker count have not been externally verified for the present day.",
+      "replace": "The narrator’s testimony connects the endangered Potawatomi language with the recognition of animate beings and the ethical obligations of speaking about them.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 9,
+      "find": "The supplied text narrates the encounter and its precise dating; it is not independently verified against the medieval record.",
+      "replace": "The encounter sets the substantive disagreement over the universality of logic against the cultural and rhetorical conflict between the speakers.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 10,
+      "find": "Ask <strong>who authorizes the leader, who benefits, and whom the leader represents</strong> in Malcolm’s critique.",
+      "replace": "Malcolm X challenged the public authority and interests of Black leaders whom he described as serving white political power.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 12,
+      "find": "The dossier follows this source framing without claiming that all Jewish communities or periods experienced the state identically.",
+      "replace": "The Genizah evidence shifts attention from elite condemnations of outside courts to the reasons ordinary litigants sought state enforcement.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 14,
+      "find": "This is a reading tool, not three separate doctrines.",
+      "replace": "The mnemonic gathers the source’s discussion of reasoned argument, ethical credibility and the motivation to act.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 20,
+      "find": "Genealogical fairness is evidence of historical disposition, not by itself proof of a direct philosophical borrowing.",
+      "replace": "Al-Maqrīzī’s appeal for fairness toward Fāṭimid genealogy is part of the historical outlook discussed alongside his admiration for Ibn Khaldūn.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 20,
+      "find": "The intended explanation of ruin is clear from his discussion, but the historian cannot treat an incomplete final section as a perfectly executed systematic treatise.",
+      "replace": "The intended analysis of ruin nevertheless forms the moral backbone of the work’s treatment of dynastic decline.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 23,
+      "find": "though silence alone is not a numerical count of every abandoned home.",
+      "replace": "and reveals disruption in settlement and irrigation.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 23,
+      "find": "The two figures have different evidentiary status and must not be treated as a precise census series.",
+      "replace": "These figures express the account’s contrast between earlier prosperity and later contraction.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 25,
+      "find": "The discussion depends on a deliberately offensive slur found in the narrative: its historical role is to show how a hostile omen could be <strong>appropriated and inverted</strong> into confidence in the army that won.",
+      "replace": "The reported retort <strong>appropriates and inverts</strong> the hostile omen into a statement of confidence in the victorious army.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 26,
+      "find": "Banks and Gladney represent different kinds of possibility, not a simple right/wrong choice.",
+      "replace": "Alfonso Banks represented youthful excitement, while George Gladney embodied austere steadiness.",
+      "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
     }
   ]
 }
