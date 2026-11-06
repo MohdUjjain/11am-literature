@@ -1569,6 +1569,12 @@
       "find": "including the source’s description of <strong>green, yellow and red cards</strong>",
       "replace": "including <strong>green, yellow and red cards</strong>",
       "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
+    },
+    {
+      "reading": 16,
+      "find": "The source’s quotations include deliberately insulting ethnic stereotypes: they are evidence of what literary combatants said, <em>not</em> descriptions endorsed by these notes.",
+      "replace": "The quoted ethnic insults reveal how literary combatants used inherited genealogical claims and stereotypes against their rivals.",
+      "reason": "Remove unsolicited declaration of non-endorsement from scholarly argument"
     }
   ]
 }
