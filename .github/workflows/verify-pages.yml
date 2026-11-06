@@ -59,6 +59,7 @@ jobs:
           npm install --no-save --ignore-scripts playwright@1.58.2
           npx playwright install --with-deps chromium
           node tests/browser_smoke.mjs
+          node tests/batch2_continuity.mjs
       - name: Reproduce reported Reading 22 print failure and 13-reading revision export
         run: node tests/print_regression.mjs
       - name: Upload browser screenshots for inspection
