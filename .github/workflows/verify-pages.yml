@@ -62,6 +62,7 @@ jobs:
           npx playwright install --with-deps chromium
           node tests/browser_smoke.mjs
           node tests/batch2_continuity.mjs
+          node tests/mobile_table_audit.mjs
       - name: Reproduce reported Reading 22 print failure and 13-reading revision export
         run: node tests/print_regression.mjs
       - name: Upload browser screenshots for inspection
