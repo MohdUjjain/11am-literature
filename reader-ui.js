@@ -95,7 +95,8 @@
     );
   }
   function visibleRevisions(){
-    return getStored(STORE_VISIBILITY) !== 'false';
+    // The live display state, not a possibly stale/blocked storage read, is authoritative.
+    return !document.body.classList.contains('lit-revisions-hidden');
   }
   function showRevisions(show,store) {
     document.body.classList.toggle('lit-revisions-hidden',!show);
@@ -276,7 +277,7 @@
   }
   function initVisibility(){
     visibilityInput=$('lit-show-revisions');
-    showRevisions(visibleRevisions(),false);
+    showRevisions(getStored(STORE_VISIBILITY) !== 'false',false);
     // Native #fragment links need the revision content present before
     // the browser performs its default anchor scroll.
     var toc=$('toc-list');
@@ -394,7 +395,8 @@
   function jumpTo(hit){
     // A button created for a previous query must never navigate after typing.
     if(renderedQuery!==searchBox.value.trim()) {renderResults();return;}
-    if(hit.entry.revision && !visibleRevisions()) {
+    if(!visibleRevisions() && (hit.entry.revision ||
+       (hit.entry.destination || hit.entry.el).closest('.revision-zone'))) {
       renderResults();return; // stale result cannot reveal hidden material
     }
     var target=hit.entry.destination || hit.entry.el;
@@ -427,8 +429,8 @@
     searchResults.replaceChildren();
     shown=0;
     if(!query){results=[];closeResults();return;}
-    results=window.LiteratureSearch.find(ensureIndex(),query).filter(function(hit){
-      return visibleRevisions() || !hit.entry.revision;
+    results=window.LiteratureSearch.find(ensureIndex(),query,{
+      includeRevision:visibleRevisions()
     });
     var summary=document.createElement('div');
     summary.className='reader-search-summary';
