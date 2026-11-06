@@ -61,6 +61,7 @@ jobs:
           npm install --no-save --ignore-scripts playwright@1.58.2
           npx playwright install --with-deps chromium
           node tests/browser_smoke.mjs
+          node tests/search_hidden_revisions.mjs
           node tests/batch2_continuity.mjs
           node tests/mobile_table_audit.mjs
       - name: Batch D — reordered section and legacy checkpoint migration
