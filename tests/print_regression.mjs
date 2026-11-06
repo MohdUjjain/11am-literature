@@ -90,7 +90,6 @@ try {
     assert.equal(test.diagnostics.pages,test.pages,
       'Printed pages and tracked physical page count differ');
     const stats=await page.evaluate(()=>({
-      pages:[...document.querySelectorAll('#print-root > .printed-page')],
       onlyVisible:!document.querySelector('#print-root .source-cite')
     }));
     // Do not serialize the actual DOM into this test process.
