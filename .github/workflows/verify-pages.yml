@@ -59,6 +59,7 @@ jobs:
           npm install --no-save --ignore-scripts playwright@1.58.2
           npx playwright install --with-deps chromium
           node tests/browser_smoke.mjs
+        node tests/batch2_continuity.mjs
       - name: Upload browser screenshots for inspection
         if: always()
         uses: actions/upload-artifact@v4
