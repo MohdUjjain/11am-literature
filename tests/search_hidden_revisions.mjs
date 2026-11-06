@@ -32,6 +32,11 @@ try{
     if(!part)throw Error('No indexed revision passage');
     return part.text.trim().split(/\s+/).slice(0,4).join(' ');
   });
+  // Hidden material must never enter engine-level matches, not merely be
+  // removed from the rendered search buttons after ranking.
+  assert.equal(await page.evaluate(q=>window.LiteratureSearch.find(
+    window.LiteratureSearch.buildIndex(document),q,{includeRevision:false})
+      .some(hit=>hit.entry.revision),query),false);
   const input=page.locator('#reader-search-input');
   await page.locator('#reader-search-toggle').click();
   await input.fill(query);
@@ -56,6 +61,7 @@ try{
   });
   await filter();
   assert.equal(await page.evaluate(()=>localStorage.getItem('11am-literature-show-revisions-v1')),'false');
+  assert.equal(await page.evaluate(()=>document.body.classList.contains('lit-revisions-hidden')),true);
   const hit=page.locator('.reader-result').first();
   if(await hit.count()){
     await hit.click();
