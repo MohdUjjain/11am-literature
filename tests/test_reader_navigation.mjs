@@ -104,8 +104,10 @@ assert.ok(skin.includes('.reader-search-hit-target{outline:none!important;'),
 assert.doesNotThrow(()=>new Script(uiCode));
 assert.ok(uiCode.includes('setStored(STORE_VISIBILITY'));
 assert.ok(uiCode.includes('setStored(STORE_POSITION'));
-assert.ok(uiCode.includes('revealRevisionTarget(target)'),
-  'Opening a hidden revision result should temporarily reveal the target');
+assert.ok(uiCode.includes('visibleRevisions() || !hit.entry.revision'),
+  'Hidden revision passages must be filtered from displayed search results');
+assert.ok(uiCode.includes('if(hit.entry.revision && !visibleRevisions())'),
+  'Stale search results must never reveal a hidden revision block');
 assert.ok(uiCode.includes("version:2,chapter:active.getAttribute('data-chapter')"),
   'Resume checkpoints must use stable section/passages, not chapter percentages');
 assert.ok(uiCode.includes("setStored(STORE_VISIBILITY,show ? 'true' : 'false')"),

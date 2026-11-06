@@ -108,6 +108,9 @@
     }
     // Recompute progress and passage-note geometry after hiding/showing zones.
     window.dispatchEvent(new Event('resize'));
+    // A search currently on screen must immediately respect the new boundary.
+    if(searchBox && searchResults && !searchResults.hidden && searchBox.value.trim())
+      renderResults();
   }
   function initTabs(){
     var tabs = Array.prototype.slice.call(document.querySelectorAll('.panel-tab'));
@@ -294,6 +297,9 @@
     });
     if(visibilityInput) visibilityInput.addEventListener('change',function(){
       showRevisions(visibilityInput.checked,true);
+      // The search index retains authored text; query results must reflect
+      // the current visibility choice immediately, including an open list.
+      if(searchBox && searchBox.value.trim())renderResults();
     });
   }
   function ensureIndex(){
@@ -388,8 +394,10 @@
   function jumpTo(hit){
     // A button created for a previous query must never navigate after typing.
     if(renderedQuery!==searchBox.value.trim()) {renderResults();return;}
+    if(hit.entry.revision && !visibleRevisions()) {
+      renderResults();return; // stale result cannot reveal hidden material
+    }
     var target=hit.entry.destination || hit.entry.el;
-    revealRevisionTarget(target);
     if(lastHit)lastHit.classList.remove('reader-search-hit-target');
     if(lastHitTimer)clearTimeout(lastHitTimer);
     lastHit=target;
@@ -419,7 +427,9 @@
     searchResults.replaceChildren();
     shown=0;
     if(!query){results=[];closeResults();return;}
-    results=window.LiteratureSearch.find(ensureIndex(),query);
+    results=window.LiteratureSearch.find(ensureIndex(),query).filter(function(hit){
+      return visibleRevisions() || !hit.entry.revision;
+    });
     var summary=document.createElement('div');
     summary.className='reader-search-summary';
     summary.setAttribute('role','status');
@@ -499,7 +509,11 @@
       try {id=decodeURIComponent(hash.slice(1));}catch(_){return;}
       var target=document.getElementById(id);
       if(target) {
-        revealRevisionTarget(target);
+        if(!visibleRevisions() && target.closest('.revision-zone')){
+          // A bookmarked search hit may predate a Hide Revision decision.
+          // Keep that boundary intact and land at its containing chapter.
+          target=target.closest('#book > .chapter') || target;
+        }
         target.scrollIntoView({block:'start',behavior:'instant'});
         if(!target.hasAttribute('tabindex'))target.setAttribute('tabindex','-1');
         target.focus({preventScroll:true});
