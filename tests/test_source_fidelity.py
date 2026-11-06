@@ -54,17 +54,17 @@ def main():
     }
     observed = {}
     for n, segment in segments.items():
-        assert not re.search(r"\\bexplainer(?:s)?\\b", segment, re.I), (
+        assert not re.search(r"\bexplainer(?:s)?\b", segment, re.I), (
             f"Source-generation label reintroduced in reading {n}")
         for pattern in [
-            r"\\bsupplied\\s+(?:explainer|account|article|text|"
-            r"reading|document|source|notes|study|author|comparison|table)\\b",
-            r"\\bthese notes\\b",
-            r"\\bnot independently verified\\b",
+            r"\bsupplied\s+(?:explainer|account|article|text|"
+            r"reading|document|source|notes|study|author|comparison|table)\b",
+            r"\bthese notes\b",
+            r"\bnot independently verified\b",
         ]:
             assert not re.search(pattern, segment, re.I), (
                 f"Unsolicited editorial disclaimer reintroduced in reading {n}: {pattern}")
-        for m in re.finditer(r"\\bsupplied\\b", segment, re.I):
+        for m in re.finditer(r"\bsupplied\b", segment, re.I):
             context = segment[max(0, m.start()-130):m.end()+130]
             assert any(p in context for p in allowed_supplied.get(n, [])), (
                 f"Unreviewed 'supplied' usage in reading {n}: {context!r}")
