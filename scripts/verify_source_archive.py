@@ -12,6 +12,7 @@ import zipfile
 from pathlib import Path
 from html.parser import HTMLParser
 import hashlib
+from rebuild_published_reader import without_title_source_information
 
 ROOT=Path(__file__).resolve().parents[1]
 ZIP=ROOT/"source/Literature_Dossier_Source_Readings_01-26_Offline_PWA.zip"
@@ -68,10 +69,14 @@ def main():
             rebuilt_html=rebuilt.read_text(encoding="utf-8")
             chapters=numbers(rebuilt_html)
             assert chapters==EXPECTED,f"Source rebuild reading sequence differs: {chapters}"
-            source_digests=chapter_digests(rebuilt_html)
+            # Source notices were deliberately removed from the printed and
+            # screen title pages; they are not scholarly reading prose.
+            source_digests=chapter_digests(
+                without_title_source_information(rebuilt_html,require_all=True))
     published_html=(ROOT/"index.html").read_text(encoding="utf-8")
     published=numbers(published_html)
     assert published==EXPECTED,"Published reading sequence differs from source"
+    assert 'class="source-cite"' not in published_html, "Title-page source notices remain"
     published_digests=chapter_digests(published_html)
     differences=[n for n in EXPECTED if source_digests.get(n)!=published_digests.get(n)]
     assert not differences, "Scholarly chapter-text parity failed for readings: "+str(differences)
