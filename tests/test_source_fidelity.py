@@ -42,6 +42,41 @@ def main():
                 for other in later
             )
             assert superseded, f"Verified replacement missing: {n}, edit {i}"
+    # The English verb "supplied" is legitimate in five historical/explanatory
+    # constructions. Input-provenance speech ("the supplied explainer", etc.)
+    # is not part of a source-faithful study note.
+    allowed_supplied = {
+        4: ["Al-Jāḥiz supplied a vocabulary",
+            "writers supplied a <strong>shadow narrative</strong>"],
+        8: ["wood and iron supplied shipbuilding"],
+        21: ["rights supplied the very tools</strong>"],
+        24: ["Akhū Muḥsin</strong> supplied allegations"],
+    }
+    observed = {}
+    for n, segment in segments.items():
+        assert not re.search(r"\\bexplainer(?:s)?\\b", segment, re.I), (
+            f"Source-generation label reintroduced in reading {n}")
+        for pattern in [
+            r"\\bsupplied\\s+(?:explainer|account|article|text|"
+            r"reading|document|source|notes|study|author|comparison|table)\\b",
+            r"\\bthese notes\\b",
+            r"\\bnot independently verified\\b",
+        ]:
+            assert not re.search(pattern, segment, re.I), (
+                f"Unsolicited editorial disclaimer reintroduced in reading {n}: {pattern}")
+        for m in re.finditer(r"\\bsupplied\\b", segment, re.I):
+            context = segment[max(0, m.start()-130):m.end()+130]
+            assert any(p in context for p in allowed_supplied.get(n, [])), (
+                f"Unreviewed 'supplied' usage in reading {n}: {context!r}")
+            observed[n] = observed.get(n, 0) + 1
+    assert observed == {4: 2, 8: 1, 21: 1, 24: 1}, (
+        f"Natural-verb 'supplied' inventory changed: {observed}")
+    for phrase in [
+        "Shīʿī doctrine requires of witnesses",
+        "Classical <em>ḥaqq</em> or <em>ḥuqūq</em> directly as",
+        "Ida Mae Gladney’s childhood, marriage and eventual life in Chicago to make",
+    ]:
+        assert phrase not in HTML, "Editorial rewrite reintroduced broken grammar"
     assert HTML.count('class="revision-zone"') == 25, "Revision zone lost"
     assert HTML.count('class="chapter-title-page"') == 25, "Chapter opener lost"
     for marker in ["data-note-id=\"s11-6-p1-n1\"", "data-note-id=\"s26-6-p0-n1\""]:
