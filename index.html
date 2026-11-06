@@ -746,6 +746,16 @@ blockquote{
   overflow:visible;box-sizing:border-box;
 }
 .printed-page .page-note-column{border-left:1px solid var(--rule);padding-left:12px;}
+/* Print-only provenance for a study note carried to a nearby reading sheet. */
+.printed-page .side-note-source{
+  font-family:var(--font-utility);font-size:10px;letter-spacing:.035em;
+  color:var(--ink-faint);font-weight:700;margin:0 0 6px;
+}
+.printed-page .page-main-column > .notes-continuation-hint{
+  font-family:var(--font-utility);font-size:13px;line-height:1.45;
+  color:var(--ink-soft);margin:10px 0 0;
+}
+
 .printed-page .page-main-column > :first-child{margin-top:0!important;}
 .printed-page .page-main-column > p,
 .printed-page .page-main-column > ul,
@@ -2207,10 +2217,33 @@ blockquote{
         var includeContents=document.getElementById('toggle-contents-page');
         if((!includeContents||includeContents.checked)&&ordered.length>1)layoutContents(ordered);
         var includeRevision=document.getElementById('toggle-revision');
+        var wantsRevision=!includeRevision||includeRevision.checked;
         ordered.forEach(function(n){
           var ch=document.querySelector('.chapter[data-chapter="'+n+'"]');
-          if(ch)layoutChapter(ch,!includeRevision||includeRevision.checked);
+          if(ch)layoutChapter(ch,wantsRevision);
         });
+        // Fail explicitly if any requested scholarly note or revision summary
+        // is absent. Never treat a successful print as permission to omit it.
+        var expectedNotes=0;
+        ordered.forEach(function(n){
+          var chapter=document.querySelector('.chapter[data-chapter="'+n+'"]');
+          if(!chapter)return;
+          var leaf=chapter.querySelector(':scope > .leaf');
+          if(leaf)expectedNotes+=leaf.querySelectorAll('.passage .callout').length;
+          if(wantsRevision){
+            var rev=chapter.querySelector(':scope > .revision-zone');
+            var summary=rev&&rev.querySelector(':scope > .revision-leaf > .section h2');
+            if(rev&&summary){
+              var printedRevision=Array.from(root.querySelectorAll(
+                '.printed-page.theme-ink[data-print-chapter="'+n+'"]'));
+              var text=printedRevision.map(function(p){return p.textContent;}).join(' ');
+              if(!printedRevision.length||text.indexOf(summary.textContent.trim())<0)
+                throw Error('Missing revision/summary pages for Reading '+n);
+            }
+          }
+        });
+        if(notesPlaced!==expectedNotes)
+          throw Error('Study-note count mismatch: '+notesPlaced+' placed of '+expectedNotes);
         // Verify all page boxes in the final printed DOM. Chrome is
         // forbidden to create additional implicit pages.
         var overflows=[];
@@ -2220,7 +2253,7 @@ blockquote{
                el.scrollHeight>el.clientHeight+EPS))overflows.push(i+1);
         });
         if(overflows.length)throw Error('Overflow in composed page(s): '+overflows.join(', '));
-        window.__dossierPrintDiagnostics={pages:pageCounter,kinds:pageKinds,textSplits:textSplits,overflows:overflows,selection:ordered,notesPlaced:notesPlaced,notesUnplaced:noteFallthrough.length,notesCarried:notesCarried,notesContinuationPages:noteContinuationPages};
+        window.__dossierPrintDiagnostics={pages:pageCounter,kinds:pageKinds,textSplits:textSplits,overflows:overflows,selection:ordered,expectedNotes:expectedNotes,notesPlaced:notesPlaced,notesUnplaced:noteFallthrough.length,notesCarried:notesCarried,notesContinuationPages:noteContinuationPages};
       }catch(e){
         root.innerHTML='';console.error('[Dossier compositor]',e);
         window.__dossierPrintDiagnostics={error:String(e),pages:pageCounter};
