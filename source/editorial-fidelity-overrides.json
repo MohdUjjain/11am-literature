@@ -1059,6 +1059,96 @@
       "find": "Evidence in the supplied explainer",
       "replace": "Evidence in the historical argument",
       "reason": "Remove intrusive 'supplied/explainer' attribution and unsolicited verification language"
+    },
+    {
+      "reading": 21,
+      "find": "Classical family law in the supplied explainer",
+      "replace": "Classical family law",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 21,
+      "find": "In the supplied comparison",
+      "replace": "In the comparison",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 21,
+      "find": "the supplied comparison requires explicit permission",
+      "replace": "the schools require explicit permission",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 21,
+      "find": "In the supplied Mamluk cases",
+      "replace": "In the Mamluk cases",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 21,
+      "find": "Term</th><th>Meaning in the supplied reading",
+      "replace": "Term</th><th>Meaning",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 23,
+      "find": "1068 is the turning point; about 1068–1072 is the main crisis period in the supplied account.",
+      "replace": "1068 marks the turning point; the principal crisis spans approximately 1068–1072.",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 23,
+      "find": "This is presented as an interpretation within the supplied explainer, not an independently verified motive for every tribal action.",
+      "replace": "The deliberate disruption of irrigation is part of the account’s explanation of the region’s economic collapse.",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 23,
+      "find": "Lawāta rebellion in supplied account",
+      "replace": "Lawāta rebellion and contested irrigation",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 23,
+      "find": "Why does the supplied author reject a simple climate-only narrative of Fayyum collapse?",
+      "replace": "Why does the analysis reject a climate-only explanation for the Fayyum’s collapse?",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 24,
+      "find": "According to the supplied explainer, the sole known transcription",
+      "replace": "The sole known transcription",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 24,
+      "find": "In the explainer’s opening anecdote",
+      "replace": "In the opening anecdote",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 25,
+      "find": "The supplied account reads Abū Tammām’s Amorium qaṣīda",
+      "replace": "Abū Tammām’s Amorium qaṣīda is interpreted",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 26,
+      "find": "The supplied narrative uses Ida Mae Gladney’s childhood, marriage and eventual life in Chicago",
+      "replace": "Ida Mae Gladney’s childhood, marriage and eventual life in Chicago",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 26,
+      "find": "called a “spark” in the supplied account",
+      "replace": "called a “spark” in the account",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
+    },
+    {
+      "reading": 26,
+      "find": "Her eventual Chicago life should not be mistaken for proof that the northern city was free of hardship.",
+      "replace": "Her Chicago life also reveals the hardships of northern urban life.",
+      "reason": "Remove metacommentary about the supplied reading; retain source arguments and terminology"
     }
   ]
 }
