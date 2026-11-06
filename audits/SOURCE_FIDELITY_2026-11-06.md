@@ -43,10 +43,10 @@ The 25 corresponding Google Docs and all 25 published chapters were compared at 
 | 22 | 1 | Explain the metrological ratio in the source's terms |
 | 23 | 5 | Preserve the 360-village legend, later 63 count and Lawāta account without invented survey cautions |
 | 24 | 1 | Present preservation through later chronicles as described in the source |
-| 25 | 1 | Distinctions in courtly reception and the qaṣīda were source-grounded; no edit required |
+| 25 | 1 | Preserve the source's discussion of prophecy and rhetorical reversal without an added evaluative descriptor |
 | 26 | 5 | Remove invented-date and comparative-moral warnings while retaining the Mississippi and Chicago narrative |
 
-**Total:** 88 independently recorded correction rules; 89 exact replacement sites across 24 readings. Readings 02 and 25 required no changes in this targeted audit. This is *not* a count of all assertions in the dossier.
+**Total:** 88 independently recorded correction rules; 89 exact replacement sites across 24 readings. Reading 02 required no change in this targeted audit. This is *not* a count of all assertions in the dossier.
 
 ## Second-pass discoveries
 
