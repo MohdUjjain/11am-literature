@@ -1521,6 +1521,54 @@
       "find": "According to the explainer, some <strong>seventy officers</strong>",
       "replace": "Some <strong>seventy officers</strong>",
       "reason": "Remove unsourced editorial distance and metacommentary while preserving authorial content"
+    },
+    {
+      "reading": 4,
+      "find": "This is a polemical allegation, not a verified count.",
+      "replace": "The number belongs to the later hostile account of his reign.",
+      "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
+    },
+    {
+      "reading": 10,
+      "find": "The listed descriptions are <strong>media characterizations</strong>, not neutral descriptions adopted by these notes.",
+      "replace": "The listed descriptions are <strong>media characterizations</strong> used to generate hostility toward the Nation of Islam.",
+      "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
+    },
+    {
+      "reading": 17,
+      "find": "Classical <em>ḥaqq</em> or <em>ḥuqūq</em> directly as a modern inalienable right.",
+      "replace": "Classical <em>ḥaqq</em> or <em>ḥuqūq</em> could signify a right, claim or jurisdiction rather than always naming a modern inalienable right.",
+      "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
+    },
+    {
+      "reading": 21,
+      "find": "Shīʿī doctrine requires of witnesses and an appropriate formula.",
+      "replace": "Shīʿī law requires witnesses and an appropriate formula.",
+      "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
+    },
+    {
+      "reading": 21,
+      "find": "Amalia Zomeño’s work is used on Mālikī Spain: women negotiated conditions",
+      "replace": "Amalia Zomeño’s study of Mālikī Spain describes women negotiating conditions",
+      "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
+    },
+    {
+      "reading": 26,
+      "find": "Ida Mae Gladney’s childhood, marriage and eventual life in Chicago to make the Great Migration more than a movement on a map.",
+      "replace": "Ida Mae Gladney’s childhood, marriage and eventual life in Chicago reveal the Great Migration as more than movement on a map.",
+      "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
+    },
+    {
+      "reading": 16,
+      "find": "should therefore be read as an example of hostile poetic rhetoric rather than factual ethnography.",
+      "replace": "expresses the hostile poetic rhetoric of the genealogical contest.",
+      "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
+    },
+    {
+      "reading": 15,
+      "find": "including the source’s description of <strong>green, yellow and red cards</strong>",
+      "replace": "including <strong>green, yellow and red cards</strong>",
+      "reason": "Second-pass source fidelity and grammatical repair after removal of meta labels"
     }
   ]
 }
