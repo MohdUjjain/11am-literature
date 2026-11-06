@@ -20,37 +20,72 @@ The 25 corresponding Google Docs and all 25 published chapters were compared at 
 
 | Reading | Corrected occurrences | Source-fidelity disposition |
 |---|---:|---|
-| 01 | 3 | Petitioner/debtor roles; remove instructional warning |
-| 02 | 0 | Source-authored distinction between office title and actual authority retained |
-| 03 | 7 | Remove contemporary-census warnings; restore the narrated nine-speaker scene |
-| 04 | 7 | Remove the assistant's gender judgment and verification warnings; preserve the source's contrast of laudatory and hostile chronicles |
-| 05 | 5 | Restore the source's asserted etymology and analysis of identity without independent-verification caveats |
-| 06 | 4 | Remove external historical/date checking; retain this reading's own chronology and terminology |
-| 07 | 4 | Present ethnicity, community and library culture as discussed in the source |
-| 08 | 4 | Retain this source's date and chronology without inserting cross-reading correction |
-| 09 | 5 | Keep Saussure as the source's modern analogy without instructions to the student |
-| 10 | 8 | Present Malcolm X's attributed arguments and media labels without added skepticism |
-| 11 | 2 | Remove unsupported present-day legal warning; retain the classical Hidāya discussion |
-| 12 | 2 | Present elite reactions and the litigant's case without a meta-warning |
-| 13 | 1 | State the imagined boxing encounter directly |
-| 14 | 2 | State the pedagogical function of the epistle's ending |
-| 15 | 6 | Remove 2026/statistical warnings; retain 72×, 37%, and dress standardization as given |
-| 16 | 4 | Restore the political function of genealogical rhetoric, without assistant-added doubts |
-| 17 | 4 | Restore source's affirmative account of rationalist influence and legal reasoning |
-| 18 | 1 | Discuss Luce's clinical language as literary analysis, not a medical disclaimer |
-| 20 | 6 | Retain the Khaldūnian argument and its chronological evidence without extra methodological warnings |
-| 21 | 1 | State the distinction between enforceable household law and ethical expectation |
-| 22 | 1 | Explain the metrological ratio in the source's terms |
-| 23 | 5 | Preserve the 360-village legend, later 63 count and Lawāta account without invented survey cautions |
-| 24 | 1 | Present preservation through later chronicles as described in the source |
-| 25 | 1 | Preserve the source's discussion of prophecy and rhetorical reversal without an added evaluative descriptor |
-| 26 | 5 | Remove invented-date and comparative-moral warnings while retaining the Mississippi and Chicago narrative |
+| 01 | 6 | Petitioner/debtor roles; remove instructional warning |
+| 02 | 2 | Source-authored distinction between office title and actual authority retained |
+| 03 | 10 | Remove contemporary-census warnings; restore the narrated nine-speaker scene |
+| 04 | 11 | Remove the assistant's gender judgment and verification warnings; preserve the source's contrast of laudatory and hostile chronicles |
+| 05 | 10 | Restore the source's asserted etymology and analysis of identity without independent-verification caveats |
+| 06 | 9 | Remove external historical/date checking; retain this reading's own chronology and terminology |
+| 07 | 8 | Present ethnicity, community and library culture as discussed in the source |
+| 08 | 10 | Retain this source's date and chronology without inserting cross-reading correction |
+| 09 | 13 | Keep Saussure as the source's modern analogy without instructions to the student |
+| 10 | 16 | Present Malcolm X's attributed arguments and media labels without added skepticism |
+| 11 | 7 | Remove unsupported present-day legal warning; retain the classical Hidāya discussion |
+| 12 | 7 | Present elite reactions and the litigant's case without a meta-warning |
+| 13 | 3 | State the imagined boxing encounter directly |
+| 14 | 11 | State the pedagogical function of the epistle's ending |
+| 15 | 25 | Remove 2026/statistical warnings; retain 72×, 37%, and dress standardization as given |
+| 16 | 18 | Restore the political function of genealogical rhetoric, without assistant-added doubts |
+| 17 | 18 | Restore source's affirmative account of rationalist influence and legal reasoning |
+| 18 | 6 | Discuss Luce's clinical language as literary analysis, not a medical disclaimer |
+| 20 | 15 | Retain the Khaldūnian argument and its chronological evidence without extra methodological warnings |
+| 21 | 14 | State the distinction between enforceable household law and ethical expectation |
+| 22 | 12 | Explain the metrological ratio in the source's terms |
+| 23 | 15 | Preserve the 360-village legend, later 63 count and Lawāta account without invented survey cautions |
+| 24 | 4 | Present preservation through later chronicles as described in the source |
+| 25 | 4 | Preserve the source's discussion of prophecy and rhetorical reversal without an added evaluative descriptor |
+| 26 | 10 | Remove invented-date and comparative-moral warnings while retaining the Mississippi and Chicago narrative |
 
-**Total:** 88 independently recorded correction rules; 89 exact replacement sites across 24 readings. Reading 02 required no change in this targeted audit. This is *not* a count of all assertions in the dossier.
+**Total:** 262 independently recorded correction rules; 264 exact replacement sites across all 25 published readings. Every published reading now has at least one documented correction after the additional provenance-language pass. This is *not* a count of all assertions in the dossier.
 
 ## Second-pass discoveries
 
 A deeper comparison of all 25 corresponding Drive explainers with the published prose and revision material found 11 additional editor-origin statements. These included a present-day verification disclaimer in Reading 03's chapter summary, an unsolicited medieval-record disclaimer in Reading 09's main text, a source-downgrading methodological claim in Reading 20's analysis, and an evaluative qualifier about a historical epithet in Reading 25. They were restored to source-derived explanation rather than retained as editorial instruction.
+
+## Follow-up pass: `supplied`, `supply` and editorial intrusion
+
+**Reason for this pass:** The earlier correction pass still left the dossier describing its own generation with phrases such as "the supplied explainer," "the supplied text," "in the supplied account" and "the explainer says." This language was inserted by the assistant, not written for a student encountering the original author's argument.
+
+**Checks performed:** Whole-book lexical searches covering all 25 reading bodies, revision summaries, definition tables, high-yield boxes, examination questions, memory aids and study callouts. Every match of **supplied**, **explainer**, and related **supply/supplies/supplying** forms was reviewed in its paragraph. A separate targeted check examined warnings, independent-verification claims, declarations of non-endorsement and contemporary relevance caveats. Corrections were compared to the numbered Drive documents before being applied.
+
+**Result in the current published-book body on this branch:**
+
+- **Zero** occurrences of the input-label **explainer**.
+- **Zero** occurrences of **supplied** as a modifier of an input source, account, reading, study, comparison, table, author or document.
+- **Five** uses of **supplied** remain, all with their ordinary factual meaning as a verb: al-Jāḥiẓ supplied a rhetorical vocabulary; later chroniclers supplied a shadow narrative; imported materials supplied shipbuilding; enforceable rights supplied legal tools; and Akhū Muḥsin supplied hostile allegations.
+- Natural physical and economic language such as **grain supply**, **seed supply**, **supply and demand**, **supplies to the Hijaz**, and **supply the ships** was deliberately retained. Removing these would damage the sources' substantive arguments.
+- A separate sweep removed further unsourced "not verified," "these notes do not endorse," and similar disclaimers, and repaired grammar after rewriting phrases.
+- The tracked overlay now contains **262 corrections, applied to 264 exact text sites**, including corrections inherited from the original audit.
+
+### Representative follow-up restorations
+
+| Reading | Metacommentary removed | Source-bearing material retained |
+|---|---|---|
+| 02 | "the supplied explainer asks..." | Badr al-Jamālī's substantive distinction between military title and delegated vizierial powers |
+| 06 | "the supplied Nile table"; an outside anachronism warning | The original Nile evidence, grain management, administrative collapse and the author's own chronology |
+| 10 | Claims of independent treatment verification not requested | Malcolm X's defense of discipline, separation and social rehabilitation |
+| 15 | "the supplied account"; "the explainer describes"; contemporary-status caveats | The community's use of modern communications, religious leadership, visual identity and succession disputes |
+| 17 | Added doubts about independently verifying historical influence | The account's affirmative argument connecting Islamic rationalism with later natural-rights thought |
+| 21 | "the supplied explainer"; a modern-law disclaimer | Distinctive legal-school doctrines of consent, divorce, custody and inheritance |
+| 22 | "the explainer" in monetary interpretations and statistics | Market coin values, mint history, rival glass-jeton explanations and reported coin fineness |
+| 23 | "the supplied author"; unsupported motive-verification caution | Political–environmental interaction, the Lawāta irrigation account, and the reported village and revenue figures |
+| 26 | "the supplied narrative"; extraneous departure-date warning | Ida Mae Gladney's life and the study's account of the Great Migration |
+
+### Verification and scope
+
+The exact chapter-scoped overlay was replayed from the **unmodified `main` publication** and reproduced the corrected branch's `index.html` **byte for byte**. All 25 published readings, all 25 chapter openers and all 25 revision zones remain present. A new automated invariant in `tests/test_source_fidelity.py` rejects reintroduction of input-provenance wording, checks the five legitimate factual uses of "supplied," and protects against previously observed grammar regressions.
+
+This is an editorial-interference audit against the supplied study notes, not a new outside fact-check of the original academic articles, nor a guarantee that every sentence of the dossier has independently been checked for complete semantic equivalence.
 
 ## Substantive corrections
 
@@ -67,7 +102,7 @@ A deeper comparison of all 25 corresponding Drive explainers with the published 
 This is **not** a blanket deletion of words such as *warning*, *historical*, *critique*, *claim*, *alleged*, *mistake*, or *not*. For example:
 
 - Reading 04's distinction between contemporary laudatory chronicles and later Ayyubid/Mamluk hostile narratives is intrinsic to the source.
-- Reading 09's Saussure example is an explicitly modern analogy *present in the supplied explainer*.
+- Reading 09's Saussure example is an explicitly modern analogy *present in the source notes*.
 - Reading 21's difference between legal manuals and court practice, and between enforceable law and moral expectation, belongs to the source's argument.
 - Reading 22's competing theories concerning Fāṭimid glass jetons are presented as an unresolved scholarly debate in the source.
 - Reading 23's comparison of a legendary earlier village count with a reported later figure is part of the supplied text.
