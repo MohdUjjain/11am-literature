@@ -530,6 +530,109 @@
       "find": "Banks and Gladney represent different kinds of possibility, not a simple right/wrong choice.",
       "replace": "Alfonso Banks represented youthful excitement, while George Gladney embodied austere steadiness.",
       "reason": "Further source-note comparison: remove unsolicited qualification in prose, annotation or revision material"
+    },
+    {
+      "reading": 1,
+      "find": "interpreted in the supplied explanation as <strong>a copy held by the petitioner</strong>",
+      "replace": "interpreted as <strong>a copy held by the petitioner</strong>",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 1,
+      "find": "The shorter supplied explainer reads Michaelides (charta) A.169 as an encounter between <strong>personal vulnerability</strong> and <strong>caliphal authority</strong>",
+      "replace": "Michaelides (charta) A.169 records an encounter between <strong>personal vulnerability</strong> and <strong>caliphal authority</strong>",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 2,
+      "find": "Comparison derived from the title/function distinction in the supplied explainer.",
+      "replace": "A distinction between the formal title and the powers exercised.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 2,
+      "find": "The supplied explainer asks whether the <em>amīr al-juyūsh</em> was really a <em>wazīr</em>.",
+      "replace": "The central question is whether the <em>amīr al-juyūsh</em> was really a <em>wazīr</em>.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 3,
+      "find": "The supplied comparison: <strong>70%</strong> verbs in Potawatomi versus <strong>30%</strong> in English.",
+      "replace": "<strong>70%</strong> verbs in Potawatomi versus <strong>30%</strong> in English.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 3,
+      "find": "The explainer begins with <em>Puhpowee</em>",
+      "replace": "The narrative begins with <em>Puhpowee</em>",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 4,
+      "find": "Comparison of the two interpretations described by the supplied text.",
+      "replace": "The contemporary account of military strategy contrasts with the later chronicle of devastation.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 4,
+      "find": "Medieval gender stereotypes are objects of critical analysis, not claims endorsed by these notes.",
+      "replace": "Medieval ideals of rational self-command and gender shaped the contrasting portrayals of al-Afḍal.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 5,
+      "find": "As Lara Harb argues in the supplied account",
+      "replace": "As Lara Harb argues",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 5,
+      "find": "The explainer asserts that ironic",
+      "replace": "The analysis traces ironic",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 5,
+      "find": "Unlike the earlier insult to Persian identity, the explainer interprets",
+      "replace": "Unlike the earlier insult to Persian identity, this example presents",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 5,
+      "find": "The term “post-colonial” is the explainer’s interpretive description, not an unqualified period label.",
+      "replace": "The term “post-colonial” marks this reversal in the social force of Persian speech.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 5,
+      "find": "Connect a specific example to its function in the argument. Attribute reported claims to the supplied explainer.",
+      "replace": "Link each Persian expression to its literary function and political setting.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 6,
+      "find": "The supplied text says “Ottoman and Black troops”; its anachronistic wording is flagged rather than silently corrected.",
+      "replace": "The account describes warfare between “Ottoman and Black troops” amid administrative breakdown.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 6,
+      "find": "the supplied Nile table",
+      "replace": "the Nile table",
+      "reason": "Remove provenance tag from the Nile table question and revision summary",
+      "expected": 2
+    },
+    {
+      "reading": 6,
+      "find": "Connect a specific example to its function in the argument. Attribute reported claims to the supplied explainer.",
+      "replace": "Link each example of irrigation, hoarding, warfare or reform to its effect on famine.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
+    },
+    {
+      "reading": 6,
+      "find": "Celebration associated in the explainer with the Nile reaching 16 cubits.",
+      "replace": "Celebration associated with the Nile reaching 16 cubits.",
+      "reason": "Replace intrusive preparation/provenance wording with source-faithful exposition"
     }
   ]
 }
