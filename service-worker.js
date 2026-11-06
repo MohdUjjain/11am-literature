@@ -3,7 +3,7 @@
  * Browser storage can be evicted and fonts are always optional.
  */
 const CACHE_PREFIX = '11am-lit-reader-';
-const BOOK_CACHE = CACHE_PREFIX + '10407037503a';
+const BOOK_CACHE = CACHE_PREFIX + 'e59b10f665ef';
 const FONT_CACHE = '11am-lit-fonts-v1';
 // A release activates only when the actual book and its executable UI are cached.
 // Decorative and discovery assets are cached best-effort, without risking a
