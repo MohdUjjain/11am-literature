@@ -38,6 +38,12 @@ def main():
     html=(ROOT/"index.html").read_text(encoding="utf-8")
     d=Inspect();d.feed(html)
     assert d.chapters==EXPECTED,f"Reading sequence changed: {d.chapters}"
+    assert 'class="source-cite"' not in html, "Title-page source-information block remains"
+    assert ".source-cite" not in html, "Obsolete title-page source stylesheet remains"
+    assert html.count('class="chapter-title-page"')==len(EXPECTED)
+    assert "notes-continuation-page" in html, "Missing lossless study-note fallback"
+    assert "Missing revision/summary pages for Reading" in html, "Missing revision guard"
+    assert "Study-note count mismatch" in html, "Missing source note-count check"
     # Desktop assigns roadmap grid-column:2; mobile must cancel it explicitly.
     assert len(re.findall(r'<div class="opener-split">',html))==len(EXPECTED)
     assert len(re.findall(
