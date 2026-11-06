@@ -318,8 +318,6 @@ p{ margin:0 0 1em; }
 .roadmap .kicker{ font-family:var(--font-utility); font-weight:600; font-size:.75rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); }
 .roadmap ol{ padding-left:1.1em; margin:.5em 0 0; }
 .roadmap li{ margin-bottom:.45em; }
-.source-cite{ margin-top:1.6em; font-family:var(--font-utility); font-size:.78rem; color:var(--ink-soft); border-top:1px solid rgba(255,255,255,0.5); padding-top:1em; max-width:60ch; }
-
 /* -- section structure -- */
 .section{ padding:58px 0 52px; border-top:none; position:relative; }
 .section::before{
@@ -608,9 +606,6 @@ blockquote{
   margin-top:0;padding:13px 15px;font-size:.75rem;line-height:1.36;
 }
 .printed-page.opener .chapter-title-page .roadmap li{margin-bottom:.22em;}
-.printed-page.opener .chapter-title-page .source-cite{
-  font-size:.67rem;margin-top:.6em;padding-top:.4em;
-}
 .printed-page.opener .book-cover{
   background:transparent;min-height:0;
 }
@@ -751,6 +746,16 @@ blockquote{
   overflow:visible;box-sizing:border-box;
 }
 .printed-page .page-note-column{border-left:1px solid var(--rule);padding-left:12px;}
+/* Print-only provenance for a study note carried to a nearby reading sheet. */
+.printed-page .side-note-source{
+  font-family:var(--font-utility);font-size:10px;letter-spacing:.035em;
+  color:var(--ink-faint);font-weight:700;margin:0 0 6px;
+}
+.printed-page .page-main-column > .notes-continuation-hint{
+  font-family:var(--font-utility);font-size:13px;line-height:1.45;
+  color:var(--ink-soft);margin:10px 0 0;
+}
+
 .printed-page .page-main-column > :first-child{margin-top:0!important;}
 .printed-page .page-main-column > p,
 .printed-page .page-main-column > ul,
