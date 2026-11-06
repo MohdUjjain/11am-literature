@@ -12,7 +12,7 @@ import zipfile
 from pathlib import Path
 from html.parser import HTMLParser
 import hashlib
-from rebuild_published_reader import without_title_source_information
+from rebuild_published_reader import without_title_source_information, apply_editorial_overrides
 
 ROOT=Path(__file__).resolve().parents[1]
 ZIP=ROOT/"source/Literature_Dossier_Source_Readings_01-26_Offline_PWA.zip"
@@ -72,7 +72,8 @@ def main():
             # Source notices were deliberately removed from the printed and
             # screen title pages; they are not scholarly reading prose.
             source_digests=chapter_digests(
-                without_title_source_information(rebuilt_html,require_all=True))
+                apply_editorial_overrides(without_title_source_information(
+                    rebuilt_html,require_all=True)))
     published_html=(ROOT/"index.html").read_text(encoding="utf-8")
     published=numbers(published_html)
     assert published==EXPECTED,"Published reading sequence differs from source"
