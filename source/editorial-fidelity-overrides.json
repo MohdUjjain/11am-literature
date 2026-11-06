@@ -1335,6 +1335,108 @@
       "find": "It is crucial to distinguish <strong>the events narrated in the novel</strong> from <strong>psychological explanations supplied by the explainer</strong>.",
       "replace": "Holden’s encounters and the recurring objects in the narrative reveal his emotional distress and desire for human connection.",
       "reason": "Remove the supplied/explainer voice from the study notes without changing the argument"
+    },
+    {
+      "reading": 21,
+      "find": "the explainer notes Shīʿī requirements",
+      "replace": "Shīʿī doctrine requires",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 21,
+      "find": "The explainer follows Amalia Zomeño’s work",
+      "replace": "Amalia Zomeño’s work is used",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 21,
+      "find": "These figures are <strong>the positions reported in the supplied explainer</strong>, not a statement of current law.",
+      "replace": "The differences reflect the legal schools’ positions on maternal custody.",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 21,
+      "find": "The explainer treats classical family law",
+      "replace": "The argument treats classical family law",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 22,
+      "find": "The explainer treats Egyptian money",
+      "replace": "Egyptian money is examined",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 22,
+      "find": "The explainer begins with a methodological claim",
+      "replace": "The discussion begins with a methodological claim",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 22,
+      "find": "The explainer gives the classical <em>mithqāl</em>",
+      "replace": "The classical <em>mithqāl</em> is given",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 22,
+      "find": "the explainer says Egyptian Islamic-style coppers appear",
+      "replace": "Egyptian Islamic-style coppers appeared",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 22,
+      "find": "“Nearly 30% below 90% purity” describes analyzed Ṣalāḥ al-Dīn specimens in the explainer.",
+      "replace": "“Nearly 30% below 90% purity” describes the analyzed gold coin specimens of Ṣalāḥ al-Dīn.",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 22,
+      "find": "serves the explainer as an image of coins returning to raw bullion value",
+      "replace": "illustrates coins returning to raw bullion value",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 22,
+      "find": "About 98% fineness in the explainer",
+      "replace": "About 98% fineness",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 23,
+      "find": "The explainer argues that Fayyum’s sudden post-1068 rupture",
+      "replace": "The analysis argues that the Fayyum’s sudden post-1068 rupture",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 23,
+      "find": "The explainer frames these pressures",
+      "replace": "These pressures are framed",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 23,
+      "find": "The explainer rejects a simple narrative",
+      "replace": "The analysis rejects a simple narrative",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 24,
+      "find": "the explainer highlights the later chroniclers",
+      "replace": "the account highlights the later chroniclers",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 25,
+      "find": "In the explainer’s interpretation, that comparison",
+      "replace": "That comparison",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
+    },
+    {
+      "reading": 26,
+      "find": "referenced in the explainer",
+      "replace": "described in the narrative",
+      "reason": "State the author's source-derived content without labeling the input as an explainer"
     }
   ]
 }
