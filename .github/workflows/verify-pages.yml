@@ -101,29 +101,3 @@ jobs:
             git commit -m 'Regenerate Literature publication assets'
             git push origin HEAD:main
           fi
-
-  batch1-generate:
-    name: Temporary Batch 1 deterministic publication regeneration
-    if: github.event_name == 'pull_request' && github.head_ref == 'audit/batch1-resilience-20261106'
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          persist-credentials: true
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Build generated artifacts only
-        run: python scripts/build.py
-      - name: Commit reproducible outputs to this review branch
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- service-worker.js
-          if ! git diff --cached --quiet; then
-            git commit -m 'build(batch1): publish deterministic artifacts for review'
-            git push origin HEAD:${{ github.head_ref }}
-          fi
