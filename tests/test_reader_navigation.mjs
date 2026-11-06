@@ -63,6 +63,8 @@ assert.ok(engine.find(index,'بسم الله').some(x=>x.entry.chapter==='20'),
   'Arabic search must ignore optional harakat');
 assert.equal(engine.find(index,'').length,0);
 assert.equal(engine.find(index,'nonexistent academic expression').length,0);
+assert.equal(engine.find(index,'legal remedy',{includeRevision:false}).length,0);
+assert.ok(engine.find(index,'legal remedy',{includeRevision:true}).some(hit=>hit.entry.revision));
 assert.ok(engine.excerpt('Long example '.repeat(40),'example',90).length<=92);
 
 // Pass C1: stable, distinct anchors and Unicode-accurate match offsets.
@@ -104,9 +106,11 @@ assert.ok(skin.includes('.reader-search-hit-target{outline:none!important;'),
 assert.doesNotThrow(()=>new Script(uiCode));
 assert.ok(uiCode.includes('setStored(STORE_VISIBILITY'));
 assert.ok(uiCode.includes('setStored(STORE_POSITION'));
-assert.ok(uiCode.includes('visibleRevisions() || !hit.entry.revision'),
-  'Hidden revision passages must be filtered from displayed search results');
-assert.ok(uiCode.includes('if(hit.entry.revision && !visibleRevisions())'),
+assert.ok(searchCode.includes('if (!includeRevision && entry.revision) return;') &&
+          uiCode.includes('includeRevision:visibleRevisions()'),
+  'Hidden revisions must be excluded in the search engine before ranking');
+assert.ok(uiCode.includes('if(!visibleRevisions() && (hit.entry.revision ||') &&
+          uiCode.includes(".closest('.revision-zone')"),
   'Stale search results must never reveal a hidden revision block');
 assert.ok(uiCode.includes("version:2,chapter:active.getAttribute('data-chapter')"),
   'Resume checkpoints must use stable section/passages, not chapter percentages');

@@ -68,12 +68,15 @@
     });
     return index;
   }
-  function find(index, query) {
+  function find(index, query, options) {
     var phrase = normalize(query);
+    var includeRevision = !options || options.includeRevision !== false;
     if (!phrase) return [];
     var terms = phrase.split(' ').filter(Boolean);
     var result = [];
     index.forEach(function(entry, order) {
+      // Apply the reader's hidden end-of-matter boundary before matching or ranking.
+      if (!includeRevision && entry.revision) return;
       var exact = entry.normalized.indexOf(phrase);
       if (exact < 0 && !terms.every(function(t){return entry.normalized.indexOf(t) >= 0;})) return;
       // Favour exact phrases and headings, but keep every match accessible.
