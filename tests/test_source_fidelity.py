@@ -31,8 +31,17 @@ def main():
         expected = int(edit.get("expected", 1))
         assert original and original != revised and expected >= 1, (i, n)
         assert original not in segments[n], f"Original editorial insertion restored: reading {n}, edit {i}"
-        if revised:
-            assert segments[n].count(revised) >= expected, f"Verified replacement missing: {n}, edit {i}"
+        if revised and segments[n].count(revised) < expected:
+            # A later, deliberately ordered correction may replace the text
+            # produced by an earlier correction in the same chapter.
+            later = edits[i + 1:]
+            superseded = any(
+                int(other["reading"]) == n
+                and revised in other["find"]
+                and other["replace"] in segments[n]
+                for other in later
+            )
+            assert superseded, f"Verified replacement missing: {n}, edit {i}"
     assert HTML.count('class="revision-zone"') == 25, "Revision zone lost"
     assert HTML.count('class="chapter-title-page"') == 25, "Chapter opener lost"
     for marker in ["data-note-id=\"s11-6-p1-n1\"", "data-note-id=\"s26-6-p0-n1\""]:
