@@ -1575,6 +1575,36 @@
       "find": "The source’s quotations include deliberately insulting ethnic stereotypes: they are evidence of what literary combatants said, <em>not</em> descriptions endorsed by these notes.",
       "replace": "The quoted ethnic insults reveal how literary combatants used inherited genealogical claims and stereotypes against their rivals.",
       "reason": "Remove unsolicited declaration of non-endorsement from scholarly argument"
+    },
+    {
+      "reading": 3,
+      "find": "A spatial visualization of the exact example already discussed in the source, not a replacement for its explanation.",
+      "replace": "A spatial arrangement of the grammatical example for revision.",
+      "reason": "Remove a remaining assistant-origin qualification and restore the author's affirmative conclusion"
+    },
+    {
+      "reading": 7,
+      "find": "those estimates convey a reputation for intellectual sophistication rather than audited inventory totals.",
+      "replace": "these collections illustrate the intellectual patronage surrounding his ministry.",
+      "reason": "Remove a remaining assistant-origin qualification and restore the author's affirmative conclusion"
+    },
+    {
+      "reading": 20,
+      "find": "The most defensible answer to the chapter’s title is therefore qualified.",
+      "replace": "The <em>Khiṭaṭ</em> emerges as a sophisticated Khaldūnian history of Cairo.",
+      "reason": "Remove a remaining assistant-origin qualification and restore the author's affirmative conclusion"
+    },
+    {
+      "reading": 20,
+      "find": "The <em>Khiṭaṭ</em> becomes a <strong>Khaldūnian urban history in its explanatory ambition</strong>, even while particular claims of direct influence, complete theoretical execution and the moral judgments of its author require discrimination.",
+      "replace": "Urban sites and ruins become evidence of <strong>ʿumrān, dynastic change and the conditions of prosperity and decay</strong>—the Khaldūnian method through which al-Maqrīzī interprets Cairo.",
+      "reason": "Remove a remaining assistant-origin qualification and restore the author's affirmative conclusion"
+    },
+    {
+      "reading": 23,
+      "find": "The later destructive role attributed to rebel groups should not be read as proof that tribal presence had always meant anarchy.",
+      "replace": "This earlier system of tribal protection contrasts with the Lawāta rebellion and damage to irrigation during the later crisis.",
+      "reason": "Remove a remaining assistant-origin qualification and restore the author's affirmative conclusion"
     }
   ]
 }
