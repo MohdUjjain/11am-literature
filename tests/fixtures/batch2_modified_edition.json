@@ -1,0 +1,29 @@
+{
+  "key": "11am-literature-reading-position-v1",
+  "visibilityKey": "11am-literature-show-revisions-v1",
+  "hidden": "false",
+  "changed": {
+    "version": 2,
+    "chapter": "3",
+    "anchor": {
+      "kind": "section",
+      "key": "s3-4",
+      "ratio": 0.42
+    },
+    "revision": false,
+    "savedAt": 1730000000000
+  },
+  "deletedId": "s3-4",
+  "newId": "s3-4-updated",
+  "hiddenRevision": {
+    "version": 2,
+    "chapter": "3",
+    "anchor": {
+      "kind": "section",
+      "key": "s3-rev-3",
+      "ratio": 0.2
+    },
+    "revision": true,
+    "savedAt": 1730000000000
+  }
+}
